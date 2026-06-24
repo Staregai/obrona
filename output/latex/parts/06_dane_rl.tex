@@ -1,0 +1,547 @@
+\section{Podstawy przetwarzania danych}
+
+\subsection{Metody redukcji wymiaru danych}
+
+Redukcja wymiaru polega na zastąpieniu danych opisanych wieloma zmiennymi przez reprezentację o mniejszej liczbie wymiarów przy możliwie małej utracie istotnej informacji. Stosuje się ją dla wizualizacji, przyspieszenia algorytmów, usuwania szumu, walki z przekleństwem wymiarowości i poprawy generalizacji.
+
+\subsubsection{Redukcja wymiaru a selekcja cech}
+
+Redukcja wymiaru tworzy nowe zmienne będące transformacjami cech oryginalnych. Selekcja cech wybiera podzbiór istniejących cech. PCA tworzy nowe składowe liniowe; selekcja może wybrać np. tylko wiek, dochód i liczbę transakcji z oryginalnej tabeli.
+
+\subsubsection{PCA}
+
+Principal Component Analysis znajduje ortogonalne kierunki maksymalnej wariancji danych. Po centrowaniu macierzy danych $X$ szukamy kierunku $w$, który maksymalizuje:
+\[
+\operatorname{Var}(Xw)
+\]
+przy ograniczeniu $\|w\|=1$. Rozwiązaniem są wektory własne macierzy kowariancji:
+\[
+\Sigma=\frac{1}{n-1}X^TX.
+\]
+Pierwsza składowa główna wyjaśnia największą wariancję, druga największą wariancję w kierunku ortogonalnym do pierwszej itd.
+
+Zalety PCA:
+\begin{itemize}
+  \item prostota,
+  \item szybkość,
+  \item dekorrelacja zmiennych,
+  \item możliwość interpretacji przez wariancję wyjaśnioną.
+\end{itemize}
+Wady:
+\begin{itemize}
+  \item liniowość,
+  \item wrażliwość na skalowanie cech,
+  \item skupienie na wariancji, niekoniecznie na informacji predykcyjnej,
+  \item ograniczona interpretowalność składowych.
+\end{itemize}
+
+\subsubsection{SVD}
+
+Singular Value Decomposition rozkłada macierz:
+\[
+X=U\Sigma V^T.
+\]
+Przycięcie do $k$ największych wartości osobliwych daje najlepsze przybliżenie rzędu $k$ w normie Frobeniusa. SVD jest podstawą PCA i metod latent semantic analysis.
+
+\subsubsection{LDA jako redukcja nadzorowana}
+
+Linear Discriminant Analysis szuka kierunków dobrze rozdzielających klasy. Maksymalizuje stosunek wariancji międzyklasowej do wewnątrzklasowej. Dla $C$ klas redukuje do co najwyżej $C-1$ wymiarów. W przeciwieństwie do PCA używa etykiet.
+
+\subsubsection{Metody nieliniowe}
+
+\begin{description}
+  \item[Kernel PCA] wykonuje PCA w przestrzeni cech zadanej przez kernel.
+  \item[Isomap] zachowuje odległości geodezyjne na rozmaitości.
+  \item[LLE] zakłada, że punkt można odtworzyć z lokalnych sąsiadów.
+  \item[t-SNE] służy głównie do wizualizacji, zachowuje lokalne podobieństwa, ale zniekształca globalne odległości.
+  \item[UMAP] szybka metoda wizualizacji i redukcji, często lepiej zachowuje strukturę globalną niż t-SNE, ale nadal wymaga ostrożnej interpretacji.
+  \item[Autoenkodery] sieci neuronowe uczące kodu niskowymiarowego przez rekonstrukcję wejścia.
+\end{description}
+
+\subsubsection{Dobór liczby wymiarów}
+
+Można użyć:
+\begin{itemize}
+  \item progu wariancji wyjaśnionej, np. 95\% w PCA,
+  \item wykresu osypiska,
+  \item walidacji krzyżowej dla jakości modelu predykcyjnego,
+  \item metryk rekonstrukcji,
+  \item stabilności reprezentacji.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Redukcja wymiaru tworzy niskowymiarową reprezentację danych. PCA jest podstawową metodą liniową maksymalizującą wariancję, SVD daje jej stabilną implementację, LDA używa etykiet, a metody nieliniowe takie jak t-SNE, UMAP i autoenkodery wykrywają bardziej złożone struktury. Trzeba pamiętać o skalowaniu, utracie informacji i walidacji liczby wymiarów.
+
+\subsection{Metody selekcji cech}
+
+Selekcja cech wybiera podzbiór oryginalnych zmiennych. Celem jest poprawa generalizacji, redukcja kosztu pomiaru, przyspieszenie modelu, interpretowalność i zmniejszenie ryzyka overfittingu.
+
+\subsubsection{Filtry}
+
+Metody filtrujące oceniają cechy niezależnie od konkretnego modelu albo z użyciem prostych statystyk:
+\begin{itemize}
+  \item wariancja cechy,
+  \item korelacja z etykietą,
+  \item test $\chi^2$ dla cech kategorycznych,
+  \item ANOVA F-test,
+  \item mutual information,
+  \item współczynnik korelacji rang Spearmana,
+  \item usuwanie jednej z silnie skorelowanych cech.
+\end{itemize}
+
+Filtry są szybkie i skalowalne, ale mogą ignorować interakcje między cechami.
+
+\subsubsection{Wrappery}
+
+Wrapper używa modelu jako czarnej skrzynki i ocenia podzbiory cech przez walidację:
+\begin{itemize}
+  \item forward selection - zaczynamy od pustego zbioru i dodajemy cechy,
+  \item backward elimination - zaczynamy od wszystkich i usuwamy,
+  \item recursive feature elimination,
+  \item przeszukiwanie heurystyczne, np. algorytm genetyczny.
+\end{itemize}
+
+Wrappery mogą dawać lepsze podzbiory dla konkretnego modelu, ale są kosztowne i podatne na przeuczenie, jeśli walidacja jest źle zorganizowana.
+
+\subsubsection{Metody wbudowane}
+
+Embedded methods wybierają cechy w trakcie uczenia modelu:
+\begin{itemize}
+  \item Lasso, czyli regularyzacja $L_1$, zeruje część współczynników,
+  \item Elastic Net łączy $L_1$ i $L_2$,
+  \item drzewa i lasy losowe dają importance cech,
+  \item gradient boosting ma miary gain/split importance,
+  \item modele liniowe z karami grupowymi wybierają grupy cech.
+\end{itemize}
+
+Trzeba uważać na interpretację importance w drzewach: cechy o wielu możliwych podziałach albo silnie skorelowane mogą być faworyzowane lub dzielić znaczenie.
+
+\subsubsection{Stability selection}
+
+Stability selection wielokrotnie losuje podpróbki danych, wykonuje selekcję i wybiera cechy pojawiające się stabilnie. Pomaga odróżnić cechy rzeczywiście istotne od przypadkowych, zwłaszcza gdy liczba cech jest duża.
+
+\subsubsection{Selekcja a przeciek danych}
+
+Selekcja cech musi być wykonywana wewnątrz pętli walidacji. Błąd: wybrać cechy na całym zbiorze, a potem zrobić cross-validation. Informacja ze zbioru testowego przecieka wtedy do modelu i wynik jest zawyżony.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Selekcja cech wybiera podzbiór oryginalnych zmiennych. Filtry są szybkie i niezależne od modelu, wrappery oceniają podzbiory przez model i walidację, a metody wbudowane wybierają cechy podczas uczenia, np. Lasso albo drzewa. Najważniejsze jest unikanie przecieku danych i ocena stabilności wyboru.
+
+\subsection{Metody postępowania z brakami w danych}
+
+Braki danych mogą zniekształcić analizę i modelowanie. Wybór metody zależy od mechanizmu braków, udziału braków, typu zmiennej i modelu docelowego.
+
+\subsubsection{Mechanizmy braków}
+
+\begin{description}
+  \item[MCAR] Missing Completely At Random - brak niezależny od danych obserwowanych i nieobserwowanych. Usunięcie wierszy nie wprowadza biasu, ale zmniejsza moc statystyczną.
+  \item[MAR] Missing At Random - brak zależy od danych obserwowanych, ale nie od brakującej wartości po uwzględnieniu obserwowanych zmiennych. Można go modelować.
+  \item[MNAR] Missing Not At Random - brak zależy od samej brakującej wartości albo ukrytej zmiennej. Najtrudniejszy przypadek.
+\end{description}
+
+Przykład MNAR: osoby z bardzo wysokim dochodem częściej nie podają dochodu.
+
+\subsubsection{Usuwanie danych}
+
+\begin{itemize}
+  \item listwise deletion - usunięcie wierszy z jakimkolwiek brakiem,
+  \item pairwise deletion - użycie dostępnych par obserwacji dla danej statystyki,
+  \item usuwanie cech z bardzo dużym udziałem braków.
+\end{itemize}
+
+Usuwanie jest proste, ale może wprowadzać bias i marnować dane, jeśli braki nie są MCAR.
+
+\subsubsection{Prosta imputacja}
+
+\begin{itemize}
+  \item średnia albo mediana dla zmiennych liczbowych,
+  \item dominanta dla zmiennych kategorycznych,
+  \item stała wartość specjalna, np. "unknown",
+  \item imputacja grupowa, np. mediana w obrębie segmentu.
+\end{itemize}
+
+Mediana jest odporniejsza na odstające wartości niż średnia. Prosta imputacja zaniża wariancję i może osłabić zależności między zmiennymi.
+
+\subsubsection{Imputacja modelowa}
+
+\begin{itemize}
+  \item k-nearest neighbors imputation,
+  \item regresja predykcyjna,
+  \item drzewa i lasy,
+  \item EM dla modeli probabilistycznych,
+  \item multiple imputation,
+  \item autoenkodery albo modele generatywne.
+\end{itemize}
+
+Multiple imputation tworzy wiele uzupełnionych zbiorów, analizuje każdy i łączy wyniki, uwzględniając niepewność imputacji.
+
+\subsubsection{Indykatory braków}
+
+Czasem sam fakt braku jest informacyjny. Dodaje się cechę binarną:
+\[
+m_j =
+\begin{cases}
+1, & x_j\text{ było brakujące},\\
+0, & \text{w przeciwnym razie}.
+\end{cases}
+\]
+To bywa skuteczne przy MAR/MNAR, ale nie zastępuje analizy mechanizmu braków.
+
+\subsubsection{Modele obsługujące braki}
+
+Niektóre modele potrafią obsługiwać braki bez jawnej imputacji, np. wybrane implementacje drzew gradientowych mają kierunek domyślny dla braków. Nadal trzeba rozumieć, co model robi z brakami i czy zachowanie jest zgodne z problemem.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Najpierw trzeba rozpoznać mechanizm braków: MCAR, MAR albo MNAR. Można usuwać wiersze lub cechy, imputować prostymi statystykami, imputować modelowo, stosować multiple imputation albo dodać indykatory braków. Imputację trzeba dopasować tylko na danych treningowych, aby uniknąć przecieku.
+
+\subsection{Estymatory błędów}
+
+Estymator błędu ocenia, jak dobrze model będzie działał na nowych danych. Błąd treningowy jest zwykle zbyt optymistyczny, bo model był dopasowany do tych danych.
+
+\subsubsection{Podział train/validation/test}
+
+Najprostszy schemat:
+\begin{itemize}
+  \item zbiór treningowy - uczenie parametrów,
+  \item zbiór walidacyjny - dobór hiperparametrów i wybór modelu,
+  \item zbiór testowy - końcowa bezstronna ocena.
+\end{itemize}
+
+Zbiór testowy powinien być użyty tylko raz na końcu. Wielokrotne podejmowanie decyzji na podstawie testu prowadzi do przeuczenia do testu.
+
+\subsubsection{Walidacja krzyżowa}
+
+W $k$-fold cross-validation dane dzieli się na $k$ części. Model trenuje się $k$ razy, za każdym razem na $k-1$ częściach, a testuje na pozostałej. Wyniki uśrednia się:
+\[
+\hat E_{CV}=\frac{1}{k}\sum_{i=1}^{k}E_i.
+\]
+Typowe wartości to $k=5$ albo $k=10$.
+
+Leave-one-out CV to przypadek $k=n$. Ma mały bias, ale może mieć dużą wariancję i jest kosztowna.
+
+\subsubsection{Stratyfikacja i dane zależne}
+
+Dla klasyfikacji niezbalansowanej stosuje się stratified CV, aby proporcje klas były podobne w foldach. Dla szeregów czasowych nie wolno mieszać przyszłości z przeszłością; używa się walidacji kroczącej. Dla danych grupowych trzeba dzielić po grupach, aby obserwacje tej samej osoby, klienta albo urządzenia nie trafiały jednocześnie do treningu i testu.
+
+\subsubsection{Bootstrap}
+
+Bootstrap losuje próbki z powtórzeniami z danych treningowych. Obserwacje niewylosowane tworzą out-of-bag set. Bootstrap pozwala oceniać niepewność estymatora i stabilność modelu. W lasach losowych OOB error jest naturalnym estymatorem błędu.
+
+\subsubsection{Macierz pomyłek i miary klasyfikacji}
+
+Dla klasyfikacji binarnej:
+\begin{itemize}
+  \item TP - prawdziwie pozytywne,
+  \item TN - prawdziwie negatywne,
+  \item FP - fałszywie pozytywne,
+  \item FN - fałszywie negatywne.
+\end{itemize}
+
+Miary:
+\[
+accuracy=\frac{TP+TN}{TP+TN+FP+FN},
+\]
+\[
+precision=\frac{TP}{TP+FP},
+\]
+\[
+recall=\frac{TP}{TP+FN},
+\]
+\[
+F1=\frac{2\cdot precision\cdot recall}{precision+recall}.
+\]
+Accuracy jest mylące przy silnie niezbalansowanych klasach.
+
+\subsubsection{Miary regresji}
+
+\[
+MAE=\frac{1}{n}\sum_i |y_i-\hat y_i|,
+\]
+\[
+MSE=\frac{1}{n}\sum_i (y_i-\hat y_i)^2,
+\]
+\[
+RMSE=\sqrt{MSE}.
+\]
+MAE jest odporniejsze na outliery, MSE/RMSE mocniej karzą duże błędy. $R^2$ mierzy część wariancji wyjaśnionej przez model.
+
+\subsubsection{Bias i wariancja estymatora błędu}
+
+Estymator błędu może być obciążony i mieć wariancję. Mały zbiór testowy daje dużą niepewność. Cross-validation zmniejsza zależność od pojedynczego podziału, ale wyniki foldów nie są całkowicie niezależne. Przy porównywaniu modeli warto stosować testy statystyczne albo przedziały ufności.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Błąd modelu trzeba estymować na danych nieużytych do uczenia. Podstawowe metody to holdout, train/validation/test, walidacja krzyżowa, bootstrap i OOB. Miara błędu zależy od zadania: accuracy, precision, recall, F1, AUC dla klasyfikacji; MAE, MSE, RMSE dla regresji. Należy unikać przecieku danych i dobierać schemat walidacji do struktury danych.
+
+\section{Uczenie ze wzmocnieniem}
+
+\subsection{Uczenie ze wzmocnieniem: pasywne, aktywne i polityki}
+
+Uczenie ze wzmocnieniem bada sytuację, w której agent uczy się przez interakcję ze środowiskiem. Agent wykonuje akcje, obserwuje następne stany i otrzymuje nagrody. Nie dostaje poprawnych etykiet akcji, lecz sygnał oceny skutków działania.
+
+\subsubsection{Cykl interakcji}
+
+W chwili $t$ agent jest w stanie $S_t$, wybiera akcję $A_t$, środowisko zwraca nagrodę $R_{t+1}$ i nowy stan $S_{t+1}$. Celem jest maksymalizacja oczekiwanego zwrotu:
+\[
+G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\dots
+=\sum_{k=0}^{\infty}\gamma^k R_{t+k+1},
+\]
+gdzie $\gamma\in[0,1]$ jest współczynnikiem dyskontowym. Dla zadań epizodycznych suma kończy się w stanie terminalnym.
+
+\subsubsection{Polityka}
+
+Polityka opisuje sposób wyboru akcji:
+\[
+\pi(a|s)=P(A_t=a\mid S_t=s).
+\]
+Polityka deterministyczna przypisuje każdemu stanowi jedną akcję:
+\[
+\pi(s)=a.
+\]
+Polityka stochastyczna przypisuje rozkład prawdopodobieństwa na akcjach. Stochastyczność jest ważna dla eksploracji i dla środowisk częściowo obserwowalnych albo wieloagentowych.
+
+\subsubsection{Pasywne uczenie ze wzmocnieniem}
+
+W pasywnym RL polityka jest dana. Agent nie decyduje, jak ją ulepszyć, lecz ocenia jej jakość. Typowe zadanie: policy evaluation, czyli estymacja funkcji wartości $V^\pi(s)$ dla ustalonej polityki $\pi$.
+
+Przykład: mamy strategię gry w blackjacka "dobieraj do 20, potem stop" i chcemy oszacować wartość stanów przy tej strategii. Metody: Monte Carlo prediction, TD(0), dynamic programming, jeśli model jest znany.
+
+\subsubsection{Aktywne uczenie ze wzmocnieniem}
+
+W aktywnym RL agent ma znaleźć dobrą albo optymalną politykę. Musi jednocześnie:
+\begin{itemize}
+  \item eksplorować, aby poznać skutki akcji,
+  \item eksploatować, aby wybierać akcje już znane jako dobre.
+\end{itemize}
+
+To problem exploration-exploitation. Strategie:
+\begin{itemize}
+  \item $\eps$-greedy - z prawdopodobieństwem $1-\eps$ wybierz najlepszą znaną akcję, z $\eps$ losową,
+  \item softmax/Boltzmann exploration,
+  \item upper confidence bound,
+  \item Thompson sampling,
+  \item dodawanie szumu do parametrów albo akcji.
+\end{itemize}
+
+\subsubsection{On-policy i off-policy}
+
+W uczeniu on-policy uczymy wartość albo poprawiamy tę samą politykę, która generuje dane. Przykład: SARSA.
+
+W uczeniu off-policy dane generuje polityka behawioralna $b$, a uczymy politykę docelową $\pi$. Przykład: Q-learning. Off-policy pozwala uczyć politykę zachłanną na danych z polityki eksploracyjnej, ale może być mniej stabilne, zwłaszcza z aproksymacją funkcji.
+
+\subsubsection{Funkcje wartości}
+
+Wartość stanu:
+\[
+V^\pi(s)=\mathbb{E}_\pi[G_t\mid S_t=s].
+\]
+Wartość akcji:
+\[
+Q^\pi(s,a)=\mathbb{E}_\pi[G_t\mid S_t=s,A_t=a].
+\]
+Funkcja $V$ mówi, jak dobry jest stan przy danej polityce. Funkcja $Q$ mówi, jak dobra jest akcja w stanie, dlatego jest szczególnie użyteczna, gdy nie znamy modelu przejść.
+
+\subsubsection{Co powiedzieć na obronie}
+
+RL polega na uczeniu przez interakcję: stan, akcja, nagroda, kolejny stan. Polityka mapuje stany na akcje albo rozkłady akcji. Pasywne RL ocenia zadaną politykę, aktywne RL szuka polityki optymalnej i musi rozwiązać dylemat eksploracji i eksploatacji. Wartości $V^\pi$ i $Q^\pi$ opisują oczekiwany zwrot.
+
+\subsection{Decyzyjny proces Markowa: definicja i przykłady}
+
+MDP jest formalnym modelem sekwencyjnego podejmowania decyzji przy niepewności. Zakłada własność Markowa: przyszłość zależy od bieżącego stanu i akcji, a nie od pełnej historii.
+
+\subsubsection{Definicja}
+
+Skończony MDP można zapisać jako
+\[
+M=(S,A,p,r,\gamma),
+\]
+gdzie:
+\begin{itemize}
+  \item $S$ - zbiór stanów,
+  \item $A$ - zbiór akcji,
+  \item $p(s',r|s,a)$ - prawdopodobieństwo przejścia do stanu $s'$ i otrzymania nagrody $r$ po wykonaniu akcji $a$ w stanie $s$,
+  \item $r$ - funkcja nagrody, często jako wartość oczekiwana,
+  \item $\gamma\in[0,1]$ - współczynnik dyskontowy.
+\end{itemize}
+
+Warunek normalizacji:
+\[
+\sum_{s'\in S}\sum_{r\in R}p(s',r|s,a)=1
+\quad\text{dla każdego }s,a.
+\]
+
+Z rozkładu $p(s',r|s,a)$ można wyznaczyć prawdopodobieństwo przejścia:
+\[
+p(s'|s,a)=\sum_r p(s',r|s,a),
+\]
+oraz oczekiwaną nagrodę:
+\[
+r(s,a)=\sum_r\sum_{s'} r\,p(s',r|s,a).
+\]
+
+\subsubsection{Własność Markowa}
+
+Proces spełnia własność Markowa, jeśli:
+\[
+P(S_{t+1},R_{t+1}\mid S_0,A_0,\dots,S_t,A_t)
+=P(S_{t+1},R_{t+1}\mid S_t,A_t).
+\]
+Stan powinien więc zawierać całą informację z historii potrzebną do przewidywania przyszłości. Jeśli obserwacja nie jest pełnym stanem, mamy POMDP, czyli częściowo obserwowalny MDP.
+
+\subsubsection{Równania Bellmana}
+
+Dla ustalonej polityki:
+\[
+V^\pi(s)=\sum_a\pi(a|s)\sum_{s',r}p(s',r|s,a)\left[r+\gamma V^\pi(s')\right].
+\]
+Dla funkcji akcji:
+\[
+Q^\pi(s,a)=\sum_{s',r}p(s',r|s,a)\left[r+\gamma\sum_{a'}\pi(a'|s')Q^\pi(s',a')\right].
+\]
+
+Optymalna funkcja wartości spełnia:
+\[
+V^*(s)=\max_a\sum_{s',r}p(s',r|s,a)\left[r+\gamma V^*(s')\right].
+\]
+Optymalna funkcja akcji:
+\[
+Q^*(s,a)=\sum_{s',r}p(s',r|s,a)\left[r+\gamma\max_{a'}Q^*(s',a')\right].
+\]
+
+\subsubsection{Przykłady MDP}
+
+\begin{description}
+  \item[Recycling robot] stan to poziom baterii, np. high/low. Akcje to search, wait, recharge. Nagrody zależą od zebrania śmieci i kar za rozładowanie.
+  \item[Gridworld] stan to pozycja agenta na kratownicy, akcje to ruchy, przejścia mogą być stochastyczne, a nagrody przypisane do pól terminalnych i kosztów ruchu.
+  \item[Blackjack] stan opisuje sumę kart gracza, odkrytą kartę krupiera i posiadanie używalnego asa. Akcje to hit/stand, nagroda końcowa to wygrana, przegrana albo remis.
+  \item[Cart-pole] stan obejmuje pozycję wózka, prędkość, kąt słupka i prędkość kątową. Akcje to siła w lewo/prawo, nagroda za utrzymanie równowagi.
+  \item[Bioreaktor] stan to odczyty sensorów i skład, akcje to ustawienia temperatury i mieszania, nagroda to tempo produkcji pożądanej substancji.
+\end{description}
+
+\subsubsection{Planowanie i uczenie}
+
+Jeśli model $p$ i $r$ jest znany, możemy planować metodami programowania dynamicznego: policy evaluation, policy iteration, value iteration. Jeśli model nie jest znany, agent uczy się z doświadczenia metodami Monte Carlo, TD, SARSA, Q-learning albo metodami z aproksymacją funkcji.
+
+\subsubsection{Co powiedzieć na obronie}
+
+MDP to model $(S,A,p,r,\gamma)$, w którym przyszłość zależy tylko od bieżącego stanu i akcji. Polityka wybiera akcje, funkcje $V^\pi$ i $Q^\pi$ opisują oczekiwany zwrot, a równania Bellmana wiążą wartość stanu z nagrodą i wartością następnych stanów. Przykłady to robot sprzątający, gridworld, blackjack, cart-pole i sterowanie procesem.
+
+\subsection{Metoda różnic czasowych TD-learning: idea, zakres stosowania, wady i zalety oraz porównanie z Monte Carlo}
+
+Temporal Difference learning łączy idee Monte Carlo i programowania dynamicznego. Tak jak Monte Carlo uczy się z doświadczenia, bez pełnego modelu środowiska. Tak jak programowanie dynamiczne używa bootstrappingu, czyli aktualizuje wartość na podstawie obecnego oszacowania wartości następnego stanu.
+
+\subsubsection{TD(0)}
+
+Dla ustalonej polityki $\pi$ aktualizacja TD(0) ma postać:
+\[
+V(S_t)\leftarrow V(S_t)+\alpha\left[R_{t+1}+\gamma V(S_{t+1})-V(S_t)\right].
+\]
+Wyrażenie
+\[
+\delta_t=R_{t+1}+\gamma V(S_{t+1})-V(S_t)
+\]
+to błąd TD.
+
+Cel aktualizacji TD to:
+\[
+R_{t+1}+\gamma V(S_{t+1}),
+\]
+czyli jednkrokowe przybliżenie zwrotu. W Monte Carlo celem jest pełny zwrot $G_t$ po zakończeniu epizodu.
+
+\subsubsection{Algorytm predykcji TD(0)}
+
+\begin{enumerate}
+  \item Zainicjalizuj $V(s)$ dowolnie.
+  \item Dla każdego epizodu:
+  \begin{enumerate}
+    \item rozpocznij w stanie $S$,
+    \item wybierz akcję zgodnie z polityką $\pi$,
+    \item wykonaj akcję, obserwuj $R$ i $S'$,
+    \item zaktualizuj
+    \[
+    V(S)\leftarrow V(S)+\alpha\left[R+\gamma V(S')-V(S)\right],
+    \]
+    \item ustaw $S\leftarrow S'$,
+    \item powtarzaj do stanu terminalnego.
+  \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Porównanie TD i Monte Carlo}
+
+\begin{longtable}{p{0.24\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+\toprule
+Cecha & Monte Carlo & TD \\
+\midrule
+Model środowiska & nie wymaga & nie wymaga \\
+Moment aktualizacji & po epizodzie & po każdym kroku \\
+Cel aktualizacji & pełny zwrot $G_t$ & $R_{t+1}+\gamma V(S_{t+1})$ \\
+Epizodyczność & wymaga epizodów albo specjalnych wariantów & działa w zadaniach ciągłych \\
+Bootstrapping & nie & tak \\
+Bias & mniejszy przy poprawnych próbkach & większy przez bootstrapping \\
+Wariancja & często większa & zwykle mniejsza \\
+Szybkość uczenia online & wolniejsza informacja & szybka aktualizacja \\
+\bottomrule
+\end{longtable}
+
+MC jest nieobciążone względem rzeczywistych zwrotów przy próbkowaniu z polityki, ale może mieć dużą wariancję. TD wprowadza bias, bo używa własnych oszacowań, ale zwykle ma mniejszą wariancję i uczy się szybciej w zadaniach sekwencyjnych.
+
+\subsubsection{SARSA}
+
+SARSA jest on-policy metodą kontroli TD:
+\[
+Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha\left[R_{t+1}+\gamma Q(S_{t+1},A_{t+1})-Q(S_t,A_t)\right].
+\]
+Nazwa pochodzi od sekwencji:
+\[
+S_t,A_t,R_{t+1},S_{t+1},A_{t+1}.
+\]
+Ponieważ używa akcji faktycznie wybranej przez bieżącą politykę, uczy wartości polityki eksploracyjnej.
+
+\subsubsection{Q-learning}
+
+Q-learning jest off-policy:
+\[
+Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha\left[R_{t+1}+\gamma\max_a Q(S_{t+1},a)-Q(S_t,A_t)\right].
+\]
+Uczy wartości polityki zachłannej, nawet jeśli dane są generowane przez politykę eksploracyjną, np. $\eps$-greedy.
+
+\subsubsection{Zakres stosowania}
+
+TD jest użyteczne, gdy:
+\begin{itemize}
+  \item środowisko jest nieznane,
+  \item dane przychodzą online,
+  \item epizody są długie albo nie kończą się,
+  \item chcemy aktualizować po każdym kroku,
+  \item pełny zwrot Monte Carlo miałby dużą wariancję.
+\end{itemize}
+
+TD jest podstawą wielu metod RL, także z aproksymacją funkcji i deep RL.
+
+\subsubsection{Wady}
+
+\begin{itemize}
+  \item bias przez bootstrapping,
+  \item wrażliwość na krok uczenia $\alpha$,
+  \item możliwa niestabilność przy aproksymacji funkcji, off-policy i bootstrappingu,
+  \item potrzeba eksploracji dla metod kontroli,
+  \item trudność doboru reprezentacji stanu.
+\end{itemize}
+
+\subsubsection{Zalety}
+
+\begin{itemize}
+  \item uczenie online,
+  \item brak potrzeby modelu środowiska,
+  \item brak potrzeby czekania do końca epizodu,
+  \item często mniejsza wariancja niż MC,
+  \item możliwość stosowania w zadaniach ciągłych,
+  \item naturalne połączenie z funkcjami wartości akcji.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+TD-learning aktualizuje wartość stanu po każdym kroku, używając różnicy między starą wartością a celem $R+\gamma V(S')$. Błąd TD to $\delta=R+\gamma V(S')-V(S)$. W porównaniu z Monte Carlo TD nie czeka do końca epizodu i zwykle ma mniejszą wariancję, ale jest obciążone przez bootstrapping. SARSA jest on-policy, Q-learning off-policy.

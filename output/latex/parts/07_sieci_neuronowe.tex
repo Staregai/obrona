@@ -1,0 +1,512 @@
+\section{Sieci neuronowe}
+
+\subsection{Uczenie nadzorowane i nienadzorowane: definicje i przykłady}
+
+Uczenie sieci neuronowej polega na zmianie wag połączeń tak, aby sieć realizowała pożądaną funkcję. Struktura połączeń i wartości wag określają, jakie przekształcenie wejścia w wyjście wykonuje sieć. W klasycznym podziale wyróżnia się uczenie nadzorowane, nienadzorowane i uczenie ze wzmocnieniem.
+
+\subsubsection{Uczenie nadzorowane}
+
+W uczeniu nadzorowanym dane treningowe mają postać par:
+\[
+(x^{(i)},y^{(i)}),\qquad i=1,\dots,n,
+\]
+gdzie $x^{(i)}\in\R^m$ jest wektorem wejściowym, a $y^{(i)}\in\R^k$ pożądanym wyjściem. Zadaniem jest nauczenie funkcji:
+\[
+f_\theta:\R^m\to\R^k
+\]
+minimalizującej błąd predykcji na nowych danych.
+
+Uczenie polega na minimalizacji funkcji straty:
+\[
+\min_\theta \frac{1}{n}\sum_{i=1}^{n} \ell(f_\theta(x^{(i)}),y^{(i)}).
+\]
+Dla regresji często stosuje się błąd kwadratowy:
+\[
+L=\frac{1}{2}\sum_i\sum_j(y_j^{(i)}-\hat y_j^{(i)})^2.
+\]
+Dla klasyfikacji wieloklasowej z softmaxem typowa jest entropia krzyżowa:
+\[
+CE=-\sum_{j=1}^{k}y_j\log \hat y_j.
+\]
+Przy one-hot encoding sprowadza się to do $-\log$ prawdopodobieństwa klasy prawdziwej.
+
+Przykłady:
+\begin{itemize}
+  \item klasyfikacja obrazów,
+  \item rozpoznawanie cyfr,
+  \item klasyfikacja spamu,
+  \item regresja cen mieszkań,
+  \item prognoza popytu,
+  \item segmentacja obrazu z etykietami pikseli.
+\end{itemize}
+
+\subsubsection{Uczenie nienadzorowane}
+
+W uczeniu nienadzorowanym mamy tylko wejścia:
+\[
+x^{(1)},\dots,x^{(n)}
+\]
+bez etykiet. Celem jest odkrycie struktury danych: grup, reprezentacji, czynników zmienności albo rozkładu.
+
+Przykłady zadań:
+\begin{itemize}
+  \item klastrowanie,
+  \item redukcja wymiaru,
+  \item detekcja anomalii,
+  \item kompresja reprezentacji,
+  \item modelowanie generatywne,
+  \item samoorganizujące mapy cech.
+\end{itemize}
+
+W sieciach neuronowych przykładami są autoenkodery, Restricted Boltzmann Machines, sieci Kohonena, uczenie Hebbowskie, WTA/WTM oraz modele generatywne.
+
+\subsubsection{WTA i WTM}
+
+Winner Takes All oznacza, że dla danego wejścia zwycięża neuron o największej aktywacji, a uczeniu podlega głównie on. Winner Takes Most rozszerza to na sąsiedztwo zwycięzcy. WTM jest podstawą samoorganizujących map Kohonena: aktualizuje się zwycięski neuron i jego sąsiadów, co prowadzi do topologicznego uporządkowania mapy.
+
+\subsubsection{Porównanie}
+
+\begin{longtable}{p{0.24\textwidth}p{0.32\textwidth}p{0.32\textwidth}}
+\toprule
+Cecha & Uczenie nadzorowane & Uczenie nienadzorowane \\
+\midrule
+Dane & wejścia i etykiety & same wejścia \\
+Cel & predykcja znanego celu & odkrycie struktury \\
+Funkcja straty & porównuje predykcję z etykietą & rekonstrukcja, podobieństwo, gęstość, topologia \\
+Przykłady & klasyfikacja, regresja & klastrowanie, PCA, SOM, autoenkodery \\
+Ocena & accuracy, F1, MSE & silhouette, rekonstrukcja, ocena jakości reprezentacji \\
+\bottomrule
+\end{longtable}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Uczenie nadzorowane korzysta z par wejście-wyjście i minimalizuje błąd względem etykiet. Uczenie nienadzorowane nie ma etykiet i szuka struktury w danych, np. klastrów albo reprezentacji. Przykładem nadzorowanym jest MLP klasyfikujący cyfry, a nienadzorowanym mapa Kohonena albo autoenkoder.
+
+\subsection{Porównanie modeli sieciowych Hopfielda, Grossberga i Kohonena}
+
+Modele Hopfielda, Grossberga i Kohonena należą do klasycznych architektur sieci neuronowych, ale rozwiązują inne zadania i mają inne mechanizmy uczenia.
+
+\subsubsection{Sieć Hopfielda}
+
+Sieć Hopfielda jest rekurencyjną siecią z pełnymi symetrycznymi połączeniami między neuronami i bez połączeń własnych:
+\[
+w_{ij}=w_{ji},\qquad w_{ii}=0.
+\]
+Klasyczny model dyskretny ma neurony bipolarne $v_i\in\{-1,1\}$ albo unipolarne $v_i\in\{0,1\}$. Stan sieci jest wektorem aktywacji. Aktualizacja może być synchroniczna albo asynchroniczna.
+
+Główne zastosowanie: pamięć skojarzeniowa, czyli content-addressable memory. Sieć przechowuje wzorce jako atraktory dynamiki. Po podaniu wzorca zaszumionego powinna zbiec do najbliższego zapamiętanego wzorca.
+
+\subsubsection{Modele Grossberga}
+
+Stephen Grossberg rozwijał modele konkurencyjnego i adaptacyjnego uczenia, w tym Adaptive Resonance Theory. W kontekście klasycznego porównania z Hopfieldem i Kohonenem Grossberg kojarzy się z sieciami:
+\begin{itemize}
+  \item uczącymi się stabilnie nowych kategorii,
+  \item opartymi na konkurencji neuronów,
+  \item rozwiązującymi dylemat stability-plasticity,
+  \item używającymi mechanizmu rezonansu między reprezentacją wejścia i kategorią.
+\end{itemize}
+
+ART ma warstwę wejściową i warstwę kategorii. Wejście aktywuje kategorię kandydującą; jeśli podobieństwo przekracza parametr czujności, następuje rezonans i uczenie. Jeśli nie, kategoria jest odrzucana i szukana jest inna albo tworzona nowa. Wysoka czujność tworzy więcej, bardziej szczegółowych kategorii; niska czujność daje kategorie ogólniejsze.
+
+Główne zastosowania: klastrowanie, klasyfikacja inkrementalna, uczenie bez katastroficznego nadpisywania, adaptacyjne rozpoznawanie wzorców.
+
+\subsubsection{Sieć Kohonena}
+
+Self-Organizing Map jest nienadzorowaną siecią konkurencyjną. Neurony są ułożone zwykle na siatce 1D albo 2D, a każdy neuron ma wektor wag $w_i$ w przestrzeni danych. Dla wejścia $x$ wybiera się best matching unit:
+\[
+c=\argmin_i\|x-w_i\|.
+\]
+Następnie aktualizuje się zwycięzcę i jego sąsiadów:
+\[
+w_i(t+1)=w_i(t)+\alpha(t)h_{ci}(t)(x-w_i(t)),
+\]
+gdzie $h_{ci}$ maleje z odległością neuronu $i$ od zwycięzcy $c$ na mapie.
+
+SOM tworzy odwzorowanie danych wysokowymiarowych na niskowymiarową siatkę z zachowaniem lokalnej topologii. Służy do wizualizacji, klastrowania i eksploracji danych.
+
+\subsubsection{Porównanie}
+
+\begin{longtable}{p{0.2\textwidth}p{0.24\textwidth}p{0.24\textwidth}p{0.24\textwidth}}
+\toprule
+Cecha & Hopfield & Grossberg/ART & Kohonen/SOM \\
+\midrule
+Typ & rekurencyjna pamięć skojarzeniowa & adaptacyjne kategorie, konkurencja & samoorganizująca mapa \\
+Uczenie & często Hebbowskie albo jego modyfikacje & rezonans, dopasowanie, czujność & WTA/WTM, uczenie sąsiedztwa \\
+Zadanie & odtwarzanie wzorców, optymalizacja & stabilne uczenie kategorii & klastrowanie i wizualizacja \\
+Dynamika & zbieganie do atraktora & wybór lub tworzenie kategorii & porządkowanie topologiczne \\
+Nadzór & zwykle nienadzorowane/asocjacyjne & nienadzorowane lub nadzorowane warianty ART & nienadzorowane \\
+Problem kluczowy & pojemność i minima fałszywe & stability-plasticity & dobór mapy, sąsiedztwa i metryki \\
+\bottomrule
+\end{longtable}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Hopfield to rekurencyjna sieć pamięci skojarzeniowej, w której wzorce są atraktorami. Grossberg/ART koncentruje się na adaptacyjnym tworzeniu kategorii i kompromisie stabilność-plastyczność. Kohonen/SOM to nienadzorowana mapa samoorganizująca, która zachowuje topologię danych i nadaje się do klastrowania oraz wizualizacji.
+
+\subsection{Dobór architektury sieci neuronowej do wybranego zadania}
+
+Dobór architektury powinien wynikać z rodzaju danych, zadania, ograniczeń obliczeniowych i wymagań jakościowych. Nie istnieje jedna najlepsza sieć do wszystkiego.
+
+\subsubsection{Klasyfikacja tabularna}
+
+Dla danych tabelarycznych często warto zacząć od prostych modeli: regresji logistycznej, drzew, random forest, gradient boosting. Jeśli używamy sieci, typowy jest MLP:
+\[
+x\to \text{Dense}\to \text{aktywacja}\to \dots \to \text{softmax/sigmoid}.
+\]
+Dla klasyfikacji wieloklasowej ostatnia warstwa ma $k$ neuronów i softmax, a strata to categorical cross-entropy. Dla binarnej - jeden neuron z sigmoidą i binary cross-entropy.
+
+\subsubsection{Regresja}
+
+Dla regresji używa się MLP z liniowym neuronem wyjściowym albo odpowiednią aktywacją zgodną z zakresem wartości. Strata: MSE, MAE, Huber. Jeśli predykcja ma być nieujemna, można użyć softplus albo modelować logarytm zmiennej.
+
+\subsubsection{Obrazy}
+
+Dla obrazów naturalnym wyborem są sieci konwolucyjne, bo wykorzystują lokalność i współdzielenie wag. Warstwy konwolucyjne wykrywają lokalne wzorce, głębsze warstwy budują cechy złożone. Dla segmentacji stosuje się architektury encoder-decoder, np. U-Net. Dla klasyfikacji można użyć transfer learningu z modelu wstępnie trenowanego.
+
+\subsubsection{Sekwencje i szeregi czasowe}
+
+Możliwości:
+\begin{itemize}
+  \item RNN, LSTM, GRU - klasyczne modele rekurencyjne,
+  \item 1D CNN - lokalne wzorce w czasie,
+  \item Transformery - długie zależności i równoległe przetwarzanie,
+  \item modele temporal convolutional networks,
+  \item architektury hybrydowe.
+\end{itemize}
+
+Dla predykcji szeregów czasowych ważne są okna czasowe, cechy kalendarzowe, unikanie przecieku przyszłości i walidacja krocząca.
+
+\subsubsection{Tekst}
+
+Współcześnie standardem są transformery i embeddingi. Dla prostych zadań można użyć bag-of-words z modelem liniowym albo małego MLP. Dla zadań semantycznych używa się modeli językowych, fine-tuningu albo klasyfikacji na embeddingach.
+
+\subsubsection{Uczenie nienadzorowane i kompresja}
+
+Dla kompresji i reprezentacji stosuje się autoenkodery. Bottleneck wymusza kod niskowymiarowy. Dla wizualizacji klasyczne są SOM, PCA, t-SNE, UMAP. Dla danych obrazowych autoenkoder konwolucyjny zachowuje strukturę przestrzenną.
+
+\subsubsection{Pamięć skojarzeniowa i odtwarzanie wzorców}
+
+Dla zadania "po zaszumionym wzorcu odtwórz najbliższy zapamiętany wzorzec" naturalna jest sieć Hopfielda. Dla dużych i złożonych wzorców klasyczny Hopfield ma ograniczoną pojemność, więc stosuje się modyfikacje reguł uczenia albo nowocześniejsze pamięci asocjacyjne.
+
+\subsubsection{Kryteria doboru rozmiaru}
+
+Za mała sieć ma duży bias i underfitting. Za duża może mieć overfitting, choć przy dużych danych i regularyzacji duże sieci mogą generalizować dobrze. Dobór obejmuje:
+\begin{itemize}
+  \item liczbę warstw,
+  \item liczbę neuronów/kanałów,
+  \item funkcje aktywacji,
+  \item normalizację,
+  \item dropout,
+  \item regularyzację wag,
+  \item learning rate i optimizer,
+  \item batch size,
+  \item early stopping.
+\end{itemize}
+
+\subsubsection{Walidacja architektury}
+
+Architekturę dobiera się eksperymentalnie na zbiorze walidacyjnym. Należy porównywać z baseline'ami, analizować krzywe uczenia, sprawdzać overfitting i wykonywać ablation study. Dla małych danych często lepszy jest transfer learning albo prostszy model.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Architekturę dobiera się do struktury danych i zadania: MLP dla danych wektorowych, CNN dla obrazów, RNN/LSTM/Transformer dla sekwencji, autoenkoder dla kompresji, SOM dla mapowania nienadzorowanego, Hopfield dla pamięci skojarzeniowej. Dobór rozmiaru i regularyzacji trzeba potwierdzić walidacją.
+
+\subsection{Idea i własności pamięci skojarzeniowych Hopfielda}
+
+Pamięć skojarzeniowa Hopfielda adresuje zawartością, nie adresem. Oznacza to, że po podaniu niepełnego albo zaszumionego wzorca sieć powinna odtworzyć najbliższy zapamiętany wzorzec.
+
+\subsubsection{Architektura}
+
+Klasyczna dyskretna sieć Hopfielda:
+\begin{itemize}
+  \item ma $N$ neuronów,
+  \item każdy neuron jest połączony z każdym innym,
+  \item wagi są symetryczne: $w_{ij}=w_{ji}$,
+  \item brak połączeń własnych: $w_{ii}=0$,
+  \item stan neuronu jest bipolarny $v_i\in\{-1,1\}$.
+\end{itemize}
+
+Wejście neuronu:
+\[
+u_i=\sum_{j=1}^{N}w_{ij}v_j-\theta_i,
+\]
+a aktualizacja:
+\[
+v_i\leftarrow \operatorname{sgn}(u_i).
+\]
+
+\subsubsection{Uczenie Hebbowskie}
+
+Dla $M$ wzorców bipolarnych $x^1,\dots,x^M$, $x^s\in\{-1,1\}^N$, klasyczna reguła Hebba:
+\[
+w_{ij}=
+\begin{cases}
+0, & i=j,\\
+\frac{1}{N}\sum_{s=1}^{M}x_i^s x_j^s, & i\ne j.
+\end{cases}
+\]
+Macierzowo:
+\[
+W=\frac{1}{N}(XX^T-MI)
+\]
+przy odpowiedniej konwencji zapisu wzorców.
+
+Reguła wzmacnia połączenia neuronów aktywnych razem i osłabia połączenia aktywnych przeciwnie.
+
+\subsubsection{Faza rozpoznawania}
+
+Podajemy wektor startowy $z$, np. zaszumiony wzorzec. Sieć iteracyjnie aktualizuje neurony. Możliwe wyniki:
+\begin{itemize}
+  \item zbieżność do zapamiętanego wzorca,
+  \item zbieżność do wzorca fałszywego,
+  \item w trybie synchronicznym cykl długości 2,
+  \item błędne odtworzenie przy zbyt dużym szumie albo przeciążeniu pamięci.
+\end{itemize}
+
+\subsubsection{Funkcja energii}
+
+Dla symetrycznych wag i braku wag własnych definiuje się energię:
+\[
+E(v)=-\frac{1}{2}\sum_{i\ne j}w_{ij}v_iv_j+\sum_i\theta_i v_i.
+\]
+Przy aktualizacji asynchronicznej energia nie rośnie. Ponieważ liczba stanów jest skończona, sieć zbiega do punktu stałego. To podstawowa własność stabilizująca model.
+
+\subsubsection{Atraktory i baseny przyciągania}
+
+Zapamiętane wzorce powinny być minimami lokalnymi energii. Basen przyciągania wzorca to zbiór stanów startowych, z których dynamika zbiega do tego wzorca. Im większy basen, tym większa odporność na szum. Wzorce zbyt podobne do siebie albo zbyt liczne zmniejszają baseny i zwiększają liczbę atraktorów fałszywych.
+
+\subsubsection{Pojemność}
+
+Dla losowych niezależnych wzorców bipolarnych klasyczna praktyczna estymacja pojemności reguły Hebba wynosi około:
+\[
+M\approx 0.15N.
+\]
+Asymptotyczne wyniki często podają skalowanie rzędu:
+\[
+M\sim \frac{N}{4\ln N}
+\]
+dla określonych warunków bezbłędnego odtwarzania. Pojemność zależy od definicji dopuszczalnego błędu, korelacji wzorców i reguły uczenia.
+
+\subsubsection{Modyfikacje}
+
+Wady Hebba: ograniczona pojemność, wzorce fałszywe, problemy dla wzorców skorelowanych i rzadkich. Modyfikacje:
+\begin{itemize}
+  \item reguła pseudoodwrotna/projection rule,
+  \item iteracyjne uczenie macierzy wag,
+  \item dobór progów indywidualnych,
+  \item preprocessing wzorców,
+  \item uogólnione sieci Hopfielda.
+\end{itemize}
+Zwykle poprawa pojemności kosztuje utratę lokalności albo prostoty biologicznej interpretacji.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Sieć Hopfielda jest rekurencyjną pamięcią skojarzeniową. Wzorce są zapisywane w wagach, często regułą Hebba, i odpowiadają atraktorom funkcji energii. Po podaniu zaszumionego wzorca sieć przez iteracyjne aktualizacje zbiega do lokalnego minimum energii. W trybie asynchronicznym przy wagach symetrycznych i zerowej przekątnej energia nie rośnie, więc sieć zbiega. Ograniczenia to pojemność, atraktory fałszywe i wrażliwość na korelacje wzorców.
+
+\subsection{Algorytm propagacji wstecznej błędu, własności i podstawowe modyfikacje}
+
+Backpropagation jest podstawowym algorytmem obliczania gradientów w wielowarstwowych sieciach neuronowych. Łączy przejście w przód, obliczenie straty i propagację gradientu od wyjścia do wejścia za pomocą reguły łańcuchowej.
+
+\subsubsection{Przejście w przód}
+
+Dla warstwy $l$:
+\[
+z^{[l]}=W^{[l]}a^{[l-1]}+b^{[l]},
+\]
+\[
+a^{[l]}=g^{[l]}(z^{[l]}).
+\]
+Na końcu otrzymujemy predykcję $\hat y=a^{[L]}$ i stratę $L(\hat y,y)$.
+
+\subsubsection{Przejście wstecz}
+
+Backpropagation oblicza pochodne straty względem parametrów. Dla warstwy wyjściowej wyznacza się błąd $\delta^{[L]}$, a następnie dla warstw wcześniejszych:
+\[
+\delta^{[l]}=\left((W^{[l+1]})^T\delta^{[l+1]}\right)\odot g'^{[l]}(z^{[l]}).
+\]
+Gradienty:
+\[
+\frac{\partial L}{\partial W^{[l]}}=\delta^{[l]}(a^{[l-1]})^T,\qquad
+\frac{\partial L}{\partial b^{[l]}}=\delta^{[l]}.
+\]
+Wagi aktualizuje się np. gradient descent:
+\[
+W\leftarrow W-\eta\nabla_W L.
+\]
+
+\subsubsection{Tryby uczenia}
+
+\begin{description}
+  \item[Online/stochastic] aktualizacja po pojedynczym przykładzie.
+  \item[Mini-batch] aktualizacja po małej paczce przykładów; standard praktyczny.
+  \item[Batch] aktualizacja po całym zbiorze treningowym.
+\end{description}
+
+Epoka oznacza jedno przejście przez cały zbiór treningowy. Iteracja to pojedyncza aktualizacja parametrów.
+
+\subsubsection{Warunki stopu}
+
+\begin{itemize}
+  \item maksymalna liczba epok,
+  \item strata poniżej progu,
+  \item norma aktualizacji poniżej progu,
+  \item brak poprawy na walidacji,
+  \item early stopping.
+\end{itemize}
+
+\subsubsection{Zalety backpropagation}
+
+\begin{itemize}
+  \item uniwersalność dla różniczkowalnych architektur,
+  \item efektywne obliczanie gradientów przez reuse wyników pośrednich,
+  \item możliwość trenowania MLP i głębokich sieci,
+  \item zgodność z wieloma funkcjami strat,
+  \item łatwe połączenie z optymalizatorami.
+\end{itemize}
+
+\subsubsection{Problemy}
+
+Z wykładów istotne problemy:
+\begin{itemize}
+  \item minima lokalne i punkty siodłowe,
+  \item wolna zbieżność w płaskich obszarach funkcji błędu,
+  \item oscylacje przy zbyt dużym kroku,
+  \item koszt obliczeniowy,
+  \item zanikające i eksplodujące gradienty,
+  \item catastrophic interference/forgetting,
+  \item dobór architektury.
+\end{itemize}
+
+\subsubsection{Momentum}
+
+Momentum dodaje bezwładność:
+\[
+\Delta w(t)=-\eta\nabla E(w(t))+\alpha\Delta w(t-1).
+\]
+Pomaga ograniczać oscylacje i przyspieszać ruch w długich płaskich dolinach funkcji błędu. Zbyt duże momentum może powodować niestabilność.
+
+\subsubsection{Adaptacyjny learning rate}
+
+Jeśli znak pochodnej cząstkowej dla danej wagi pozostaje taki sam, można zwiększać krok; jeśli znak się zmienia, prawdopodobnie przeskoczyliśmy minimum i krok trzeba zmniejszyć. To idea metod takich jak Silva-Almeida, Delta-bar-delta i Rprop.
+
+Rprop używa głównie znaku gradientu, a nie jego wartości:
+\[
+\Delta w_i=-\eta_i \operatorname{sgn}\left(\frac{\partial E}{\partial w_i}\right),
+\]
+przy adaptacji $\eta_i$ zależnej od zmian znaku gradientu. Jest metodą batchową i dobrze radzi sobie z płaskimi regionami.
+
+\subsubsection{QuickProp i metody drugiego rzędu}
+
+Metody drugiego rzędu wykorzystują krzywiznę funkcji błędu. Newton:
+\[
+w_{k+1}=w_k-\left(\nabla^2E(w_k)\right)^{-1}\nabla E(w_k).
+\]
+Jest szybki lokalnie, ale Hessian i jego odwrotność są kosztowne. QuickProp aproksymuje informację drugiego rzędu dla pojedynczych wag i może przyspieszać uczenie, ale wymaga ostrożności.
+
+\subsubsection{Regularyzacja i stabilizacja}
+
+Podstawowe modyfikacje współczesne:
+\begin{itemize}
+  \item weight decay,
+  \item dropout,
+  \item batch normalization/layer normalization,
+  \item data augmentation,
+  \item early stopping,
+  \item gradient clipping,
+  \item lepsze inicjalizacje, np. Xavier/He,
+  \item ReLU i jej warianty zamiast sigmoid w głębokich sieciach,
+  \item Adam/AdamW.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Backpropagation oblicza gradient funkcji straty względem wag przez przejście w przód i propagację błędu wstecz regułą łańcuchową. Wagi aktualizuje się gradientowo. Zalety to efektywność i uniwersalność; problemy to minima lokalne, wolna zbieżność, oscylacje, zanik gradientu i katastroficzne zapominanie. Modyfikacje obejmują momentum, adaptacyjne kroki, Rprop, QuickProp, regularyzację, dropout i early stopping.
+
+\subsection{Problem katastroficznego zapominania: na czym polega i jak przeciwdziałać}
+
+Katastroficzne zapominanie, nazywane też catastrophic interference, polega na tym, że sieć uczona sekwencyjnie nowych zadań albo klas traci wcześniej nabytą wiedzę. Nowe aktualizacje wag nadpisują reprezentacje potrzebne dla starych zadań.
+
+\subsubsection{Dlaczego występuje}
+
+W klasycznym uczeniu backpropagation wszystkie zadania współdzielą te same parametry. Jeśli uczymy najpierw zadania A, a potem tylko zadania B, gradient z B zmienia wagi bez informacji o tym, że część wag była istotna dla A. W efekcie spada jakość na A.
+
+Problem jest szczególnie silny, gdy:
+\begin{itemize}
+  \item dane przychodzą sekwencyjnie,
+  \item nie można przechowywać starych danych,
+  \item zadania korzystają z tych samych parametrów,
+  \item rozkłady danych zmieniają się,
+  \item model ma ograniczoną pojemność albo zbyt agresywne uczenie.
+\end{itemize}
+
+\subsubsection{Stability-plasticity dilemma}
+
+Model powinien być plastyczny, aby uczyć się nowych informacji, ale stabilny, aby nie tracić starych. Zbyt duża plastyczność powoduje zapominanie. Zbyt duża stabilność blokuje uczenie nowych zadań.
+
+\subsubsection{Interleaved learning i rehearsal}
+
+Najprostsza metoda to mieszać stare i nowe przykłady. Rehearsal przechowuje bufor reprezentatywnych starych danych i podczas uczenia nowych zadań powtarza stare. Warianty:
+\begin{itemize}
+  \item experience replay,
+  \item exemplar memory,
+  \item generative replay - starych danych dostarcza model generatywny,
+  \item pseudo-rehearsal - generowanie syntetycznych przykładów.
+\end{itemize}
+
+Wada: potrzeba przechowywania danych albo generatora, koszt i kwestie prywatności.
+
+\subsubsection{Regularyzacja ważnych wag}
+
+Metody takie jak Elastic Weight Consolidation ograniczają zmianę wag ważnych dla poprzednich zadań:
+\[
+L(\theta)=L_{new}(\theta)+\lambda\sum_i F_i(\theta_i-\theta_i^*)^2,
+\]
+gdzie $F_i$ mierzy ważność parametru, np. przez informację Fishera. Podobną ideę mają Synaptic Intelligence i Memory Aware Synapses.
+
+\subsubsection{Metody modularne}
+
+Można przydzielać różne moduły albo części sieci do różnych zadań:
+\begin{itemize}
+  \item osobne głowy wyjściowe,
+  \item progressive networks,
+  \item adaptery,
+  \item maski parametrów,
+  \item dynamiczne rozszerzanie architektury.
+\end{itemize}
+
+Zaletą jest ochrona starej wiedzy. Wadą jest rosnący model i problem łączenia wyników modułów.
+
+\subsubsection{Zamrażanie i współdzielenie cech}
+
+W wykładach pojawia się idea incremental class learning: uczyć klasy kolejno, wyznaczać neurony reprezentujące istotne cechy klasy, zamrażać ich wagi i wykorzystywać je przy kolejnych klasach. Jeśli nowa klasa może użyć już zamrożonych cech, uczenie jest szybsze i mniej niszczy starą wiedzę. To podejście łączy stabilność zamrożonych reprezentacji z plastycznością niezamrożonych części sieci.
+
+\subsubsection{Knowledge distillation}
+
+Przy uczeniu nowego zadania można karać odchylenie odpowiedzi nowego modelu od odpowiedzi starego modelu na starych albo reprezentatywnych danych. Dzięki temu model zachowuje funkcję wejście-wyjście poprzedniej wersji.
+
+\subsubsection{Architektury i reprezentacje}
+
+Zapominanie można ograniczać przez:
+\begin{itemize}
+  \item większą pojemność modelu,
+  \item reprezentacje disentangled,
+  \item sparse activations,
+  \item normalizację i małe kroki uczenia,
+  \item task-specific adapters,
+  \item metauczenie strategii ciągłego uczenia.
+\end{itemize}
+
+\subsubsection{Ocena ciągłego uczenia}
+
+Trzeba mierzyć nie tylko wynik na ostatnim zadaniu, ale też:
+\begin{itemize}
+  \item średnią jakość na wszystkich zadaniach,
+  \item forgetting measure,
+  \item forward transfer - czy stare uczenie pomaga nowemu,
+  \item backward transfer - czy nowe uczenie poprawia albo pogarsza stare,
+  \item pamięć i koszt obliczeniowy.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Katastroficzne zapominanie polega na utracie wcześniej nauczonej wiedzy podczas sekwencyjnego uczenia nowych zadań, bo te same wagi są modyfikowane przez nowe gradienty. Przeciwdziała się przez rehearsal, generative replay, regularyzację ważnych wag, modularność, zamrażanie i współdzielenie cech, dynamiczne rozszerzanie architektury oraz distillation. Sednem jest kompromis między stabilnością starej wiedzy i plastycznością potrzebną do uczenia nowej.

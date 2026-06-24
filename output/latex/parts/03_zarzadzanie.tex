@@ -1,0 +1,296 @@
+\section{Zarządzanie przedsięwzięciami informatycznymi}
+
+\subsection{Czym charakteryzuje się projekt informatyczny?}
+
+Projekt informatyczny jest tymczasowym przedsięwzięciem prowadzącym do wytworzenia unikalnego produktu, usługi albo rezultatu związanego z systemem informatycznym. Może to być stworzenie aplikacji, wdrożenie systemu ERP, migracja danych, integracja usług, modernizacja infrastruktury, budowa hurtowni danych albo wdrożenie modelu uczenia maszynowego.
+
+\subsubsection{Cechy projektu}
+
+Projekt ma:
+\begin{itemize}
+  \item jasno określony cel biznesowy albo techniczny,
+  \item początek i koniec,
+  \item ograniczony budżet, czas i zakres,
+  \item interesariuszy,
+  \item zespół projektowy,
+  \item ryzyka i niepewność,
+  \item plan realizacji,
+  \item kryteria akceptacji.
+\end{itemize}
+
+W IT szczególnie istotne są niepewność wymagań, zmienność technologii, integracje z istniejącymi systemami, zależność od kompetencji ludzi oraz trudność szacowania prac twórczych.
+
+\subsubsection{Potrójne ograniczenie i jego rozszerzenia}
+
+Klasycznie projekt opisuje się przez trójkąt:
+\[
+\text{zakres} \quad-\quad \text{czas} \quad-\quad \text{koszt}.
+\]
+Zmiana jednego elementu wpływa na pozostałe. Jeśli zakres rośnie przy stałym terminie, trzeba zwiększyć zasoby, obniżyć jakość albo zaakceptować ryzyko opóźnienia.
+
+W praktyce dodaje się jakość, ryzyko, satysfakcję klienta, wartość biznesową i ograniczenia organizacyjne. Projekt IT nie jest sukcesem tylko dlatego, że kod działa. Sukces oznacza dostarczenie wartości w akceptowalnym koszcie, czasie i jakości.
+
+\subsubsection{Specyfika projektów informatycznych}
+
+Projekty informatyczne mają kilka cech odróżniających je od wielu projektów inżynierii materialnej:
+\begin{description}
+  \item[Niematerialny produkt] Oprogramowania nie widać bezpośrednio, dlatego postęp bywa trudny do oceny, jeśli nie ma działających przyrostów.
+  \item[Zmienność wymagań] Użytkownicy często doprecyzowują potrzeby dopiero po zobaczeniu prototypu.
+  \item[Wysoka złożoność zależności] Integracje, dane, infrastruktura, bezpieczeństwo i wydajność tworzą zależności ukryte.
+  \item[Niski koszt kopiowania, wysoki koszt wytworzenia] Samo powielenie programu jest tanie, ale jego zaprojektowanie, testowanie i utrzymanie jest kosztowne.
+  \item[Dług techniczny] Decyzje przyspieszające krótkoterminowo mogą zwiększać koszt dalszego rozwoju.
+  \item[Trudność szacowania] Zadania programistyczne są często poznawczo nowe, więc estymacje mają dużą niepewność.
+\end{description}
+
+\subsubsection{Interesariusze}
+
+Interesariusz to osoba albo organizacja wpływająca na projekt albo dotknięta jego wynikiem. W projekcie IT są to zwykle:
+\begin{itemize}
+  \item sponsor biznesowy,
+  \item product owner albo właściciel produktu,
+  \item użytkownicy końcowi,
+  \item zespół projektowy,
+  \item administratorzy i zespoły utrzymaniowe,
+  \item dział bezpieczeństwa,
+  \item compliance i prawnicy,
+  \item dostawcy zewnętrzni,
+  \item klienci.
+\end{itemize}
+
+Dobre zarządzanie projektem wymaga rozumienia, kto podejmuje decyzje, kto akceptuje rezultat, kto dostarcza wymagania i kto ponosi skutki wdrożenia.
+
+\subsubsection{Zakres, wymagania i akceptacja}
+
+Zakres określa, co projekt ma dostarczyć. Wymagania mogą być:
+\begin{itemize}
+  \item funkcjonalne - co system ma robić,
+  \item niefunkcjonalne - wydajność, bezpieczeństwo, dostępność, użyteczność,
+  \item biznesowe - jaki problem organizacji ma zostać rozwiązany,
+  \item techniczne - standardy, technologie, integracje,
+  \item regulacyjne - zgodność z prawem i politykami.
+\end{itemize}
+
+Kryteria akceptacji muszą być weryfikowalne. Zamiast "system ma być szybki" lepiej zapisać "95 percent odpowiedzi API dla operacji X ma czas poniżej 300 ms przy obciążeniu Y".
+
+\subsubsection{Ryzyka typowe dla projektów IT}
+
+\begin{itemize}
+  \item niedoszacowanie złożoności,
+  \item niestabilne wymagania,
+  \item brak dostępności kluczowych osób,
+  \item opóźnienia integracji,
+  \item niska jakość danych,
+  \item problemy z bezpieczeństwem,
+  \item vendor lock-in,
+  \item brak środowisk testowych,
+  \item niedostateczne testy,
+  \item brak planu migracji i rollbacku,
+  \item konflikt między terminem a jakością.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Projekt informatyczny to tymczasowe przedsięwzięcie tworzące unikalny rezultat IT. Charakteryzuje się określonym celem, zakresem, terminem, budżetem, interesariuszami i ryzykiem. Szczególne dla IT są zmienne wymagania, niematerialność produktu, trudność szacowania, złożoność integracji i dług techniczny.
+
+\subsection{Główne różnice między projektem a pracą operacyjną}
+
+Projekt i praca operacyjna są potrzebne organizacji, ale mają różny charakter. Projekt wprowadza zmianę; operacje utrzymują ciągłe działanie.
+
+\subsubsection{Porównanie}
+
+\begin{longtable}{p{0.25\textwidth}p{0.33\textwidth}p{0.33\textwidth}}
+\toprule
+Kryterium & Projekt & Praca operacyjna \\
+\midrule
+Czas trwania & tymczasowy, ma początek i koniec & ciągła, powtarzalna \\
+Cel & wytworzenie unikalnego rezultatu albo zmiany & utrzymanie działania i świadczenie usług \\
+Zakres & zdefiniowany dla konkretnego przedsięwzięcia & stabilny, procesowy \\
+Niepewność & zwykle wysoka & zwykle niższa, procedury są znane \\
+Sukces & dostarczenie wartości w czasie, budżecie i jakości & stabilność, efektywność, SLA, jakość obsługi \\
+Zespół & często czasowy i interdyscyplinarny & stały albo rotacyjny \\
+Przykład IT & budowa nowej aplikacji & utrzymanie aplikacji produkcyjnej \\
+\bottomrule
+\end{longtable}
+
+\subsubsection{Relacja między projektem i operacjami}
+
+Projekt często przekazuje wynik do operacji. Przykład: zespół projektowy wdraża system, a potem zespół utrzymaniowy monitoruje go, obsługuje incydenty, wykonuje aktualizacje i wspiera użytkowników.
+
+Granica nie zawsze jest ostra. Rozwój produktu cyfrowego może być ciągłym strumieniem zmian, ale poszczególne większe inicjatywy nadal mają charakter projektowy. W podejściu produktowym mówi się częściej o ciągłym rozwoju produktu niż o jednorazowych projektach, jednak nadal występują ograniczone inicjatywy, budżety i cele.
+
+\subsubsection{Przykład}
+
+Wdrożenie modułu płatności online jest projektem: ma zakres, termin, integracje, testy bezpieczeństwa i odbiór. Codzienne monitorowanie transakcji, reagowanie na błędy płatności i aktualizacja certyfikatów to operacje.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Projekt jest tymczasowy i tworzy unikalną zmianę, a praca operacyjna jest ciągła i powtarzalna. Projekt kończy się przekazaniem rezultatu, natomiast operacje utrzymują usługę, proces albo system. W IT projekty często budują lub zmieniają systemy, a operacje zapewniają ich stabilne działanie.
+
+\subsection{Metodyki zarządzania projektami: charakterystyka, różnice i cechy wspólne}
+
+Metodyka zarządzania projektem określa sposób planowania, organizacji, realizacji, kontroli i zamykania prac. W IT najczęściej porównuje się podejścia predykcyjne, zwinne i hybrydowe.
+
+\subsubsection{Waterfall}
+
+Waterfall, czyli model kaskadowy, zakłada sekwencyjne fazy:
+\begin{enumerate}
+  \item analiza wymagań,
+  \item projekt,
+  \item implementacja,
+  \item testowanie,
+  \item wdrożenie,
+  \item utrzymanie.
+\end{enumerate}
+
+Zalety:
+\begin{itemize}
+  \item jasny plan i dokumentacja,
+  \item dobre dopasowanie do stałych wymagań,
+  \item łatwiejsze kontraktowanie zakresu,
+  \item formalna kontrola zmian.
+\end{itemize}
+
+Wady:
+\begin{itemize}
+  \item późna informacja zwrotna od użytkownika,
+  \item kosztowne zmiany wymagań,
+  \item ryzyko odkrycia problemów dopiero pod koniec,
+  \item słabe dopasowanie do niepewnych produktów cyfrowych.
+\end{itemize}
+
+Waterfall jest sensowny, gdy wymagania są stabilne, środowisko regulowane, a koszt zmian wysoki, np. wybrane systemy krytyczne albo kontrakty publiczne.
+
+\subsubsection{PMBOK i podejście procesowe}
+
+PMBOK nie jest jedną sekwencją prac, lecz zbiorem dobrych praktyk zarządzania projektami. Obejmuje obszary takie jak zakres, harmonogram, koszt, jakość, zasoby, komunikacja, ryzyko, zamówienia i interesariusze. Jest metodycznie neutralny: można go stosować w projektach kaskadowych, zwinnych i hybrydowych.
+
+Mocną stroną PMBOK jest kompletność zarządcza. Słabością w małych zespołach może być nadmiar formalizacji, jeśli stosuje się go bez dostosowania.
+
+\subsubsection{PRINCE2}
+
+PRINCE2 jest metodyką silnie nastawioną na uzasadnienie biznesowe, role, produkty zarządcze i kontrolę etapową. Kluczowe elementy:
+\begin{itemize}
+  \item ciągła zasadność biznesowa,
+  \item uczenie się z doświadczeń,
+  \item zdefiniowane role i odpowiedzialności,
+  \item zarządzanie etapami,
+  \item zarządzanie przez wyjątki,
+  \item koncentracja na produktach,
+  \item dostosowanie do środowiska projektu.
+\end{itemize}
+
+PRINCE2 dobrze pasuje do organizacji wymagających kontroli i raportowania, ale może być zbyt formalny dla małych, szybko zmieniających się produktów.
+
+\subsubsection{Agile}
+
+Agile to rodzina podejść opartych na iteracyjności, przyrostowym dostarczaniu wartości, współpracy z klientem i reagowaniu na zmianę. Nie oznacza braku planu. Oznacza planowanie adaptacyjne i częstą weryfikację założeń.
+
+Wspólne idee:
+\begin{itemize}
+  \item krótkie iteracje,
+  \item częste dostarczanie działającego przyrostu,
+  \item bliska współpraca z użytkownikiem lub właścicielem produktu,
+  \item priorytetyzowany backlog,
+  \item retrospekcje i ciągłe usprawnianie,
+  \item akceptacja zmienności wymagań.
+\end{itemize}
+
+\subsubsection{Scrum}
+
+Scrum jest ramą pracy zwinnej. Role:
+\begin{description}
+  \item[Product Owner] odpowiada za wartość produktu i backlog.
+  \item[Scrum Master] dba o proces, usuwa przeszkody i wspiera zespół.
+  \item[Developers] wytwarzają przyrost produktu.
+\end{description}
+
+Zdarzenia:
+\begin{itemize}
+  \item Sprint,
+  \item Sprint Planning,
+  \item Daily Scrum,
+  \item Sprint Review,
+  \item Sprint Retrospective.
+\end{itemize}
+
+Artefakty:
+\begin{itemize}
+  \item Product Backlog,
+  \item Sprint Backlog,
+  \item Increment.
+\end{itemize}
+
+Scrum dobrze działa, gdy produkt można rozwijać przyrostowo, a wymagania są zmienne. Nie rozwiązuje sam problemów technicznych: wymaga praktyk inżynierskich, testów, CI/CD i dbania o architekturę.
+
+\subsubsection{Kanban}
+
+Kanban koncentruje się na przepływie pracy. Typowe zasady:
+\begin{itemize}
+  \item wizualizacja pracy na tablicy,
+  \item limity WIP, czyli ograniczenie pracy w toku,
+  \item zarządzanie przepływem,
+  \item jawne polityki procesu,
+  \item ciągłe doskonalenie.
+\end{itemize}
+
+Kanban jest dobry dla utrzymania, zespołów operacyjnych, obsługi zgłoszeń i środowisk, gdzie praca napływa nieregularnie. W przeciwieństwie do Scruma nie wymaga sprintów.
+
+\subsubsection{Extreme Programming}
+
+XP jest metodyką zwinną silnie skupioną na praktykach inżynierskich:
+\begin{itemize}
+  \item pair programming,
+  \item test-driven development,
+  \item continuous integration,
+  \item refaktoryzacja,
+  \item prosta architektura,
+  \item małe wydania,
+  \item wspólna własność kodu.
+\end{itemize}
+
+XP odpowiada na lukę często widoczną w Scrumie: sama organizacja iteracji nie gwarantuje jakości technicznej.
+
+\subsubsection{Lean}
+
+Lean skupia się na maksymalizacji wartości i eliminacji marnotrawstwa. W IT marnotrawstwem może być nadmiar funkcji, oczekiwanie, przełączanie kontekstu, częściowo wykonana praca, defekty, ręczne czynności i nadmierna biurokracja. Lean podkreśla optymalizację całego strumienia wartości, nie tylko lokalną produktywność osób.
+
+\subsubsection{DevOps}
+
+DevOps nie jest klasyczną metodyką projektową, ale zestawem praktyk łączących rozwój, utrzymanie i automatyzację dostarczania. Ważne elementy:
+\begin{itemize}
+  \item CI/CD,
+  \item infrastructure as code,
+  \item monitoring i observability,
+  \item automatyzacja testów,
+  \item szybki rollback,
+  \item współodpowiedzialność za produkcję.
+\end{itemize}
+
+DevOps skraca dystans między projektem i operacjami.
+
+\subsubsection{Podejścia hybrydowe}
+
+W praktyce często łączy się elementy. Przykład: formalne etapy i budżet według PRINCE2, a realizacja zespołu w Scrumie. Albo roadmapa produktu i kwartalne cele, ale codzienny przepływ w Kanbanie. Hybryda jest sensowna, jeśli wynika z potrzeb organizacji, a nie z niekonsekwencji.
+
+\subsubsection{Cechy wspólne metodyk}
+
+Mimo różnic większość metodyk obejmuje:
+\begin{itemize}
+  \item definiowanie celu i zakresu,
+  \item role i odpowiedzialności,
+  \item planowanie pracy,
+  \item monitorowanie postępu,
+  \item zarządzanie ryzykiem,
+  \item komunikację z interesariuszami,
+  \item kontrolę jakości,
+  \item obsługę zmian,
+  \item zamknięcie albo przekazanie rezultatu.
+\end{itemize}
+
+\subsubsection{Najważniejsze różnice}
+
+Waterfall zakłada stabilność wymagań i sekwencyjność. Agile zakłada zmienność i iteracyjne dostarczanie wartości. Scrum daje ramę pracy zespołowej w iteracjach. Kanban optymalizuje przepływ i limity pracy w toku. PRINCE2 i PMBOK są bardziej zarządcze i formalne. XP skupia się na jakości inżynierskiej. DevOps skupia się na automatyzacji dostarczania i odpowiedzialności za działanie systemu.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Metodyki różnią się podejściem do zmiany, planowania i kontroli. Kaskadowe są dobre przy stabilnych wymaganiach, zwinne przy niepewności i potrzebie częstej informacji zwrotnej, Kanban przy ciągłym przepływie zadań, PRINCE2/PMBOK przy formalnym zarządzaniu, XP przy nacisku na praktyki programistyczne. Wspólne są cel, role, planowanie, monitorowanie, ryzyko, jakość i komunikacja.

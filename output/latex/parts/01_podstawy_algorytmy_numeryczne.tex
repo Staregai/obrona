@@ -1,0 +1,748 @@
+\section{Podstawy teoretyczne, algorytmiczne i numeryczne}
+
+\subsection{Hierarchia Chomsky'ego oraz odpowiadające jej gramatyki i automaty}
+
+Hierarchia Chomsky'ego porządkuje klasy języków formalnych według tego, jak skomplikowanych reguł gramatycznych potrzeba do ich opisu oraz jak silny model automatu jest potrzebny do ich rozpoznawania. Im wyższy poziom w hierarchii, tym większa ekspresyjność, ale też trudniejsze własności decyzyjne.
+
+\subsubsection{Podstawowe pojęcia}
+
+Alfabet $\Sigma$ jest skończonym zbiorem symboli. Słowo to skończony ciąg symboli z $\Sigma$, a język to dowolny podzbiór $\Sigma^*$. Gramatyka formalna jest zwykle zapisywana jako
+\[
+G=(N,\Sigma,P,S),
+\]
+gdzie $N$ jest zbiorem symboli nieterminalnych, $\Sigma$ zbiorem terminali, $P$ zbiorem produkcji, a $S\in N$ symbolem startowym. Produkcja mówi, jak wolno zastąpić fragment sentencji innym fragmentem. Język generowany przez gramatykę to zbiór słów terminalnych wyprowadzalnych z $S$.
+
+Automat jest modelem rozpoznawania języka. Dla słowa wejściowego automat odpowiada, czy słowo należy do języka. Różne klasy automatów mają różną pamięć i różne możliwości sterowania obliczeniem.
+
+\subsubsection{Cztery klasy w hierarchii}
+
+\begin{longtable}{p{0.13\textwidth}p{0.23\textwidth}p{0.26\textwidth}p{0.25\textwidth}}
+\toprule
+Typ & Gramatyka & Ograniczenie produkcji & Odpowiadający automat \\
+\midrule
+0 & bez ograniczeń & $\alpha\to\beta$, gdzie $\alpha$ zawiera co najmniej jeden nieterminal & maszyna Turinga \\
+1 & kontekstowa & produkcje niemalejące długości, często $\alpha A\beta\to\alpha\gamma\beta$, $\gamma\ne\epsilon$ & liniowo ograniczona maszyna Turinga \\
+2 & bezkontekstowa & $A\to\gamma$, po lewej dokładnie jeden nieterminal & automat ze stosem \\
+3 & regularna & np. $A\to aB$, $A\to a$, ewentualnie $A\to\epsilon$ w ograniczonej postaci & automat skończony \\
+\bottomrule
+\end{longtable}
+
+Zachodzą ścisłe inkluzje:
+\[
+\mathcal{L}_{3}\subsetneq \mathcal{L}_{2}\subsetneq \mathcal{L}_{1}\subsetneq \mathcal{L}_{0}.
+\]
+Każdy język regularny jest bezkontekstowy, każdy bezkontekstowy jest kontekstowy, a każdy kontekstowy jest rekurencyjnie przeliczalny. Odwrotne zależności nie zachodzą.
+
+\subsubsection{Języki regularne}
+
+Języki regularne opisują najprostsze wzorce, bez pamięci o nieograniczonej strukturze zagnieżdżonej. Są równoważne:
+\begin{itemize}
+  \item gramatykom regularnym,
+  \item wyrażeniom regularnym,
+  \item deterministycznym automatom skończonym,
+  \item niedeterministycznym automatom skończonym.
+\end{itemize}
+
+Automat skończony ma skończoną liczbę stanów i nie ma stosu ani taśmy roboczej. Dlatego potrafi zapamiętać tylko skończoną informację o prefiksie wejścia. Typowy język regularny:
+\[
+L=\{w\in\{0,1\}^*: w\text{ kończy się na }01\}.
+\]
+Typowy język nieregularny:
+\[
+L=\{a^n b^n:n\ge 0\}.
+\]
+Nie jest regularny, bo wymaga porównania dwóch nieograniczonych liczności.
+
+\subsubsection{Języki bezkontekstowe}
+
+Języki bezkontekstowe pozwalają opisywać strukturę rekurencyjną, np. nawiasowanie, drzewa składniowe i większość składni języków programowania. Produkcja ma postać $A\to\gamma$, więc nieterminal może być rozwijany niezależnie od kontekstu.
+
+Automat ze stosem ma dodatkową pamięć LIFO. Dzięki temu rozpoznaje np.
+\[
+\{a^n b^n:n\ge 0\}
+\]
+przez odkładanie symboli dla liter $a$ i zdejmowanie ich przy literach $b$. Nie rozpoznaje jednak w ogólności języków wymagających dwóch niezależnych liczników, np.
+\[
+\{a^n b^n c^n:n\ge 0\}.
+\]
+
+\subsubsection{Języki kontekstowe}
+
+Gramatyki kontekstowe pozwalają na produkcje zależne od otoczenia symbolu. Warunek niemalejącej długości powoduje, że wyprowadzenie nie może dowolnie skracać sentencji. Odpowiada im liniowo ograniczona maszyna Turinga, czyli maszyna Turinga, która może korzystać tylko z pamięci liniowo ograniczonej rozmiarem wejścia. Przykładem języka kontekstowego niebędącego bezkontekstowym jest
+\[
+\{a^n b^n c^n:n\ge 1\}.
+\]
+
+\subsubsection{Języki typu 0}
+
+Gramatyki typu 0 nie mają istotnych ograniczeń na produkcje poza tym, że lewa strona nie może być pusta. Odpowiadają maszynom Turinga i językom rekurencyjnie przeliczalnym: jeśli słowo należy do języka, maszyna kiedyś je zaakceptuje; jeśli nie należy, może odrzucić albo działać w nieskończoność. Ta klasa obejmuje więc problemy częściowo rozstrzygalne, ale niekoniecznie decyzyjne.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Najważniejsza odpowiedź ustna: hierarchia Chomsky'ego klasyfikuje języki według ograniczeń reguł produkcji. Typ 3 to języki regularne i automaty skończone, typ 2 to języki bezkontekstowe i automaty ze stosem, typ 1 to języki kontekstowe i liniowo ograniczone maszyny Turinga, typ 0 to gramatyki bez ograniczeń i maszyny Turinga. Każda kolejna klasa jest ściśle szersza.
+
+\subsection{Złożoność obliczeniowa algorytmu}
+
+Złożoność obliczeniowa opisuje, jak zasoby potrzebne algorytmowi rosną wraz z rozmiarem danych wejściowych. Najczęściej analizuje się czas i pamięć, ale w praktyce mogą liczyć się też liczba zapytań do bazy, komunikacja sieciowa, zużycie energii albo liczba operacji arytmetycznych wysokiej precyzji.
+
+\subsubsection{Rozmiar wejścia i model obliczeń}
+
+Złożoność zawsze definiuje się względem parametru $n$, czyli rozmiaru wejścia. Dla tablicy może to być liczba elementów, dla grafu para $(|V|,|E|)$, dla liczby całkowitej liczba bitów jej zapisu, a nie sama wartość liczby. To rozróżnienie jest ważne: algorytm wielomianowy w wartości liczby może być wykładniczy w długości jej zapisu.
+
+Model obliczeń określa, jakie operacje uznajemy za elementarne. W klasycznej analizie RAM zakłada się, że proste operacje arytmetyczne, porównania i dostęp do pamięci zajmują czas stały. W analizie bitowej koszt operacji zależy od długości operandów.
+
+\subsubsection{Notacja asymptotyczna}
+
+Dla funkcji kosztu $T(n)$ używa się:
+\begin{itemize}
+  \item $T(n)=\BigO(g(n))$ - ograniczenie z góry z dokładnością do stałej,
+  \item $T(n)=\Omega(g(n))$ - ograniczenie z dołu,
+  \item $T(n)=\Theta(g(n))$ - dokładny rząd wzrostu,
+  \item $T(n)=o(g(n))$ - wzrost istotnie wolniejszy,
+  \item $T(n)=\omega(g(n))$ - wzrost istotnie szybszy.
+\end{itemize}
+
+Formalnie $T(n)=\BigO(g(n))$, gdy istnieją stałe $c>0$ i $n_0$, takie że dla każdego $n\ge n_0$ zachodzi $0\le T(n)\le c g(n)$.
+
+\subsubsection{Przypadek pesymistyczny, średni i amortyzowany}
+
+\begin{description}
+  \item[Pesymistyczna złożoność] mierzy najgorszy możliwy koszt dla wejść rozmiaru $n$. Daje gwarancję niezależną od danych.
+  \item[Średnia złożoność] wymaga rozkładu prawdopodobieństwa na wejściach. Jest użyteczna, ale zależy od założeń statystycznych.
+  \item[Złożoność oczekiwana] dotyczy zwykle algorytmów losowych i oczekiwania po losowości algorytmu.
+  \item[Złożoność amortyzowana] rozlicza koszt sekwencji operacji. Pojedyncza operacja może być droga, ale średni koszt w długiej sekwencji jest mały, np. dynamiczna tablica z podwajaniem rozmiaru.
+\end{description}
+
+\subsubsection{Typowe rzędy wzrostu}
+
+Od najlepszych do najgorszych praktycznie:
+\[
+\BigO(1),\quad \BigO(\log n),\quad \BigO(n),\quad \BigO(n\log n),\quad
+\BigO(n^2),\quad \BigO(n^3),\quad \BigO(2^n),\quad \BigO(n!),\quad \BigO(n^n).
+\]
+Różnice asymptotyczne szybko dominują nad stałymi. Algorytm $\BigO(n\log n)$ dla dużych danych będzie zwykle jakościowo lepszy od $\BigO(n^2)$, nawet jeśli ma większą stałą.
+
+\subsubsection{Złożoność pamięciowa}
+
+Złożoność pamięciowa $S(n)$ mierzy dodatkową pamięć potrzebną algorytmowi. Często odróżnia się pamięć wejścia od pamięci roboczej. Algorytm sortowania przez scalanie ma czas $\Theta(n\log n)$ i typowo pamięć $\Theta(n)$, a heapsort czas $\Theta(n\log n)$ i pamięć dodatkową $\Theta(1)$.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Złożoność algorytmu to funkcja opisująca zużycie zasobów w zależności od rozmiaru wejścia. Podajemy ją asymptotycznie, najczęściej w notacji $\BigO$, bo interesuje nas tempo wzrostu dla dużych danych. Trzeba wskazać model obliczeń, rozmiar wejścia i to, czy mówimy o czasie, pamięci, przypadku pesymistycznym, średnim czy amortyzowanym.
+
+\subsection{Klasy problemów według złożoności. Problem P--NP}
+
+Klasy złożoności grupują problemy decyzyjne według zasobów potrzebnych do ich rozwiązania. Problem decyzyjny ma odpowiedź TAK albo NIE. Wiele problemów optymalizacyjnych można badać przez wersje decyzyjne, np. zamiast "znajdź najkrótszą trasę TSP" pytamy "czy istnieje trasa o długości co najwyżej $B$?".
+
+\subsubsection{Klasa P}
+
+Klasa $\mathrm{P}$ zawiera problemy decyzyjne rozwiązywalne deterministycznie w czasie wielomianowym względem długości wejścia:
+\[
+\mathrm{P}=\bigcup_{k\ge 1}\mathrm{DTIME}(n^k).
+\]
+Przykłady: osiągalność w grafie, najkrótsze ścieżki z nieujemnymi wagami w wersji decyzyjnej, sortowanie jako problem funkcyjny, sprawdzanie spójności grafu, maksymalny przepływ w wersji decyzyjnej.
+
+Wielomianowość traktuje się jako formalny odpowiednik obliczalności efektywnej, choć praktycznie algorytm $\BigO(n^{100})$ nie jest użyteczny, a algorytm wykładniczy może działać dla małych $n$.
+
+\subsubsection{Klasa NP}
+
+Klasa $\NP$ zawiera problemy decyzyjne, dla których odpowiedź TAK ma certyfikat weryfikowalny deterministycznie w czasie wielomianowym. Równoważnie są to problemy rozwiązywalne przez niedeterministyczną maszynę Turinga w czasie wielomianowym.
+
+Przykład: dla problemu Hamiltona certyfikatem jest kolejność wierzchołków. Weryfikacja, czy jest to cykl Hamiltona, jest wielomianowa. Dla TSP decyzyjnego certyfikatem jest permutacja miast; weryfikujemy, czy tworzy cykl i czy suma wag jest $\le B$.
+
+Zawsze $\mathrm{P}\subseteq\NP$, bo jeśli umiemy problem szybko rozwiązać, to umiemy też szybko zweryfikować certyfikat albo go zignorować.
+
+\subsubsection{Redukcje wielomianowe}
+
+Problem $A$ redukuje się wielomianowo do problemu $B$, co zapisujemy $A\le_p B$, jeśli istnieje funkcja obliczalna w czasie wielomianowym taka, że instancja $x$ problemu $A$ ma odpowiedź TAK wtedy i tylko wtedy, gdy $f(x)$ ma odpowiedź TAK w problemie $B$.
+
+Redukcja oznacza: gdybyśmy umieli szybko rozwiązywać $B$, umielibyśmy szybko rozwiązywać $A$. Dlatego trudność przenosi się z $A$ na $B$.
+
+\subsubsection{Problemy NP-trudne i NP-zupełne}
+
+Problem jest NP-trudny, jeśli każdy problem z $\NP$ redukuje się do niego w czasie wielomianowym. Problem jest NP-zupełny, jeśli jest NP-trudny i jednocześnie należy do $\NP$.
+
+Klasyczne problemy NP-zupełne:
+\begin{itemize}
+  \item $\SAT$ i 3-SAT,
+  \item CLIQUE w wersji decyzyjnej,
+  \item VERTEX COVER,
+  \item HAMILTONIAN CYCLE,
+  \item TSP decyzyjny,
+  \item SUBSET SUM.
+\end{itemize}
+
+Twierdzenie Cooka-Levina mówi, że $\SAT$ jest NP-zupełny. W praktyce wiele dowodów NP-zupełności polega na redukcji z problemu już znanego jako NP-zupełny.
+
+\subsubsection{Problem P--NP}
+
+Pytanie $\mathrm{P}=\NP?$ brzmi: czy każdy problem, którego rozwiązanie można szybko zweryfikować, można też szybko rozwiązać? Wiadomo, że $\mathrm{P}\subseteq\NP$, ale nie wiadomo, czy inkluzja jest ścisła. Powszechne przekonanie brzmi $\mathrm{P}\ne\NP$, ponieważ przez dekady nie znaleziono algorytmów wielomianowych dla problemów NP-zupełnych mimo ogromnego wysiłku.
+
+Jeżeli $\mathrm{P}=\NP$, wszystkie problemy NP-zupełne miałyby algorytmy wielomianowe. Miałoby to konsekwencje dla optymalizacji, automatycznego dowodzenia, kryptografii i wielu problemów planowania. Jeżeli $\mathrm{P}\ne\NP$, istnieją problemy łatwo weryfikowalne, ale niemożliwe do rozwiązania w czasie wielomianowym przez algorytm deterministyczny.
+
+\subsubsection{Inne klasy warte wspomnienia}
+
+\begin{description}
+  \item[co-NP] problemy, których odpowiedzi NIE mają krótkie certyfikaty. Nie wiadomo, czy $\NP=\coNP$.
+  \item[PSPACE] problemy rozwiązywalne w pamięci wielomianowej. Obejmuje $\NP$.
+  \item[EXPTIME] problemy rozwiązywalne w czasie wykładniczym.
+  \item[BPP] problemy rozwiązywalne przez algorytmy losowe w czasie wielomianowym z ograniczonym prawdopodobieństwem błędu.
+  \item[RP, co-RP, ZPP] klasy losowe z jednostronnym błędem albo zerowym błędem oczekiwanym.
+\end{description}
+
+\subsubsection{Co powiedzieć na obronie}
+
+P to problemy decyzyjne rozwiązywalne w czasie wielomianowym. NP to problemy, dla których rozwiązanie można zweryfikować w czasie wielomianowym. Problem P--NP pyta, czy szybka weryfikacja oznacza szybkie rozwiązywanie. Problemy NP-zupełne są najtrudniejsze w NP: jeśli jeden z nich ma algorytm wielomianowy, to $\mathrm{P}=\NP$.
+
+\subsection{Testowanie i poszukiwanie błędów w implementacji metod inteligencji obliczeniowej wykorzystujących losowość}
+
+Metody inteligencji obliczeniowej często są niedeterministyczne: algorytmy ewolucyjne, symulowane wyżarzanie, Monte Carlo Tree Search, losowe inicjalizacje sieci neuronowych, dropout, losowe mini-batche, bagging albo metody próbkowania. Testowanie takich implementacji wymaga odróżnienia błędów programistycznych od naturalnej zmienności wyników.
+
+\subsubsection{Reprodukowalność jako pierwszy warunek debugowania}
+
+Podstawą jest kontrola generatorów liczb pseudolosowych. Należy:
+\begin{itemize}
+  \item jawnie ustawiać ziarno generatora,
+  \item zapisywać użyte ziarna razem z wynikami eksperymentu,
+  \item kontrolować wszystkie źródła losowości, np. bibliotekę numeryczną, framework GPU, operacje wielowątkowe,
+  \item umożliwić powtórzenie pojedynczego przebiegu bit po bicie, o ile środowisko na to pozwala.
+\end{itemize}
+
+Dobrym wzorcem jest rozdzielenie generatorów: osobny strumień dla inicjalizacji populacji, mutacji, selekcji, podziału danych, szumu eksploracyjnego. Ułatwia to znalezienie źródła rozbieżności.
+
+\subsubsection{Testy jednostkowe deterministycznych komponentów}
+
+Nawet metoda losowa składa się z wielu deterministycznych części. Testować należy osobno:
+\begin{itemize}
+  \item funkcję celu i ograniczenia,
+  \item kod dekodowania reprezentacji osobnika,
+  \item obliczanie dopasowania,
+  \item operatory krzyżowania i mutacji dla ustalonych wartości losowych,
+  \item aktualizację wag, gradientów, wartości $Q$ albo statystyk w drzewie MCTS,
+  \item obsługę przypadków brzegowych: puste dane, jeden osobnik, zerowa wariancja, remisy, wartości NaN.
+\end{itemize}
+
+Warto wstrzykiwać generator losowy jako zależność. Wtedy test może użyć generatora deterministycznego zwracającego z góry znaną sekwencję.
+
+\subsubsection{Testy własności i niezmienników}
+
+W metodach inteligencji obliczeniowej często łatwiej sprawdzić własności niż konkretne wyniki:
+\begin{itemize}
+  \item prawdopodobieństwa selekcji sumują się do $1$,
+  \item mutacja zachowuje dopuszczalny zakres genów,
+  \item krzyżowanie permutacyjne zwraca permutację bez duplikatów,
+  \item najlepsze znalezione rozwiązanie w algorytmie elitarnym nie pogarsza się między generacjami,
+  \item operator projekcji zwraca punkt spełniający ograniczenia,
+  \item funkcja straty maleje dla prostego problemu uczącego, jeżeli krok jest odpowiednio mały,
+  \item estymator Monte Carlo jest nieobciążony na prostym rozkładzie testowym.
+\end{itemize}
+
+Takie testy można realizować jako property-based testing: generujemy wiele losowych wejść i sprawdzamy ogólne warunki.
+
+\subsubsection{Testy statystyczne losowości}
+
+Jeżeli komponent ma realizować określony rozkład, pojedynczy wynik niczego nie dowodzi. Sprawdza się zbiorcze statystyki:
+\begin{itemize}
+  \item średnią i wariancję próbek,
+  \item histogram kategorii,
+  \item test $\chi^2$ dla rozkładu dyskretnego,
+  \item test Kołmogorowa-Smirnowa dla rozkładu ciągłego,
+  \item przedziały ufności dla oczekiwanej jakości.
+\end{itemize}
+
+Przykład: jeśli mutacja wybiera każdy gen z prawdopodobieństwem $p$, to po wielu próbach liczba mutacji powinna mieścić się w sensownym przedziale wokół $np$. Test nie powinien być zbyt wąski, bo będzie fałszywie wykrywać błędy.
+
+\subsubsection{Metamorphic testing}
+
+Metamorphic testing polega na sprawdzaniu relacji między wynikami dla przekształconych danych wejściowych. Przykłady:
+\begin{itemize}
+  \item przemnożenie funkcji celu przez dodatnią stałą nie powinno zmienić optimum,
+  \item permutacja kolejności przykładów uczących nie powinna zmienić wyniku batchowego,
+  \item dodanie stałej do wszystkich długości krawędzi w TSP może zmienić wartości tras, ale nie musi zmienić relacji, jeśli dodatek jest równy dla każdej trasy,
+  \item powielenie identycznych próbek nie powinno zmieniać optimum empirycznego dla średniej straty.
+\end{itemize}
+
+\subsubsection{Debugowanie przebiegów optymalizacji}
+
+Należy logować nie tylko wynik końcowy, ale też przebieg:
+\begin{itemize}
+  \item najlepszą, średnią i najgorszą wartość funkcji celu w populacji,
+  \item różnorodność populacji,
+  \item rozkład długości kroków albo mutacji,
+  \item temperaturę w symulowanym wyżarzaniu,
+  \item stopę akceptacji ruchów,
+  \item normy gradientów i wartości straty,
+  \item liczbę wizyt i wartości w węzłach MCTS.
+\end{itemize}
+
+Typowe symptomy błędów: natychmiastowa utrata różnorodności, wartości NaN, brak jakiejkolwiek zmiany mimo mutacji, nierealnie szybka zbieżność, wyniki lepsze niż znane dolne ograniczenie, silna zależność od kolejności danych, brak powtarzalności mimo ustalonego ziarna.
+
+\subsubsection{Porównanie z bazami odniesienia}
+
+Implementację sprawdza się na:
+\begin{itemize}
+  \item instancjach małych, dla których da się policzyć optimum brutalnie,
+  \item problemach analitycznych z oczywistym optimum, np. funkcja sferyczna $f(x)=\sum_i x_i^2$,
+  \item benchmarkach literaturowych,
+  \item baseline'ach prostych, np. losowe przeszukiwanie, algorytm zachłanny, metoda lokalna.
+\end{itemize}
+
+Jeżeli złożona metoda regularnie przegrywa z losowym baseline'em na prostym zadaniu, zwykle oznacza to błąd implementacyjny, złe skalowanie parametrów albo niedopasowanie reprezentacji.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Testując metody losowe, trzeba zapewnić reprodukowalność przez kontrolę ziaren, testować deterministyczne komponenty, sprawdzać niezmienniki i własności statystyczne, uruchamiać wiele niezależnych przebiegów oraz porównywać z prostymi benchmarkami. Wynik pojedynczego uruchomienia nie jest dowodem poprawności ani jakości.
+
+\subsection{Metody prowadzenia eksperymentów obliczeniowych}
+
+Eksperyment obliczeniowy ma odpowiedzieć na pytanie badawcze, a nie tylko wygenerować tabelę wyników. Wymaga hipotezy, kontrolowanego protokołu, rzetelnego doboru danych, powtarzalności i analizy statystycznej.
+
+\subsubsection{Pytanie badawcze i hipotezy}
+
+Najpierw definiuje się, co porównujemy i dlaczego. Przykłady:
+\begin{itemize}
+  \item Czy metoda A daje mniejszy błąd klasyfikacji niż metoda B?
+  \item Czy operator mutacji X poprawia jakość algorytmu ewolucyjnego na instancjach TSP?
+  \item Jak rozmiar populacji wpływa na czas dojścia do rozwiązania?
+  \item Czy metoda jest odporna na braki danych?
+\end{itemize}
+
+Hipoteza zerowa może mówić, że nie ma różnicy między metodami. Hipoteza alternatywna mówi, że różnica istnieje, np. metoda A ma mniejszą średnią stratę.
+
+\subsubsection{Plan eksperymentu}
+
+Dobry plan określa:
+\begin{itemize}
+  \item dane lub instancje problemu,
+  \item metody i ich implementacje,
+  \item parametry i sposób ich strojenia,
+  \item metryki jakości,
+  \item budżet obliczeniowy,
+  \item liczbę powtórzeń,
+  \item sposób agregacji wyników,
+  \item testy statystyczne,
+  \item kryteria zakończenia.
+\end{itemize}
+
+Ważna zasada: zbiór testowy nie może służyć do strojenia parametrów. W uczeniu maszynowym typowy podział to train/validation/test albo walidacja krzyżowa z zewnętrzną pętlą testową.
+
+\subsubsection{Kontrola zmiennych}
+
+Aby porównanie było uczciwe, zmieniamy jedną rzecz naraz albo stosujemy formalny plan czynnikowy. Wszystkie metody powinny mieć porównywalny budżet: czas, liczba ewaluacji funkcji celu, liczba epok, liczba symulacji. W algorytmach optymalizacyjnych często bardziej uczciwe jest porównanie po liczbie wywołań funkcji celu niż po liczbie iteracji, bo jedna iteracja różnych metod może mieć różny koszt.
+
+\subsubsection{Powtarzalność i replikowalność}
+
+Powtarzalność oznacza możliwość uzyskania tych samych wyników w tym samym środowisku. Replikowalność oznacza potwierdzenie w innym środowisku albo przez inną implementację. Należy zapisywać:
+\begin{itemize}
+  \item kod i wersję commita,
+  \item wersje bibliotek,
+  \item konfigurację sprzętu,
+  \item parametry eksperymentu,
+  \item ziarna losowości,
+  \item surowe wyniki,
+  \item skrypty do agregacji.
+\end{itemize}
+
+\subsubsection{Metryki i analiza statystyczna}
+
+Metryka musi odpowiadać celowi. Dla klasyfikacji używa się accuracy, precision, recall, F1, AUC, log-loss; dla regresji MAE, MSE, RMSE, $R^2$; dla optymalizacji wartości funkcji celu, odchylenia od optimum, czasu, liczby ewaluacji, stabilności.
+
+Dla metod losowych podaje się co najmniej średnią i odchylenie standardowe albo medianę i kwartyle. Przy rozkładach skośnych mediana bywa bardziej informacyjna niż średnia. Do porównań można użyć testu t dla sparowanych wyników, testu Wilcoxona, testu Friedmana z post-hoc dla wielu metod i wielu zbiorów danych. Sama różnica średnich bez niepewności jest słabym argumentem.
+
+\subsubsection{Ablation study i analiza czułości}
+
+Ablation study polega na usuwaniu albo podmienianiu składników metody, aby sprawdzić, które elementy naprawdę wpływają na wynik. Analiza czułości bada, jak wynik zmienia się przy zmianie parametrów. To ważne, bo metoda może działać dobrze tylko dla wąskiego zakresu parametrów, co zmniejsza jej praktyczną użyteczność.
+
+\subsubsection{Błędy w eksperymentach}
+
+Typowe błędy:
+\begin{itemize}
+  \item przeciek danych między treningiem i testem,
+  \item strojenie parametrów na zbiorze testowym,
+  \item porównanie do słabego baseline'u,
+  \item zbyt mała liczba powtórzeń,
+  \item ignorowanie wariancji,
+  \item wybiórcze raportowanie najlepszych wyników,
+  \item inny budżet obliczeniowy dla różnych metod,
+  \item brak kontroli losowości,
+  \item wyciąganie wniosków z jednego datasetu albo jednej instancji.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Eksperyment obliczeniowy powinien mieć jasną hipotezę, ustalony protokół, kontrolowane parametry, uczciwe baseline'y, powtórzenia, analizę statystyczną i możliwość odtworzenia. W metodach losowych trzeba raportować rozkład wyników, a nie tylko najlepszy przebieg.
+
+\subsection{Problem komiwojażera: definicja i algorytmy rozwiązywania}
+
+Problem komiwojażera, czyli TSP, jest jednym z najważniejszych problemów optymalizacji kombinatorycznej. Dane jest $n$ miast i koszty przejazdu $c_{ij}$ między parami miast. Należy znaleźć cykl Hamiltona o minimalnym koszcie, czyli trasę odwiedzającą każde miasto dokładnie raz i wracającą do punktu startowego.
+
+\subsubsection{Warianty problemu}
+
+\begin{description}
+  \item[Symetryczny TSP] $c_{ij}=c_{ji}$. Trasa nie zależy od kierunku przejścia krawędzi.
+  \item[Asymetryczny TSP] koszty mogą zależeć od kierunku, np. czas jazdy w mieście.
+  \item[Metryczny TSP] koszty spełniają nierówność trójkąta $c_{ij}\le c_{ik}+c_{kj}$.
+  \item[Euklidesowy TSP] miasta są punktami w przestrzeni, a kosztem jest odległość euklidesowa.
+  \item[Decyzyjny TSP] pytanie brzmi, czy istnieje cykl o koszcie co najwyżej $B$.
+\end{description}
+
+Decyzyjna wersja TSP jest NP-zupełna, a wersja optymalizacyjna jest NP-trudna. Oznacza to, że nie oczekujemy algorytmu dokładnego wielomianowego dla ogólnego TSP, o ile $\mathrm{P}\ne\NP$.
+
+\subsubsection{Sformułowanie matematyczne}
+
+Dla symetrycznego TSP można wprowadzić zmienne binarne $x_{ij}$, gdzie $x_{ij}=1$, jeśli krawędź $(i,j)$ należy do trasy. Minimalizujemy
+\[
+\min \sum_{i<j} c_{ij}x_{ij}.
+\]
+Warunki stopnia:
+\[
+\sum_{j\ne i} x_{ij}=2\quad\text{dla każdego miasta }i.
+\]
+Same warunki stopnia dopuszczają jednak kilka rozłącznych cykli. Dlatego trzeba dodać ograniczenia eliminujące podcykle:
+\[
+\sum_{i,j\in S,\,i<j}x_{ij}\le |S|-1
+\quad\text{dla każdego } \emptyset\ne S\subsetneq V.
+\]
+Tych ograniczeń jest wykładniczo wiele, ale w metodach branch-and-cut dodaje się tylko te naruszone.
+
+\subsubsection{Algorytmy dokładne}
+
+\begin{description}
+  \item[Brute force] sprawdza wszystkie permutacje miast. Dla TSP symetrycznego liczba różnych tras to $(n-1)!/2$. Koszt jest silnie wykładniczy.
+  \item[Programowanie dynamiczne Held-Karpa] definiuje $D[S,j]$ jako koszt najkrótszej ścieżki zaczynającej w mieście $1$, odwiedzającej zbiór $S$ i kończącej w $j$. Rekurencja:
+  \[
+  D[S,j]=\min_{i\in S,\,i\ne j}\left(D[S\setminus\{j\},i]+c_{ij}\right).
+  \]
+  Złożoność czasu $\BigO(n^2 2^n)$ i pamięci $\BigO(n2^n)$.
+  \item[Branch and bound] przeszukuje drzewo częściowych tras i odcina gałęzie, których dolne ograniczenie jest gorsze od najlepszego znanego rozwiązania.
+  \item[Branch and cut] łączy programowanie całkowitoliczbowe z generowaniem ograniczeń eliminujących podcykle i nierówności wzmacniających relaksację.
+\end{description}
+
+\subsubsection{Heurystyki konstrukcyjne}
+
+Heurystyki szybko budują rozwiązanie, ale bez gwarancji optymalności:
+\begin{itemize}
+  \item najbliższy sąsiad: z aktualnego miasta idziemy do najbliższego nieodwiedzonego,
+  \item nearest insertion: wstawiamy kolejne miasto w miejsce najmniej zwiększające koszt,
+  \item cheapest insertion: wybieramy globalnie najtańsze wstawienie,
+  \item farthest insertion: najpierw wstawiamy miasta dalekie, żeby wcześniej ustalić strukturę trasy,
+  \item algorytmy oparte na minimalnym drzewie rozpinającym.
+\end{itemize}
+
+\subsubsection{Ulepszanie lokalne}
+
+Metody lokalne startują z dowolnej trasy i poprawiają ją przez ruchy lokalne:
+\begin{description}
+  \item[2-opt] usuwa dwie krawędzie i odwraca fragment trasy, jeśli to skraca cykl.
+  \item[3-opt] usuwa trzy krawędzie i rozważa kilka sposobów ponownego połączenia fragmentów.
+  \item[Lin-Kernighan] adaptacyjnie dobiera złożoność ruchu $k$-opt i jest bardzo skuteczny praktycznie.
+\end{description}
+
+2-opt jest prosty i często daje dużą poprawę. Warunek poprawy dla wymiany krawędzi $(a,b)$ i $(c,d)$ na $(a,c)$ i $(b,d)$:
+\[
+c_{ab}+c_{cd} > c_{ac}+c_{bd}.
+\]
+
+\subsubsection{Aproksymacja dla metrycznego TSP}
+
+Dla metrycznego TSP istnieją algorytmy z gwarancją:
+\begin{itemize}
+  \item algorytm podwajania drzewa MST daje trasę nie gorszą niż $2\cdot OPT$,
+  \item algorytm Christofidesa daje gwarancję $1.5\cdot OPT$ dla symetrycznego metrycznego TSP.
+\end{itemize}
+
+Christofides: budujemy MST, znajdujemy wierzchołki nieparzystego stopnia, liczymy minimalne skojarzenie doskonałe na nich, dodajemy je do MST, otrzymujemy multigraf eulerowski, przechodzimy cyklem Eulera i skracamy powtórzenia dzięki nierówności trójkąta.
+
+\subsubsection{Metaheurystyki}
+
+Dla dużych instancji stosuje się algorytmy przybliżone:
+\begin{itemize}
+  \item symulowane wyżarzanie,
+  \item tabu search,
+  \item algorytmy genetyczne z reprezentacją permutacyjną,
+  \item ant colony optimization,
+  \item iterated local search,
+  \item MCTS albo metody uczenia przez wzmacnianie w wariantach konstrukcyjnych.
+\end{itemize}
+
+Kluczowy problem reprezentacji: operator mutacji albo krzyżowania musi zachować permutację miast. Dlatego używa się np. PMX, OX, CX, swap mutation, inversion mutation.
+
+\subsubsection{Co powiedzieć na obronie}
+
+TSP polega na znalezieniu najkrótszego cyklu odwiedzającego każde miasto dokładnie raz. Jest NP-trudny, a wersja decyzyjna jest NP-zupełna. Dokładne metody to brute force, Held-Karp, branch and bound oraz programowanie całkowitoliczbowe. Praktycznie używa się heurystyk konstrukcyjnych, 2-opt/3-opt, Lin-Kernighana i metaheurystyk. Dla metrycznego TSP są algorytmy aproksymacyjne, np. Christofides z gwarancją $3/2$.
+
+\subsection{Zadania interpolacji i zastosowanie interpolacji}
+
+Interpolacja polega na wyznaczeniu funkcji, która przechodzi dokładnie przez dane punkty pomiarowe:
+\[
+f(x_i)=y_i,\quad i=0,\dots,n.
+\]
+W odróżnieniu od aproksymacji, interpolacja wymaga dokładnego dopasowania w węzłach. Jest użyteczna, gdy wartości danych traktujemy jako dokładne albo chcemy skonstruować funkcję pomocniczą do obliczeń numerycznych.
+
+\subsubsection{Interpolacja wielomianowa}
+
+Dla $n+1$ różnych węzłów $x_0,\dots,x_n$ istnieje dokładnie jeden wielomian $p_n$ stopnia co najwyżej $n$, taki że $p_n(x_i)=y_i$. Można go zapisać w postaci Lagrange'a:
+\[
+p_n(x)=\sum_{i=0}^{n}y_i L_i(x),
+\quad
+L_i(x)=\prod_{\substack{j=0\\j\ne i}}^{n}\frac{x-x_j}{x_i-x_j}.
+\]
+Bazy $L_i$ mają własność $L_i(x_j)=1$ dla $i=j$ i $0$ dla $i\ne j$.
+
+Wzór Newtona używa ilorazów różnicowych:
+\[
+p_n(x)=a_0+a_1(x-x_0)+a_2(x-x_0)(x-x_1)+\dots+a_n\prod_{j=0}^{n-1}(x-x_j),
+\]
+gdzie $a_k=f[x_0,\dots,x_k]$. Zaletą postaci Newtona jest łatwe dodanie nowego węzła bez przeliczania całego wielomianu.
+
+\subsubsection{Błąd interpolacji}
+
+Jeśli funkcja $f$ ma pochodną rzędu $n+1$, to dla interpolacji wielomianowej:
+\[
+f(x)-p_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i)
+\]
+dla pewnego $\xi$ zależnego od $x$. Błąd zależy więc od gładkości funkcji i rozmieszczenia węzłów.
+
+\subsubsection{Efekt Rungego i dobór węzłów}
+
+Interpolacja wielomianem wysokiego stopnia na równoodległych węzłach może silnie oscylować przy końcach przedziału. To efekt Rungego. Przeciwdziała się mu przez:
+\begin{itemize}
+  \item użycie węzłów Czebyszewa,
+  \item interpolację kawałkami,
+  \item splajny,
+  \item aproksymację zamiast interpolacji, jeśli dane są zaszumione.
+\end{itemize}
+
+Węzły Czebyszewa zagęszczają się przy końcach przedziału, zmniejszając maksymalny wpływ iloczynu $\prod_i(x-x_i)$.
+
+\subsubsection{Splajny}
+
+Splajn to funkcja sklejana z wielomianów niskiego stopnia, zwykle trzeciego. Splajn kubiczny na przedziałach $[x_i,x_{i+1}]$:
+\begin{itemize}
+  \item interpoluje dane w węzłach,
+  \item jest ciągły,
+  \item ma ciągłą pierwszą i drugą pochodną,
+  \item unika globalnych oscylacji typowych dla wielomianów wysokiego stopnia.
+\end{itemize}
+
+Warunki brzegowe mogą być naturalne ($S''(x_0)=S''(x_n)=0$), z zadanymi pochodnymi albo okresowe.
+
+\subsubsection{Zastosowania interpolacji}
+
+\begin{itemize}
+  \item rekonstrukcja wartości między pomiarami,
+  \item grafika komputerowa i animacja,
+  \item przetwarzanie sygnałów i obrazów,
+  \item numeryczne całkowanie i różniczkowanie,
+  \item metoda elementów skończonych,
+  \item tablice funkcji specjalnych,
+  \item kalibracja czujników,
+  \item trajektorie robotów.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Interpolacja buduje funkcję przechodzącą przez zadane punkty. Najważniejsze metody to interpolacja wielomianowa Lagrange'a i Newtona oraz splajny. Trzeba znać istnienie i jednoznaczność wielomianu interpolacyjnego, wzór błędu oraz problem Rungego. W praktyce dla wielu punktów preferuje się splajny albo węzły Czebyszewa.
+
+\subsection{Metody skończone rozwiązywania układów równań liniowych}
+
+Układ równań liniowych zapisujemy jako
+\[
+Ax=b,
+\]
+gdzie $A\in\R^{n\times n}$, $b\in\R^n$, a $x\in\R^n$ jest niewiadomą. Metody skończone, nazywane też bezpośrednimi, w arytmetyce dokładnej dają rozwiązanie po skończonej liczbie operacji. Odróżnia się je od metod iteracyjnych, które generują ciąg przybliżeń.
+
+\subsubsection{Eliminacja Gaussa}
+
+Eliminacja Gaussa sprowadza macierz do postaci trójkątnej górnej przez zerowanie elementów pod przekątną. Następnie rozwiązuje się układ przez podstawianie wsteczne.
+
+Dla kroku $k$ eliminujemy elementy $a_{ik}$ dla $i>k$:
+\[
+m_{ik}=\frac{a_{ik}}{a_{kk}},\qquad
+R_i\leftarrow R_i-m_{ik}R_k.
+\]
+Złożoność czasowa wynosi $\Theta(n^3)$, a podstawianie wsteczne $\Theta(n^2)$.
+
+\subsubsection{Wybór elementu głównego}
+
+Bez pivotingu eliminacja może być niestabilna numerycznie albo niemożliwa, gdy pivot $a_{kk}=0$. W częściowym wyborze elementu głównego zamieniamy wiersze tak, aby w kolumnie $k$ wybrać największy co do modułu element wśród wierszy $k,\dots,n$. Poprawia to stabilność i w praktyce jest standardem.
+
+Pełny pivoting pozwala zamieniać także kolumny, ale jest droższy i rzadziej potrzebny.
+
+\subsubsection{Rozkład LU}
+
+Eliminacja Gaussa odpowiada rozkładowi:
+\[
+PA=LU,
+\]
+gdzie $P$ jest macierzą permutacji, $L$ trójkątną dolną, a $U$ trójkątną górną. Rozwiązanie $Ax=b$ przebiega wtedy:
+\[
+Ly=Pb,\qquad Ux=y.
+\]
+Rozkład LU jest szczególnie opłacalny, gdy trzeba rozwiązać wiele układów z tą samą macierzą $A$ i różnymi prawymi stronami $b$.
+
+\subsubsection{Rozkład Cholesky'ego}
+
+Jeśli $A$ jest symetryczna i dodatnio określona, można użyć rozkładu:
+\[
+A=LL^T.
+\]
+Jest około dwa razy tańszy niż LU i stabilny dla tej klasy macierzy. Występuje często w metodzie najmniejszych kwadratów, procesach Gaussowskich, optymalizacji wypukłej i równaniach normalnych, choć same równania normalne mogą pogarszać uwarunkowanie.
+
+\subsubsection{Rozkład QR}
+
+Rozkład QR:
+\[
+A=QR,
+\]
+gdzie $Q$ jest ortogonalna, a $R$ trójkątna górna. Jest bardzo ważny w rozwiązywaniu problemów najmniejszych kwadratów:
+\[
+\min_x \|Ax-b\|_2.
+\]
+Ponieważ macierze ortogonalne nie zmieniają normy euklidesowej, QR jest numerycznie stabilniejszy niż równania normalne $A^TAx=A^Tb$.
+
+\subsubsection{Uwarunkowanie układu}
+
+Wrażliwość rozwiązania na zaburzenia danych opisuje liczba uwarunkowania:
+\[
+\kappa(A)=\|A\|\|A^{-1}\|.
+\]
+Jeśli $\kappa(A)$ jest duża, mały błąd w $A$ albo $b$ może spowodować duży błąd w $x$. Stabilny algorytm nie naprawi złego uwarunkowania problemu, ale nie powinien znacząco dokładać własnego błędu.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Metody skończone rozwiązują układ po skończonej liczbie operacji. Najważniejsza jest eliminacja Gaussa z pivotingiem oraz rozkłady LU, Cholesky'ego i QR. LU jest dobre dla wielu prawych stron, Cholesky dla macierzy symetrycznych dodatnio określonych, QR dla najmniejszych kwadratów i stabilności. Trzeba wspomnieć o koszcie $\Theta(n^3)$ i uwarunkowaniu.
+
+\subsection{Metody poszukiwania zer funkcji jednej zmiennej}
+
+Szukamy $x^*$ takiego, że
+\[
+f(x^*)=0.
+\]
+Metody różnią się wymaganiami wobec funkcji, szybkością zbieżności i gwarancjami.
+
+\subsubsection{Metoda bisekcji}
+
+Zakładamy, że $f$ jest ciągła na $[a,b]$ i $f(a)f(b)<0$. Z twierdzenia Darboux istnieje zero w przedziale. W każdym kroku bierzemy środek
+\[
+c=\frac{a+b}{2}
+\]
+i wybieramy połowę przedziału, w której następuje zmiana znaku.
+
+Zalety: prostota, gwarancja zbieżności, odporność. Wady: zbieżność liniowa i potrzeba przedziału ze zmianą znaku. Po $k$ krokach długość przedziału wynosi $(b-a)/2^k$, więc łatwo ustalić liczbę iteracji potrzebną dla tolerancji.
+
+\subsubsection{Metoda Newtona}
+
+Metoda Newtona korzysta z pochodnej i linearyzacji funkcji:
+\[
+x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}.
+\]
+Interpretacja geometryczna: bierzemy styczną do wykresu w $x_k$ i jej przecięcie z osią $x$.
+
+Dla dobrego punktu startowego i prostego pierwiastka metoda ma zbieżność kwadratową. Może jednak zawieść, jeśli $f'(x_k)$ jest bliskie zeru, punkt startowy jest zły, funkcja ma osobliwości albo iteracje opuszczają sensowny obszar.
+
+\subsubsection{Metoda siecznych}
+
+Metoda siecznych zastępuje pochodną ilorazem różnicowym:
+\[
+x_{k+1}=x_k-f(x_k)\frac{x_k-x_{k-1}}{f(x_k)-f(x_{k-1})}.
+\]
+Nie wymaga obliczania pochodnej. Zbieżność jest superliniowa, rzędu około $1.618$, ale brak tak silnych gwarancji jak w bisekcji.
+
+\subsubsection{Regula falsi}
+
+Regula falsi także używa siecznej, ale zachowuje przedział, w którym funkcja zmienia znak. Dzięki temu ma gwarancję podobną do bisekcji, choć może zbiegać wolno, jeśli jeden koniec przedziału pozostaje długo nieruchomy. Istnieją modyfikacje, np. Illinois, poprawiające ten problem.
+
+\subsubsection{Metody hybrydowe}
+
+W praktyce często łączy się bezpieczeństwo bisekcji z szybkością Newtona albo siecznych. Przykładem jest metoda Brenta, która używa bisekcji, siecznych i interpolacji odwrotnej kwadratowej. Jest standardowym wyborem dla jednowymiarowego znajdowania pierwiastków, gdy mamy przedział ze zmianą znaku.
+
+\subsubsection{Kryteria stopu}
+
+Typowe kryteria:
+\begin{itemize}
+  \item $|f(x_k)|<\eps$,
+  \item $|x_{k+1}-x_k|<\eps$,
+  \item długość przedziału $<\eps$,
+  \item przekroczenie maksymalnej liczby iteracji.
+\end{itemize}
+Samo małe $|f(x_k)|$ może być mylące dla funkcji bardzo płaskiej albo źle przeskalowanej, dlatego często łączy się kilka kryteriów.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Bisekcja jest wolna, ale gwarantowana przy ciągłości i zmianie znaku. Newton jest bardzo szybki lokalnie, ale wymaga pochodnej i dobrego startu. Sieczne nie wymagają pochodnej i mają zbieżność superliniową. W praktyce dobre są metody hybrydowe, np. Brent, bo łączą gwarancję z szybkością.
+
+\subsection{Metody całkowania numerycznego}
+
+Całkowanie numeryczne, czyli kwadratura, przybliża
+\[
+I=\int_a^b f(x)\,dx
+\]
+za pomocą skończonej liczby wartości funkcji. Stosuje się je, gdy funkcji nie da się scałkować analitycznie, znamy ją tylko z pomiarów albo całka jest składnikiem większego algorytmu.
+
+\subsubsection{Złożone wzory Newtona-Cotesa}
+
+Najprostsze metody dzielą przedział na podprzedziały długości $h=(b-a)/n$.
+
+Metoda prostokątów:
+\[
+I\approx h\sum_{i=0}^{n-1} f(x_i)
+\]
+albo wariant ze środkiem:
+\[
+I\approx h\sum_{i=0}^{n-1} f\left(\frac{x_i+x_{i+1}}{2}\right).
+\]
+
+Metoda trapezów:
+\[
+I\approx h\left(\frac{f(a)+f(b)}{2}+\sum_{i=1}^{n-1}f(x_i)\right).
+\]
+
+Metoda Simpsona dla parzystego $n$:
+\[
+I\approx \frac{h}{3}\left(f(x_0)+f(x_n)+4\sum_{\substack{i=1\\i\text{ nieparzyste}}}^{n-1}f(x_i)+2\sum_{\substack{i=2\\i\text{ parzyste}}}^{n-2}f(x_i)\right).
+\]
+
+Dla funkcji dostatecznie gładkich złożona metoda trapezów ma błąd rzędu $\BigO(h^2)$, a metoda Simpsona $\BigO(h^4)$.
+
+\subsubsection{Kwadratury Gaussa}
+
+Kwadratury Gaussa dobierają węzły i wagi tak, aby całkować dokładnie wielomiany możliwie wysokiego stopnia:
+\[
+\int_a^b f(x)w(x)\,dx\approx \sum_{i=1}^{n} A_i f(x_i).
+\]
+Dla $n$ węzłów kwadratura Gaussa jest dokładna dla wielomianów stopnia do $2n-1$. Węzły są związane z pierwiastkami wielomianów ortogonalnych. Najczęstsza jest Gauss-Legendre dla wagi $w(x)=1$ na $[-1,1]$.
+
+\subsubsection{Metody adaptacyjne}
+
+Jeśli funkcja ma obszary trudne, np. ostre piki albo szybkie zmiany, równomierna siatka marnuje punkty tam, gdzie funkcja jest gładka. Metody adaptacyjne dzielą przedział tam, gdzie lokalny błąd jest duży. Adaptacyjny Simpson porównuje wynik na całym przedziale z sumą wyników na połowach i rekurencyjnie zagęszcza podział.
+
+\subsubsection{Ekstrapolacja Richardsona i Romberg}
+
+Jeśli znamy rozwinięcie błędu metody, można połączyć wyniki dla kroków $h$ i $h/2$, aby wyeliminować główny składnik błędu. Metoda Romberga stosuje ekstrapolację Richardsona do metody trapezów, tworząc tablicę coraz dokładniejszych przybliżeń.
+
+\subsubsection{Monte Carlo}
+
+Dla całek wielowymiarowych metody deterministyczne cierpią na przekleństwo wymiarowości. Monte Carlo przybliża wartość oczekiwaną:
+\[
+\int_D f(x)\,dx = |D|\mathbb{E}[f(X)],
+\]
+gdzie $X$ jest losowane jednostajnie z $D$. Estymator:
+\[
+\hat I=\frac{|D|}{N}\sum_{i=1}^{N}f(X_i)
+\]
+ma błąd standardowy malejący jak $\BigO(N^{-1/2})$, niezależnie od wymiaru w sensie tempa względem liczby próbek. Wadą jest wolna zbieżność i losowa zmienność.
+
+\subsubsection{Źródła błędów}
+
+Błąd całkowania obejmuje:
+\begin{itemize}
+  \item błąd obcięcia wynikający z przybliżenia całki sumą,
+  \item błąd zaokrągleń arytmetyki zmiennoprzecinkowej,
+  \item błędy danych wejściowych,
+  \item trudności przy osobliwościach, nieciągłościach i funkcjach oscylacyjnych.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Podstawowe metody to prostokąty, trapezy i Simpson, dalej kwadratury Gaussa, metody adaptacyjne, Romberg oraz Monte Carlo. Simpson jest dokładniejszy od trapezów dla funkcji gładkich, Gauss wykorzystuje optymalny dobór węzłów, metody adaptacyjne zagęszczają siatkę tam, gdzie funkcja jest trudna, a Monte Carlo jest szczególnie ważne w dużym wymiarze.

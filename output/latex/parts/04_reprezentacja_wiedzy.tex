@@ -1,0 +1,366 @@
+\section{Reprezentacja wiedzy}
+
+\subsection{Metoda rezolucji w rachunku predykatów}
+
+Rezolucja jest regułą wnioskowania i zarazem podstawą automatycznego dowodzenia twierdzeń. Jej główna idea polega na sprowadzeniu dowodu $T\models \beta$ do wykazania sprzeczności zbioru $T\cup\{\neg\beta\}$. Jeśli założenia razem z negacją tezy są niespełnialne, to teza wynika z założeń.
+
+\subsubsection{Idea dowodu przez sprzeczność}
+
+Dla teorii $T$ i zdania $\beta$ zachodzi:
+\[
+T\models \beta \quad\Longleftrightarrow\quad T\cup\{\neg\beta\}\text{ jest niespełnialny}.
+\]
+Rezolucja próbuje więc wyprowadzić klauzulę pustą, oznaczaną często $\square$. Klauzula pusta reprezentuje fałsz, czyli sprzeczność.
+
+W rachunku zdań metoda jest decyzyjna: jeśli zbiór klauzul jest niespełnialny, rezolucja może znaleźć sprzeczność; jeśli jest spełnialny, pełne przeszukanie może to wykazać. W rachunku predykatów pierwszego rzędu sytuacja jest trudniejsza: logika pierwszego rzędu jest półrozstrzygalna. Jeśli wniosek rzeczywiście wynika, procedura może znaleźć dowód; jeśli nie wynika, przeszukiwanie może nie zakończyć się.
+
+\subsubsection{Literały i klauzule}
+
+Atom to formuła postaci $P(t_1,\dots,t_k)$, gdzie $P$ jest predykatem, a $t_i$ są termami. Literał to atom albo negacja atomu. Klauzula jest alternatywą literałów:
+\[
+L_1\vee L_2\vee\dots\vee L_m.
+\]
+Zbiór klauzul interpretuje się jako koniunkcję wszystkich klauzul. Klauzula pusta $\square$ jest alternatywą zera literałów, czyli jest zawsze fałszywa.
+
+\subsubsection{Reguła rezolucji w rachunku zdań}
+
+Jeśli mamy dwie klauzule zawierające literały komplementarne:
+\[
+\lambda\vee A,\qquad \neg\lambda\vee B,
+\]
+to możemy wyprowadzić rezolwentę:
+\[
+A\vee B.
+\]
+Reguła jest poprawna semantycznie, bo jeśli pierwsza i druga klauzula są prawdziwe, to po usunięciu pary komplementarnej pozostała alternatywa musi być prawdziwa.
+
+Przykład:
+\[
+P\vee Q,\qquad \neg P\vee R
+\]
+dają:
+\[
+Q\vee R.
+\]
+
+\subsubsection{Sprowadzenie formuł do postaci klauzulowej}
+
+Aby stosować rezolucję, formuły trzeba zamienić na postać normalną. Dla rachunku zdań używa się CNF:
+\[
+\bigwedge_i \bigvee_j L_{ij}.
+\]
+Algorytm:
+\begin{enumerate}
+  \item usunąć implikacje i równoważności:
+  \[
+  \alpha\to\beta \equiv \neg\alpha\vee\beta,
+  \]
+  \[
+  \alpha\leftrightarrow\beta \equiv (\neg\alpha\vee\beta)\wedge(\neg\beta\vee\alpha);
+  \]
+  \item przesunąć negacje do atomów, używając praw de Morgana;
+  \item zastosować rozdzielność $\vee$ względem $\wedge$;
+  \item potraktować koniunkcję jako zbiór klauzul.
+\end{enumerate}
+
+\subsubsection{Dodatkowe problemy w rachunku predykatów}
+
+W rachunku predykatów pojawiają się kwantyfikatory i zmienne. Dwa literały mogą nie być identyczne syntaktycznie, ale mogą stać się identyczne po podstawieniu. Przykład:
+\[
+Student(x),\qquad Student(Piotr).
+\]
+Nie są tym samym literałem, ale podstawienie $\{x/Piotr\}$ je uzgadnia. Do rezolucji pierwszego rzędu potrzebujemy więc:
+\begin{itemize}
+  \item postaci preneksowej i klauzulowej,
+  \item standaryzacji nazw zmiennych,
+  \item skolemizacji,
+  \item unifikacji,
+  \item reguły rezolucji z najogólniejszym unifikatorem.
+\end{itemize}
+
+\subsubsection{Postać preneksowa}
+
+Formuła jest w postaci preneksowej, gdy wszystkie kwantyfikatory stoją z przodu:
+\[
+Q_1x_1Q_2x_2\dots Q_nx_n.\; M,
+\]
+gdzie $M$ jest formułą bez kwantyfikatorów, nazywaną macierzą.
+
+Przekształcanie do postaci preneksowej obejmuje:
+\begin{enumerate}
+  \item usunięcie implikacji i równoważności,
+  \item przesunięcie negacji do atomów:
+  \[
+  \neg\forall x\,\alpha \equiv \exists x\,\neg\alpha,\qquad
+  \neg\exists x\,\alpha \equiv \forall x\,\neg\alpha,
+  \]
+  \item zmianę nazw zmiennych związanych, aby uniknąć kolizji,
+  \item wyniesienie kwantyfikatorów na początek,
+  \item przekształcenie macierzy do CNF.
+\end{enumerate}
+
+\subsubsection{Skolemizacja}
+
+Skolemizacja usuwa kwantyfikatory egzystencjalne, zastępując zmienne egzystencjalne stałymi albo funkcjami Skolema. Nie zachowuje równoważności logicznej wprost, ale zachowuje spełnialność, co wystarcza dla rezolucji refutacyjnej.
+
+Jeśli mamy:
+\[
+\exists y\, P(y),
+\]
+zastępujemy $y$ nową stałą $c$:
+\[
+P(c).
+\]
+
+Jeśli zmienna egzystencjalna zależy od wcześniejszych uniwersalnych:
+\[
+\forall x\exists y\, Loves(x,y),
+\]
+to $y$ zastępujemy funkcją Skolema $f(x)$:
+\[
+\forall x\, Loves(x,f(x)).
+\]
+Po skolemizacji wszystkie pozostałe zmienne są traktowane jako uniwersalnie kwantyfikowane, więc kwantyfikatory uniwersalne można pominąć w zapisie klauzul.
+
+\subsubsection{Unifikacja}
+
+Unifikacja znajduje podstawienie, które czyni dwa termy albo literały identycznymi. Najważniejszy jest najogólniejszy unifikator, MGU, czyli taki unifikator, z którego każdy inny unifikator może być otrzymany przez dalsze podstawienie.
+
+Przykłady:
+\[
+P(x,a)\quad\text{i}\quad P(f(y),a)
+\]
+mają MGU:
+\[
+\{x/f(y)\}.
+\]
+
+Literały:
+\[
+Parent(x,John),\qquad Parent(Mary,y)
+\]
+mają MGU:
+\[
+\{x/Mary,\;y/John\}.
+\]
+
+W unifikacji trzeba stosować occurs check: zmienna nie może zostać podstawiona termem zawierającym tę samą zmienną, np. $x=f(x)$ nie powinno być dopuszczone w standardowej logice pierwszego rzędu, bo tworzyłoby nieskończony term.
+
+\subsubsection{Reguła rezolucji pierwszego rzędu}
+
+Jeśli mamy klauzule:
+\[
+L\vee A,\qquad \neg K\vee B,
+\]
+a $\theta$ jest MGU literałów $L$ i $K$, to rezolwentą jest:
+\[
+(A\vee B)\theta.
+\]
+Najpierw unifikujemy literały komplementarne, a potem usuwamy je i stosujemy podstawienie do reszty klauzuli.
+
+Przykład:
+\[
+Human(x)\to Mortal(x),\qquad Human(Socrates).
+\]
+Po CNF:
+\[
+\neg Human(x)\vee Mortal(x),\qquad Human(Socrates).
+\]
+Unifikujemy $Human(x)$ z $Human(Socrates)$ przez $\{x/Socrates\}$ i otrzymujemy:
+\[
+Mortal(Socrates).
+\]
+Jeśli chcemy udowodnić $Mortal(Socrates)$ przez refutację, dodajemy $\neg Mortal(Socrates)$, a potem rezolucja daje klauzulę pustą.
+
+\subsubsection{Procedura dowodzenia rezolucyjnego}
+
+\begin{enumerate}
+  \item Weź teorię $T$ i tezę $\beta$.
+  \item Dodaj negację tezy: $T\cup\{\neg\beta\}$.
+  \item Przekształć wszystkie formuły do postaci klauzulowej:
+  usunięcie implikacji, przesunięcie negacji, standaryzacja zmiennych, preneks, skolemizacja, CNF, usunięcie kwantyfikatorów uniwersalnych.
+  \item Wybieraj pary klauzul z unifikowalnymi literałami komplementarnymi.
+  \item Dodawaj rezolwenty do zbioru klauzul.
+  \item Jeśli pojawi się $\square$, dowód zakończony sukcesem.
+\end{enumerate}
+
+\subsubsection{Poprawność, pełność i problem strategii}
+
+Rezolucja jest poprawna: każda wyprowadzona klauzula wynika logicznie z poprzednich. Jest też pełna refutacyjnie dla logiki pierwszego rzędu: jeśli zbiór klauzul jest niespełnialny, istnieje dowód rezolucyjny prowadzący do klauzuli pustej.
+
+Pełność nie oznacza efektywności. Naiwne generowanie wszystkich rezolwent prowadzi do eksplozji kombinatorycznej. Dlatego stosuje się strategie:
+\begin{itemize}
+  \item rezolucję liniową,
+  \item set of support,
+  \item preferencję klauzul jednostkowych,
+  \item subsumpcję,
+  \item porządkowanie literałów,
+  \item indeksowanie termów,
+  \item ograniczenia głębokości albo heurystyki wyboru.
+\end{itemize}
+
+\subsubsection{Rezolucja SLD i Prolog}
+
+W programowaniu logicznym, szczególnie w Prologu, używa się wyspecjalizowanej rezolucji SLD dla klauzul Horna. Klauzula Horna ma co najwyżej jeden literał pozytywny. Reguła:
+\[
+Head \leftarrow Body_1,\dots,Body_k
+\]
+odpowiada formule:
+\[
+Body_1\wedge\dots\wedge Body_k\to Head.
+\]
+Prolog rozwiązuje zapytanie przez próbę refutacji jego negacji, wybierając cele od lewej do prawej i klauzule w kolejności programu. To jest efektywne i praktyczne, ale strategia Prologa nie jest pełna dla wszystkich możliwych programów z powodu deterministycznego porządku przeszukiwania i możliwości zapętlenia.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Rezolucja w rachunku predykatów polega na dowodzeniu przez sprzeczność: do teorii dodaje się negację tezy, przekształca wszystko do zbioru klauzul, usuwa kwantyfikatory egzystencjalne przez skolemizację, a literały dopasowuje przez unifikację. Reguła rezolucji usuwa parę literałów komplementarnych po zastosowaniu MGU. Wyprowadzenie klauzuli pustej oznacza, że teza wynika z teorii. Metoda jest poprawna i pełna refutacyjnie, ale wymaga strategii, bo liczba rezolwent może eksplodować.
+
+\subsection{Główne problemy w zagadnieniach wnioskowania o działaniach}
+
+Wnioskowanie o działaniach dotyczy systemów dynamicznych: mamy obiekty, ich własności oraz akcje zmieniające stan świata. Celem jest formalne odpowiadanie na pytania typu: co będzie prawdziwe po wykonaniu akcji, czy akcja jest wykonalna, czy jakiś cel da się osiągnąć sekwencją akcji, jakie skutki są konieczne, a jakie możliwe.
+
+\subsubsection{Model dynamicznego świata}
+
+Stan świata opisuje wartości fluentów, czyli własności mogących zmieniać się w czasie. Akcje przekształcają stany. W najprostszym modelu mamy:
+\begin{itemize}
+  \item zbiór fluentów $F$,
+  \item zbiór akcji $Ac$,
+  \item stany jako interpretacje fluentów,
+  \item stan początkowy,
+  \item funkcję przejścia $Res(A,\sigma)$ zwracającą możliwe stany po wykonaniu akcji $A$ w stanie $\sigma$.
+\end{itemize}
+
+Jeśli akcja jest deterministyczna, $Res(A,\sigma)$ ma jeden element. Jeśli niedeterministyczna, może mieć wiele wyników. Jeśli akcja jest niewykonalna, wynik może być pusty albo zgodnie z przyjętą semantyką może oznaczać brak efektu.
+
+\subsubsection{Ontologia działań}
+
+W modelowaniu działań trzeba zdecydować, jakie typy zjawisk dopuszczamy:
+\begin{itemize}
+  \item skutki deterministyczne albo niedeterministyczne,
+  \item skutki pewne albo typowe, czyli domyślne,
+  \item skutki bezpośrednie i pośrednie,
+  \item skutki natychmiastowe i opóźnione,
+  \item akcje jednoetapowe albo trwające w czasie,
+  \item akcje sekwencyjne albo współbieżne,
+  \item akcje elementarne albo złożone,
+  \item pełną albo niepełną wiedzę o stanie i akcjach.
+\end{itemize}
+
+Każda decyzja upraszcza albo komplikuje semantykę. Prosty język akcji może wystarczyć dla sekwencyjnych działań deterministycznych, ale zawiedzie przy skutkach ubocznych, współbieżności albo wyjątkach.
+
+\subsubsection{Frame problem}
+
+Frame problem to problem reprezentowania i wnioskowania o tym, co nie zmienia się po wykonaniu akcji. W świecie z wieloma fluentami większość własności zwykle pozostaje bez zmian. Naiwne dopisywanie dla każdej akcji i każdego fluentu aksjomatu "ta akcja nie zmienia tej własności" prowadzi do ogromnej liczby aksjomatów.
+
+Przykład: w Yale Shooting Problem załadowanie broni zmienia fluent $loaded$, ale nie powinno zmieniać faktu, że Fred żyje. Logika klasyczna bez dodatkowej zasady inercji nie pozwala automatycznie wywnioskować, że Fred nadal żyje po załadowaniu broni.
+
+Rozwiązaniem jest zasada inercji: fluent zachowuje wartość, dopóki akcja nie wymusza zmiany albo nie zwalnia fluentu spod inercji. Formalizacje akcji często budują tę zasadę w semantykę, zamiast wypisywać wszystkie frame axioms.
+
+\subsubsection{Ramification problem}
+
+Ramification problem dotyczy skutków pośrednich. Akcja może bezpośrednio zmieniać jeden fluent, ale przez ograniczenia stanu wymuszać zmiany innych fluentów.
+
+Przykład: jeśli obowiązuje reguła $walking\to alive$, a strzał powoduje $\neg alive$, to pośrednio powinno wynikać $\neg walking$. Nie chcemy ręcznie wypisywać każdego skutku pośredniego każdej akcji.
+
+Trudność polega na tym, aby:
+\begin{itemize}
+  \item reprezentować ograniczenia statyczne,
+  \item propagować skutki bezpośrednie przez te ograniczenia,
+  \item nie generować nieintuicyjnych skutków,
+  \item odróżnić skutki pośrednie od warunków wykonalności.
+\end{itemize}
+
+W slajdach pojawia się przykład, w którym próba zachowania spójności ograniczeń może prowadzić do dziwnych wniosków, np. "ożywienia" martwego indyka przy akcji zachęcania do chodzenia. To pokazuje, że sama minimalizacja zmian bywa niewystarczająca.
+
+\subsubsection{Qualification problem}
+
+Qualification problem dotyczy warunków, pod którymi akcja jest możliwa i przynosi oczekiwane skutki. W praktyce liczba potencjalnych warunków jest ogromna i nie da się ich wszystkich wypisać.
+
+Klasyczny przykład: aby uruchomić samochód, trzeba mieć kluczyk, paliwo, sprawny akumulator, sprawne przewody i bardzo wiele innych rzeczy, w tym brak ziemniaka w rurze wydechowej. Nie da się w każdym modelu jawnie sprawdzać wszystkich nietypowych przeszkód.
+
+Rozwiązaniem mogą być:
+\begin{itemize}
+  \item domyślne założenia normalności,
+  \item logiki niemonotoniczne,
+  \item preconditions z wyjątkami,
+  \item probabilistyczne modele skuteczności działań,
+  \item rozróżnienie skutków typowych i nietypowych.
+\end{itemize}
+
+\subsubsection{Problem skutków domyślnych}
+
+W realnym świecie działania mają często skutki typowe, ale niepewne. Strzał z załadowanej broni typowo zabija, ale mogą istnieć wyjątki: broń się zacina, cel ma osłonę, strzał chybia. Logika klasyczna jest monotoniczna: dodanie nowej informacji nie usuwa wcześniejszych wniosków. Rozumowanie domyślne jest niemonotoniczne: wniosek "typowo $P$" może zostać wycofany po poznaniu wyjątku.
+
+Modele działań z efektami domyślnymi muszą odróżniać:
+\begin{itemize}
+  \item skutki pewne,
+  \item skutki normalne albo preferowane,
+  \item skutki atypowe,
+  \item minimalizację odstępstw od normalności.
+\end{itemize}
+
+\subsubsection{Niedeterminizm}
+
+Akcja może mieć wiele możliwych rezultatów. Przykład: rzut kostką, próba otwarcia uszkodzonych drzwi, ruch robota po śliskiej powierzchni. Wtedy pytania dzielą się na:
+\begin{itemize}
+  \item czy cel jest konieczny po akcji, czyli zachodzi we wszystkich możliwych wynikach,
+  \item czy cel jest możliwy, czyli zachodzi w co najmniej jednym wyniku,
+  \item czy istnieje plan gwarantujący cel,
+  \item czy istnieje strategia reagująca na obserwacje.
+\end{itemize}
+
+Niedeterminizm zwiększa złożoność planowania, bo pojedyncza sekwencja akcji może nie wystarczyć; potrzebna może być strategia warunkowa.
+
+\subsubsection{Współbieżność}
+
+Wiele akcji może zachodzić jednocześnie. Pojawiają się pytania:
+\begin{itemize}
+  \item kiedy akcje są konfliktowe,
+  \item czy skutki akcji złożonej są sumą skutków akcji elementarnych,
+  \item czy jedna akcja blokuje drugą,
+  \item czy akcje razem mają skutek inny niż osobno.
+\end{itemize}
+
+Przykład: dwie niezależne akcje, jak otwarcie drzwi i podniesienie miski, mogą mieć łączny skutek będący koniunkcją skutków. Ale dwie akcje podnoszenia miski jedną ręką mogą osobno rozlać zupę, a razem już nie. To łamie prostą zasadę dziedziczenia skutków.
+
+\subsubsection{Czas, akcje trwające i scenariusze}
+
+Jeśli akcje trwają w czasie, trzeba reprezentować:
+\begin{itemize}
+  \item moment rozpoczęcia i zakończenia,
+  \item wartości fluentów w trakcie akcji,
+  \item skutki opóźnione,
+  \item akcje wyzwalane przez stany,
+  \item akcje wyzwalane przez inne akcje,
+  \item scenariusze jako zbiory wystąpień akcji w czasie.
+\end{itemize}
+
+W modelach z czasem liniowym stan w chwili $t+1$ zależy od stanu w chwili $t$, wykonanych akcji i ewentualnych reguł dynamicznych. W modelach z czasem rozgałęzionym analizuje się wiele możliwych przyszłości.
+
+\subsubsection{Niepełna wiedza i obserwacje}
+
+Agent często nie zna pełnego stanu świata. Wtedy zamiast pojedynczego stanu ma zbiór stanów możliwych albo przekonanie probabilistyczne. Akcje mogą być:
+\begin{itemize}
+  \item ontic, czyli zmieniać świat,
+  \item sensing, czyli dostarczać informacji,
+  \item announcement, czyli zmieniać wiedzę agentów.
+\end{itemize}
+
+Wnioskowanie musi wtedy rozróżniać prawdę w świecie od wiedzy albo przekonań agenta. Stąd powiązanie z logikami epistemicznymi, modalnymi i dynamicznymi.
+
+\subsubsection{Planowanie}
+
+Wnioskowanie o działaniach jest ściśle związane z planowaniem. Typowe zapytania:
+\begin{itemize}
+  \item Czy po sekwencji akcji $\langle A_1,\dots,A_n\rangle$ zachodzi $\alpha$?
+  \item Czy istnieje sekwencja akcji prowadząca do celu?
+  \item Czy każda realizacja akcji prowadzi do celu?
+  \item Czy akcja jest wykonalna w danym stanie?
+  \item Jakie fluenty są obserwowalne po akcji?
+\end{itemize}
+
+W modelu niedeterministycznym albo niepełnoinformacyjnym plan może być warunkowy: następna akcja zależy od obserwacji.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Główne problemy wnioskowania o działaniach to frame problem, ramification problem i qualification problem. Frame problem dotyczy tego, co pozostaje bez zmian; ramification problem skutków pośrednich; qualification problem ogromnej liczby warunków potrzebnych do skutecznego wykonania akcji. Dodatkowo ważne są niedeterminizm, skutki domyślne, współbieżność, czas trwania akcji, niepełna wiedza i planowanie. Formalne języki akcji próbują tak dobrać semantykę, aby uzyskać intuicyjne wnioski bez ręcznego wypisywania wszystkich wyjątków i skutków.

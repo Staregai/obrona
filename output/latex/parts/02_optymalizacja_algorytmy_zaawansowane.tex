@@ -1,0 +1,364 @@
+\section{Programowanie matematyczne i algorytmy zaawansowane}
+
+\subsection{Metody poszukiwania ekstremum funkcji nieliniowej}
+
+Rozważamy problem
+\[
+\min_{x\in\R^n} f(x)
+\]
+albo równoważnie maksymalizację przez minimalizację $-f(x)$. Funkcja może być wypukła albo niewypukła, gładka albo niegładka, tania albo kosztowna w ewaluacji. Wybór metody zależy głównie od dostępności pochodnych, wymiaru, wypukłości, szumu i kosztu obliczenia funkcji.
+
+\subsubsection{Warunki optymalności bez ograniczeń}
+
+Jeśli $f$ jest różniczkowalna i $x^*$ jest lokalnym minimum wewnętrznym, to konieczny warunek pierwszego rzędu:
+\[
+\nabla f(x^*)=0.
+\]
+Jeśli $f$ jest dwa razy różniczkowalna, konieczny warunek drugiego rzędu:
+\[
+\nabla^2 f(x^*) \succeq 0.
+\]
+Warunek wystarczający dla ścisłego minimum lokalnego:
+\[
+\nabla f(x^*)=0,\qquad \nabla^2 f(x^*)\succ 0.
+\]
+Dla funkcji wypukłej każdy punkt spełniający $\nabla f(x^*)=0$ jest minimum globalnym. Dla funkcji ściśle wypukłej minimum globalne jest co najwyżej jedno.
+
+\subsubsection{Metoda największego spadku}
+
+Metoda największego spadku, czyli gradient descent, wykonuje kroki:
+\[
+x_{k+1}=x_k-\alpha_k\nabla f(x_k),
+\]
+gdzie $\alpha_k>0$ jest długością kroku. Kierunek $-\nabla f(x_k)$ jest kierunkiem najszybszego lokalnego spadku w normie euklidesowej.
+
+Długość kroku można dobrać:
+\begin{itemize}
+  \item jako stałą,
+  \item przez dokładne przeszukiwanie liniowe,
+  \item przez warunki Armijo albo Wolfe'a,
+  \item według harmonogramu malejącego, zwłaszcza w metodach stochastycznych.
+\end{itemize}
+
+Dla funkcji wypukłej z gradientem Lipschitza, przy odpowiednim kroku metoda zbiega do minimum. Dla funkcji silnie wypukłej zbieżność jest liniowa, ale może być bardzo wolna przy złym uwarunkowaniu, gdy poziomice są wydłużone.
+
+\subsubsection{Metoda Newtona}
+
+Metoda Newtona używa przybliżenia kwadratowego:
+\[
+f(x_k+p)\approx f(x_k)+\nabla f(x_k)^Tp+\frac{1}{2}p^T\nabla^2f(x_k)p.
+\]
+Kierunek Newtona spełnia:
+\[
+\nabla^2 f(x_k)p_k=-\nabla f(x_k),
+\]
+a aktualizacja:
+\[
+x_{k+1}=x_k+\alpha_k p_k.
+\]
+
+Jeśli Hessian jest dodatnio określony i punkt startowy jest dostatecznie blisko minimum, metoda ma zbieżność kwadratową. Wady: koszt obliczenia i odwracania/rozwiązywania układu z Hessianem, problemy przy Hessianie osobliwym albo nieokreślonym oraz brak globalnych gwarancji bez line search albo trust region.
+
+\subsubsection{Metody quasi-Newtonowskie}
+
+Metody quasi-Newtonowskie przybliżają Hessian albo jego odwrotność na podstawie kolejnych gradientów. Najbardziej znana jest BFGS. Niech
+\[
+s_k=x_{k+1}-x_k,\qquad y_k=\nabla f(x_{k+1})-\nabla f(x_k).
+\]
+BFGS aktualizuje przybliżenie Hessianu tak, aby spełniało równanie secant:
+\[
+B_{k+1}s_k=y_k.
+\]
+L-BFGS przechowuje tylko kilka ostatnich par $(s_k,y_k)$, dlatego nadaje się do dużych wymiarów.
+
+Zalety: zwykle szybsze niż gradient descent, bez jawnego Hessianu. Wady: wymagają gradientu, a dla funkcji silnie niewypukłych lub zaszumionych mogą wymagać zabezpieczeń.
+
+\subsubsection{Metody bezpochodne}
+
+Gdy gradient nie jest dostępny, funkcja jest szumowa albo niedokładna, stosuje się metody bezpochodne:
+\begin{description}
+  \item[Nelder-Mead] utrzymuje sympleks $n+1$ punktów i wykonuje odbicie, ekspansję, kontrakcję i redukcję. Działa dobrze w małych wymiarach, ale nie ma silnych gwarancji w ogólności.
+  \item[Pattern search] bada skończony zbiór kierunków i zmniejsza krok, gdy nie ma poprawy.
+  \item[CMA-ES] adaptuje rozkład normalny próbkowania i macierz kowariancji. Jest silny dla trudnych, niewypukłych problemów ciągłych, ale kosztowny.
+  \item[Symulowane wyżarzanie] akceptuje czasem gorsze ruchy z prawdopodobieństwem malejącym wraz z temperaturą, co pomaga wyjść z minimów lokalnych.
+\end{description}
+
+\subsubsection{Optymalizacja stochastyczna}
+
+Dla funkcji będącej średnią po danych:
+\[
+f(x)=\frac{1}{m}\sum_{i=1}^{m}\ell_i(x)
+\]
+pełny gradient może być kosztowny. Stochastic Gradient Descent używa losowej próbki albo mini-batcha:
+\[
+x_{k+1}=x_k-\alpha_k g_k,\qquad \mathbb{E}[g_k]=\nabla f(x_k).
+\]
+W uczeniu maszynowym popularne są modyfikacje z momentum, RMSProp, Adam i AdamW. Ich zaletą jest skalowalność, wadą wrażliwość na hiperparametry i trudniejsza analiza końcowej dokładności.
+
+\subsubsection{Lokalne i globalne optimum}
+
+Dla funkcji niewypukłych metoda lokalna zwykle gwarantuje co najwyżej znalezienie punktu stacjonarnego albo lokalnego minimum. Globalna optymalizacja wymaga dodatkowych technik: wielostartu, branch and bound, relaksacji wypukłych, metaheurystyk, metod przedziałowych albo specjalnej struktury problemu.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Najważniejsze metody bez ograniczeń to gradient descent, Newton, quasi-Newton, metody bezpochodne i stochastyczne. Gradient descent jest prosty, ale może być wolny; Newton jest szybki lokalnie, ale kosztowny; BFGS/L-BFGS to praktyczny kompromis; Nelder-Mead i inne metody bezpochodne są użyteczne, gdy nie mamy gradientu. W problemach wypukłych optimum lokalne jest globalne, w niewypukłych nie.
+
+\subsection{Metody poszukiwania ekstremum w obecności ograniczeń}
+
+Problem z ograniczeniami ma postać:
+\[
+\min_x f(x)
+\]
+przy warunkach
+\[
+g_i(x)\le 0,\quad i=1,\dots,m,\qquad h_j(x)=0,\quad j=1,\dots,p.
+\]
+Zbiór dopuszczalny jest zbiorem punktów spełniających ograniczenia. Ograniczenia mogą być liniowe, nieliniowe, wypukłe, niewypukłe, równościowe, nierównościowe albo całkowitoliczbowe.
+
+\subsubsection{Warunki KKT}
+
+Dla problemu gładkiego definiujemy Lagrangian:
+\[
+\mathcal{L}(x,\lambda,\mu)=f(x)+\sum_{i=1}^{m}\lambda_i g_i(x)+\sum_{j=1}^{p}\mu_j h_j(x),
+\]
+gdzie $\lambda_i\ge 0$ są mnożnikami dla nierówności, a $\mu_j$ dla równości.
+
+Warunki Karusha-Kuhna-Tuckera:
+\begin{align*}
+\nabla_x \mathcal{L}(x^*,\lambda^*,\mu^*)&=0 &&\text{stacjonarność},\\
+g_i(x^*)&\le 0,\quad h_j(x^*)=0 &&\text{dopuszczalność pierwotna},\\
+\lambda_i^*&\ge 0 &&\text{dopuszczalność dualna},\\
+\lambda_i^* g_i(x^*)&=0 &&\text{komplementarność}.
+\end{align*}
+Dla problemów wypukłych przy odpowiednich warunkach regularności KKT są nie tylko konieczne, ale też wystarczające.
+
+\subsubsection{Metoda mnożników Lagrange'a}
+
+Dla samych równości $h_j(x)=0$ szukamy punktów stacjonarnych Lagrangianu:
+\[
+\nabla f(x^*)+\sum_{j=1}^{p}\mu_j\nabla h_j(x^*)=0,\qquad h_j(x^*)=0.
+\]
+Geometrycznie gradient funkcji celu w optimum leży w rozpięciu gradientów aktywnych ograniczeń, czyli nie ma składowej pozwalającej poprawić wynik wzdłuż zbioru dopuszczalnego.
+
+\subsubsection{Metody kar i barier}
+
+Metody kar zamieniają problem ograniczony na sekwencję problemów bez ograniczeń:
+\[
+\min_x f(x)+\rho_k P(x),
+\]
+gdzie $P(x)$ karze naruszenie ograniczeń, np.
+\[
+P(x)=\sum_i \max(0,g_i(x))^2+\sum_j h_j(x)^2.
+\]
+Gdy $\rho_k$ rośnie, rozwiązania powinny zbliżać się do dopuszczalnych. Wadą jest pogarszające się uwarunkowanie dla dużych kar.
+
+Metody barier działają wewnątrz zbioru dopuszczalnego, np. dla $g_i(x)<0$:
+\[
+\min_x f(x)-\mu\sum_i \log(-g_i(x)).
+\]
+Gdy $\mu\to 0$, bariera słabnie, a rozwiązanie zbliża się do optimum problemu oryginalnego. To idea metod punktu wewnętrznego.
+
+\subsubsection{Programowanie sekwencyjne kwadratowe}
+
+Sequential Quadratic Programming rozwiązuje w każdej iteracji przybliżony problem kwadratowy: funkcję celu zastępuje modelem kwadratowym Lagrangianu, a ograniczenia linearyzuje. SQP jest bardzo skuteczne dla gładkich problemów nieliniowych średniego rozmiaru.
+
+\subsubsection{Metody projekcyjne}
+
+Dla prostego zbioru dopuszczalnego $C$ można wykonać krok gradientowy i projekcję:
+\[
+x_{k+1}=P_C(x_k-\alpha_k\nabla f(x_k)),
+\]
+gdzie
+\[
+P_C(y)=\argmin_{x\in C}\|x-y\|_2.
+\]
+Metoda jest naturalna dla ograniczeń pudełkowych, kul, sympleksu albo prostych zbiorów wypukłych. W uczeniu maszynowym odpowiada np. obcinaniu wag do zakresu albo projekcji na ograniczenie normy.
+
+\subsubsection{Active set i interior point}
+
+Metody aktywnego zbioru zgadują, które ograniczenia nierównościowe są aktywne w optimum, czyli spełnione jako równości. Następnie rozwiązują problem z tymi ograniczeniami jak z równościami i aktualizują zbiór aktywny.
+
+Metody punktu wewnętrznego poruszają się we wnętrzu zbioru dopuszczalnego i używają barier. Są podstawą bardzo wydajnych solverów dla programowania liniowego, kwadratowego i wypukłego.
+
+\subsubsection{Ograniczenia całkowitoliczbowe}
+
+Jeśli część zmiennych musi być całkowita albo binarna, problem staje się programowaniem całkowitoliczbowym. Typowe techniki:
+\begin{itemize}
+  \item branch and bound,
+  \item branch and cut,
+  \item relaksacja liniowa albo wypukła,
+  \item płaszczyzny tnące,
+  \item heurystyki naprawcze.
+\end{itemize}
+Tego typu problemy są często NP-trudne.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Dla ograniczeń kluczowe są warunki KKT: stacjonarność, dopuszczalność, nieujemność mnożników i komplementarność. Metody praktyczne to mnożniki Lagrange'a, kary, bariery, projekcja, SQP, active set i interior point. Dla problemów wypukłych warunki KKT dają globalną charakterystykę optimum; dla niewypukłych zwykle tylko lokalną.
+
+\subsection{Wielomianowy schemat aproksymacyjny}
+
+Wiele problemów NP-trudnych jest zbyt kosztownych do dokładnego rozwiązania dla dużych instancji. Algorytmy aproksymacyjne zwracają rozwiązania bliskie optymalnym z formalną gwarancją jakości.
+
+\subsubsection{Współczynnik aproksymacji}
+
+Dla problemu minimalizacyjnego algorytm ma współczynnik $\rho(n)\ge 1$, jeśli dla każdej instancji:
+\[
+A(I)\le \rho(n)\cdot OPT(I),
+\]
+gdzie $A(I)$ jest wartością rozwiązania algorytmu, a $OPT(I)$ optimum. Dla problemu maksymalizacyjnego zwykle wymaga się:
+\[
+A(I)\ge \frac{1}{\rho(n)}OPT(I).
+\]
+Jeśli $\rho$ jest stałe, mówimy o stałej aproksymacji.
+
+\subsubsection{PTAS}
+
+Polynomial-Time Approximation Scheme to rodzina algorytmów, która dla dowolnego $\eps>0$ zwraca rozwiązanie o jakości:
+\[
+A(I)\le (1+\eps)OPT(I)
+\]
+dla minimalizacji albo
+\[
+A(I)\ge (1-\eps)OPT(I)
+\]
+dla maksymalizacji, w czasie wielomianowym względem rozmiaru wejścia $n$ dla ustalonego $\eps$.
+
+Istotne: czas może być bardzo zły jako funkcja $1/\eps$, np.
+\[
+\BigO(n^{1/\eps}).
+\]
+Dla każdego ustalonego $\eps$ jest to wielomian w $n$, więc formalnie PTAS.
+
+\subsubsection{FPTAS}
+
+Fully Polynomial-Time Approximation Scheme wymaga czasu wielomianowego zarówno względem $n$, jak i $1/\eps$, np.
+\[
+\BigO(n^3/\eps^2).
+\]
+FPTAS jest znacznie silniejszy praktycznie i teoretycznie niż PTAS.
+
+\subsubsection{EPTAS}
+
+Efficient PTAS ma czas postaci
+\[
+f(1/\eps)\cdot n^{O(1)},
+\]
+gdzie wykładnik przy $n$ nie zależy od $\eps$. To kompromis między PTAS i FPTAS.
+
+\subsubsection{Przykłady}
+
+\begin{itemize}
+  \item Problem plecakowy 0/1 ma FPTAS oparty na skalowaniu wartości przedmiotów i programowaniu dynamicznym.
+  \item Euklidesowy TSP w ustalonym wymiarze ma PTAS.
+  \item Dla ogólnego metrycznego TSP znany jest algorytm Christofidesa z gwarancją $3/2$, ale nie jest to PTAS.
+  \item Dla wielu problemów silnie NP-trudnych istnienie FPTAS implikowałoby $\mathrm{P}=\NP$.
+\end{itemize}
+
+\subsubsection{Schemat FPTAS dla plecaka}
+
+W plecaku maksymalizujemy wartość przy ograniczeniu wagi. Klasyczne DP po wartościach działa w czasie zależnym od sumy wartości, która może być pseudowielomianowa. FPTAS skaluje wartości:
+\[
+v_i'=\left\lfloor \frac{v_i}{K}\right\rfloor
+\]
+dla odpowiednio dobranego $K$ zależnego od $\eps$ i $v_{\max}$. Następnie rozwiązujemy problem DP dla mniejszych wartości. Tracimy co najwyżej kontrolowany ułamek optimum.
+
+\subsubsection{Co powiedzieć na obronie}
+
+PTAS to rodzina algorytmów, która dla dowolnej dokładności $\eps$ daje rozwiązanie w granicach $1+\eps$ od optimum w czasie wielomianowym dla ustalonego $\eps$. FPTAS jest silniejszy, bo czas jest wielomianowy także względem $1/\eps$. Schematy aproksymacyjne są sposobem radzenia sobie z NP-trudnością, gdy optimum dokładne jest za drogie.
+
+\subsection{Programowanie dynamiczne}
+
+Programowanie dynamiczne jest techniką projektowania algorytmów dla problemów z optymalną podstrukturą i nakładającymi się podproblemami. Zamiast wielokrotnie rozwiązywać te same podproblemy, zapamiętuje się ich wyniki.
+
+\subsubsection{Dwie podstawowe własności}
+
+\begin{description}
+  \item[Optymalna podstruktura] rozwiązanie optymalne problemu można zbudować z rozwiązań optymalnych podproblemów.
+  \item[Nakładające się podproblemy] rekurencyjne rozwiązanie generowałoby te same podproblemy wielokrotnie.
+\end{description}
+
+Jeśli podproblemy się nie nakładają, zwykle wystarcza dziel i zwyciężaj, jak w mergesort. Jeśli nie ma optymalnej podstruktury, DP może dawać błędne rozwiązania.
+
+\subsubsection{Top-down i bottom-up}
+
+Podejście top-down z memoizacją zapisuje wyniki funkcji rekurencyjnej. Jest łatwe do napisania i oblicza tylko potrzebne stany.
+
+Podejście bottom-up wypełnia tablicę w porządku zgodnym z zależnościami. Zwykle daje mniejszy narzut i łatwiej kontrolować pamięć.
+
+\subsubsection{Schemat projektowania DP}
+
+\begin{enumerate}
+  \item Zdefiniować stan, czyli co opisuje podproblem.
+  \item Określić wartość przechowywaną w stanie.
+  \item Wyprowadzić rekurencję przejścia.
+  \item Ustalić przypadki bazowe.
+  \item Ustalić kolejność obliczeń.
+  \item Odtworzyć rozwiązanie, jeśli potrzebna jest struktura, a nie tylko wartość.
+  \item Oszacować liczbę stanów i koszt przejścia.
+\end{enumerate}
+
+\subsubsection{Przykład: najdłuższy wspólny podciąg}
+
+Dla napisów $X[1..m]$ i $Y[1..n]$ definiujemy $dp[i][j]$ jako długość LCS prefiksów $X[1..i]$ i $Y[1..j]$:
+\[
+dp[i][j]=
+\begin{cases}
+0, & i=0\text{ lub }j=0,\\
+dp[i-1][j-1]+1, & X_i=Y_j,\\
+\max(dp[i-1][j],dp[i][j-1]), & X_i\ne Y_j.
+\end{cases}
+\]
+Złożoność czasu i pamięci wynosi $\Theta(mn)$, choć pamięć dla samej długości można zredukować do $\Theta(\min(m,n))$.
+
+\subsubsection{Przykład: plecak 0/1}
+
+Dla przedmiotów o wagach $w_i$ i wartościach $v_i$ oraz pojemności $W$:
+\[
+dp[i][c]=\text{maksymalna wartość z pierwszych }i\text{ przedmiotów przy pojemności }c.
+\]
+Rekurencja:
+\[
+dp[i][c]=
+\begin{cases}
+dp[i-1][c], & w_i>c,\\
+\max(dp[i-1][c],dp[i-1][c-w_i]+v_i), & w_i\le c.
+\end{cases}
+\]
+Czas $\Theta(nW)$ jest pseudowielomianowy, bo zależy od wartości liczbowej $W$, a nie od liczby bitów jej zapisu.
+
+\subsubsection{Przykład: Floyd-Warshall}
+
+Dla najkrótszych ścieżek między wszystkimi parami:
+\[
+d^{(k)}_{ij}=\min\left(d^{(k-1)}_{ij},d^{(k-1)}_{ik}+d^{(k-1)}_{kj}\right).
+\]
+Stan oznacza najkrótszą ścieżkę z $i$ do $j$ używającą jako pośrednich tylko wierzchołków z $\{1,\dots,k\}$. Czas $\Theta(n^3)$, pamięć $\Theta(n^2)$.
+
+\subsubsection{Przykład: Held-Karp dla TSP}
+
+Stan:
+\[
+dp[S][j]=\text{koszt najkrótszej ścieżki startującej w }1,\text{ odwiedzającej }S,\text{ kończącej w }j.
+\]
+Rekurencja:
+\[
+dp[S][j]=\min_{i\in S, i\ne j} dp[S\setminus\{j\}][i]+c_{ij}.
+\]
+Czas $\Theta(n^2 2^n)$ jest dużo lepszy niż brute force, ale nadal wykładniczy.
+
+\subsubsection{Pułapki}
+
+Najczęstsze błędy:
+\begin{itemize}
+  \item stan nie zawiera całej informacji potrzebnej do przyszłych decyzji,
+  \item rekurencja używa stanu, który nie został jeszcze obliczony,
+  \item pomylenie indeksów i przypadków bazowych,
+  \item nieświadome użycie pseudowielomianowej złożoności,
+  \item odtworzenie rozwiązania nie jest zaplanowane,
+  \item pamięć jest zbyt duża mimo akceptowalnego czasu.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Programowanie dynamiczne stosuje się, gdy problem ma optymalną podstrukturę i nakładające się podproblemy. Definiujemy stan, rekurencję, przypadki bazowe i kolejność obliczeń. DP może być top-down z memoizacją albo bottom-up. Typowe przykłady to LCS, plecak, Floyd-Warshall, edycja napisów i Held-Karp dla TSP.

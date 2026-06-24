@@ -1,0 +1,550 @@
+\section{Metody sztucznej inteligencji i systemy ekspertowe}
+
+\subsection{Sposób działania algorytmu ewolucyjnego}
+
+Algorytm ewolucyjny jest populacyjną metaheurystyką inspirowaną ewolucją biologiczną. Przetwarza zbiór kandydatów na rozwiązania, stosuje selekcję, rekombinację i mutację, a jakość kandydatów ocenia funkcją dopasowania. Celem jest iteracyjne przesuwanie populacji w kierunku lepszych rozwiązań przy zachowaniu wystarczającej różnorodności.
+
+\subsubsection{Elementy algorytmu}
+
+\begin{description}
+  \item[Osobnik] kandydat na rozwiązanie problemu.
+  \item[Genotyp] reprezentacja osobnika używana przez operatory, np. bitstring, wektor liczb rzeczywistych, permutacja.
+  \item[Fenotyp] rozwiązanie po dekodowaniu genotypu, np. konkretna trasa TSP.
+  \item[Populacja] zbiór osobników.
+  \item[Funkcja dopasowania] miara jakości osobnika. Dla problemu minimalizacji często przekształca się koszt na dopasowanie albo stosuje selekcję opartą bezpośrednio na rankingu.
+  \item[Selekcja] wybór osobników do reprodukcji.
+  \item[Krzyżowanie] tworzenie potomków z informacji wielu rodziców.
+  \item[Mutacja] losowa modyfikacja osobnika.
+  \item[Elityzm] przenoszenie najlepszych osobników bez zmian do kolejnego pokolenia.
+\end{description}
+
+\subsubsection{Ogólny schemat}
+
+\begin{enumerate}
+  \item Zainicjalizuj populację, losowo albo heurystycznie.
+  \item Oceń każdego osobnika funkcją dopasowania.
+  \item Dopóki nie spełniono warunku stopu:
+  \begin{enumerate}
+    \item wybierz rodziców,
+    \item zastosuj krzyżowanie,
+    \item zastosuj mutację,
+    \item oceń potomków,
+    \item utwórz nowe pokolenie,
+    \item zachowaj elity, jeśli stosujesz elityzm.
+  \end{enumerate}
+  \item Zwróć najlepszego znalezionego osobnika.
+\end{enumerate}
+
+Warunek stopu może zależeć od liczby pokoleń, budżetu czasu, liczby ewaluacji funkcji celu, braku poprawy albo osiągnięcia wymaganej jakości.
+
+\subsubsection{Reprezentacja}
+
+Reprezentacja jest kluczowa. Powinna:
+\begin{itemize}
+  \item kodować wszystkie istotne rozwiązania,
+  \item ograniczać liczbę rozwiązań niedopuszczalnych,
+  \item pozwalać operatorom tworzyć sensownych potomków,
+  \item zachowywać strukturę problemu.
+\end{itemize}
+
+Przykłady:
+\begin{itemize}
+  \item bitstring dla wyboru podzbioru cech,
+  \item wektor rzeczywisty dla optymalizacji ciągłej,
+  \item permutacja dla TSP i harmonogramowania,
+  \item drzewo dla programowania genetycznego.
+\end{itemize}
+
+Jeśli reprezentacja generuje rozwiązania niedopuszczalne, trzeba stosować kary, naprawę, dekoder albo specjalne operatory zachowujące dopuszczalność.
+
+\subsubsection{Selekcja}
+
+Selekcja zwiększa prawdopodobieństwo reprodukcji lepszych osobników, ale nie powinna zbyt szybko usuwać różnorodności.
+
+\begin{description}
+  \item[Ruletka] prawdopodobieństwo wyboru proporcjonalne do dopasowania. Wrażliwa na skalowanie dopasowania.
+  \item[Selekcja rankingowa] osobniki sortuje się według jakości, a prawdopodobieństwa zależą od rangi. Jest stabilniejsza.
+  \item[Turniej] losuje się kilka osobników i wybiera najlepszego. Rozmiar turnieju kontroluje presję selekcyjną.
+  \item[Elityzm] najlepsze osobniki przechodzą do następnego pokolenia, co zapobiega utracie najlepszego znalezionego rozwiązania.
+\end{description}
+
+\subsubsection{Krzyżowanie i mutacja}
+
+Dla bitstringów używa się krzyżowania jednopunktowego, wielopunktowego albo jednorodnego. Dla wektorów rzeczywistych można stosować średnie arytmetyczne, BLX-$\alpha$, SBX albo rekombinację liniową. Dla permutacji potrzebne są operatory zachowujące permutację, np. PMX, OX, CX.
+
+Mutacja zapewnia eksplorację. Przykłady:
+\begin{itemize}
+  \item odwrócenie bitu,
+  \item dodanie szumu Gaussowskiego,
+  \item zamiana dwóch pozycji w permutacji,
+  \item odwrócenie fragmentu trasy,
+  \item mutacja poddrzewa w programowaniu genetycznym.
+\end{itemize}
+
+\subsubsection{Eksploracja i eksploatacja}
+
+Algorytm ewolucyjny musi równoważyć:
+\begin{description}
+  \item[Eksplorację] przeszukiwanie nowych regionów przestrzeni.
+  \item[Eksploatację] intensywne ulepszanie obiecujących regionów.
+\end{description}
+
+Zbyt duża presja selekcyjna albo zbyt mała mutacja prowadzą do przedwczesnej zbieżności. Zbyt duża losowość powoduje zachowanie podobne do losowego przeszukiwania. Różnorodność można utrzymywać przez mutację, niching, crowding, fitness sharing, restart albo populacje wyspowe.
+
+\subsubsection{Parametry}
+
+Najważniejsze parametry:
+\begin{itemize}
+  \item rozmiar populacji,
+  \item prawdopodobieństwo krzyżowania,
+  \item prawdopodobieństwo mutacji,
+  \item siła mutacji,
+  \item presja selekcyjna,
+  \item liczba elit,
+  \item kryterium stopu.
+\end{itemize}
+
+Parametry silnie wpływają na wynik, dlatego należy je stroić na walidacyjnych instancjach i raportować w eksperymentach.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Algorytm ewolucyjny utrzymuje populację rozwiązań, ocenia je funkcją dopasowania, wybiera lepsze osobniki do reprodukcji i tworzy nowe rozwiązania przez krzyżowanie oraz mutację. Selekcja daje presję w stronę jakości, mutacja i różnorodność zapewniają eksplorację, a elityzm chroni najlepsze rozwiązania. Kluczowe są reprezentacja i dobór operatorów zgodnych z problemem.
+
+\subsection{Porównanie algorytmu ewolucyjnego z metodami optymalizacji w $\R^n$}
+
+Algorytmy ewolucyjne i klasyczne metody optymalizacji ciągłej rozwiązują podobny problem poszukiwania ekstremum, ale mają inne założenia, koszty i gwarancje.
+
+\subsubsection{Algorytm ewolucyjny}
+
+Algorytm ewolucyjny:
+\begin{itemize}
+  \item jest populacyjny,
+  \item zwykle nie wymaga gradientu,
+  \item dobrze radzi sobie z funkcjami niegładkimi, zaszumionymi i wielomodalnymi,
+  \item łatwo obsługuje reprezentacje dyskretne i mieszane,
+  \item może znajdować dobre rozwiązania globalnie, ale bez gwarancji optimum,
+  \item wymaga wielu ewaluacji funkcji celu.
+\end{itemize}
+
+Jakość wyniku jest losowa i zależy od parametrów oraz budżetu obliczeniowego. Wyniki powinno się raportować statystycznie.
+
+\subsubsection{Metoda największego spadku}
+
+Gradient descent:
+\[
+x_{k+1}=x_k-\alpha_k\nabla f(x_k)
+\]
+jest metodą lokalną, deterministyczną przy ustalonym punkcie startowym i kroku. Dla funkcji gładkich wypukłych ma gwarancje zbieżności, a dla silnie wypukłych zbieżność liniową. Wymaga gradientu i jest wrażliwa na skalowanie zmiennych oraz uwarunkowanie. W funkcjach niewypukłych może utknąć w minimum lokalnym albo punkcie siodłowym.
+
+\subsubsection{Metoda Neldera-Meada}
+
+Nelder-Mead jest bezpochodną metodą lokalną. Utrzymuje sympleks $n+1$ punktów i wykonuje operacje odbicia, ekspansji, kontrakcji i redukcji. Dobrze działa w małych wymiarach i dla funkcji bez gradientu, ale w dużych wymiarach traci efektywność. Nie jest populacyjny w sensie ewolucyjnym, choć utrzymuje wiele punktów. Ma słabsze gwarancje zbieżności niż metody gradientowe w problemach gładkich wypukłych.
+
+\subsubsection{Metody quasi-Newtonowskie}
+
+BFGS i L-BFGS korzystają z gradientu i przybliżają krzywiznę funkcji. Dla gładkich problemów są zwykle znacznie szybsze niż gradient descent. W problemach wypukłych mogą dawać bardzo wysoką dokładność. Wymagają jednak gradientu lub jego dobrego przybliżenia, a dla funkcji silnie zaszumionych albo niedyskretnej reprezentacji mogą być nieodpowiednie.
+
+\subsubsection{Porównanie jakości i sposobu działania}
+
+\begin{longtable}{p{0.22\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+\toprule
+Kryterium & Algorytm ewolucyjny & Metody wypukłe/lokalne \\
+\midrule
+Informacja o funkcji & wartości funkcji, czasem ograniczenia & gradient, czasem Hessian albo pochodne \\
+Charakter & globalna metaheurystyka populacyjna & lokalna metoda analityczna \\
+Wypukłość & nie wymaga wypukłości & wypukłość daje silne gwarancje \\
+Gładkość & nie wymaga gładkości & zwykle wymaga gładkości \\
+Koszt & wiele ewaluacji funkcji celu & mniej iteracji, ale każda może wymagać gradientu/Hessianu \\
+Wynik & losowy, zależny od budżetu & deterministyczny przy ustalonych parametrach \\
+Gwarancje & zwykle słabe formalnie & silne dla problemów wypukłych \\
+Duży wymiar & często trudny bez specjalizacji & L-BFGS/SGD skalują się dobrze \\
+\bottomrule
+\end{longtable}
+
+\subsubsection{Kiedy wybrać którą metodę}
+
+Algorytm ewolucyjny warto wybrać, gdy:
+\begin{itemize}
+  \item funkcja jest czarnoskrzynkowa,
+  \item nie ma gradientu,
+  \item przestrzeń jest dyskretna albo mieszana,
+  \item problem jest wielomodalny,
+  \item ewaluacje można równoleglić,
+  \item wystarczy dobre rozwiązanie, niekoniecznie dowód optymalności.
+\end{itemize}
+
+Metody gradientowe/quasi-Newtonowskie warto wybrać, gdy:
+\begin{itemize}
+  \item funkcja jest gładka,
+  \item gradient jest dostępny,
+  \item problem jest wypukły albo lokalna dokładność jest ważna,
+  \item wymiar jest duży,
+  \item liczba ewaluacji funkcji celu ma być mała.
+\end{itemize}
+
+Często stosuje się hybrydy: algorytm ewolucyjny znajduje obiecujący region, a metoda lokalna dopracowuje rozwiązanie. Takie podejście nazywa się czasem algorytmem memetycznym.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Algorytm ewolucyjny jest globalną, losową, populacyjną heurystyką bez wymogu gradientu, dobrą dla funkcji trudnych, niegładkich i wielomodalnych. Metody gradientowe, Nelder-Mead i quasi-Newton są bardziej lokalne; dla problemów wypukłych i gładkich dają znacznie lepsze gwarancje oraz dokładność. Ewolucja jest bardziej uniwersalna, ale kosztowna i mniej przewidywalna; metody wypukłe są szybsze i lepiej uzasadnione, gdy spełnione są ich założenia.
+
+\subsection{Metody symulacji Monte Carlo w grach}
+
+Metody Monte Carlo w grach używają losowych symulacji rozgrywki do oceny ruchów. Są szczególnie użyteczne, gdy przestrzeń stanów jest ogromna, trudno zbudować dobrą funkcję oceny, a pełne przeszukiwanie minimax jest niemożliwe.
+
+\subsubsection{Podstawowa idea}
+
+Dla danego stanu gry i możliwego ruchu wykonujemy wiele losowych dogrywek do końca gry albo do ustalonej głębokości. Wynik ruchu oceniamy średnią nagrodą:
+\[
+\hat V(a)=\frac{1}{N}\sum_{i=1}^{N} z_i,
+\]
+gdzie $z_i$ jest wynikiem $i$-tej symulacji po ruchu $a$. Ruch z największą średnią jest wybierany.
+
+Zaletą jest prostota i brak konieczności ręcznego projektowania skomplikowanej heurystyki. Wadą jest wariancja i koszt wielu symulacji.
+
+\subsubsection{Monte Carlo Tree Search}
+
+MCTS łączy symulacje Monte Carlo z budową drzewa przeszukiwania. Najczęściej opisuje się cztery fazy:
+\begin{enumerate}
+  \item selekcja - przechodzimy od korzenia do liścia, wybierając dzieci według reguły równoważącej eksplorację i eksploatację,
+  \item ekspansja - dodajemy nowy węzeł,
+  \item symulacja - wykonujemy dogrywkę, np. losową albo heurystyczną,
+  \item propagacja wsteczna - aktualizujemy statystyki odwiedzonych węzłów.
+\end{enumerate}
+
+W każdym węźle przechowuje się zwykle liczbę wizyt $N(s)$ i sumę albo średnią nagród $Q(s,a)$.
+
+\subsubsection{UCT}
+
+Popularną regułą selekcji jest UCT, oparta na upper confidence bound:
+\[
+a=\argmax_a\left(\bar X(s,a)+C\sqrt{\frac{\ln N(s)}{N(s,a)}}\right).
+\]
+Pierwszy składnik promuje ruchy o wysokiej średniej wygranej, drugi promuje ruchy rzadko badane. Parametr $C$ kontroluje eksplorację.
+
+\subsubsection{Zastosowania}
+
+MCTS był przełomowy w grach takich jak Go, gdzie klasyczne minimax z ręczną funkcją oceny długo było niewystarczające. Stosuje się go też w grach planszowych, grach z niepełną informacją w wariantach determinization albo information set MCTS, planowaniu robotów, grach wideo i problemach decyzyjnych.
+
+\subsubsection{Ulepszenia}
+
+\begin{itemize}
+  \item rollout policy zamiast całkowicie losowych dogrywek,
+  \item progressive widening dla dużej liczby akcji,
+  \item transposition tables,
+  \item RAVE/AMAF,
+  \item priory z sieci neuronowej,
+  \item value network zastępująca część symulacji,
+  \item parallel MCTS.
+\end{itemize}
+
+AlphaGo i AlphaZero łączyły MCTS z sieciami neuronowymi: sieć polityki sugerowała obiecujące ruchy, a sieć wartości oceniała pozycje.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Monte Carlo w grach ocenia ruchy przez losowe symulacje. MCTS buduje asymetryczne drzewo tam, gdzie symulacje wskazują obiecujące warianty. Kluczowe fazy to selekcja, ekspansja, symulacja i backpropagation. UCT równoważy eksploatację ruchów dobrych i eksplorację słabo poznanych. Metody te są skuteczne przy ogromnych drzewach gry i słabych heurystykach.
+
+\subsection{Pojęcie agenta w SI: opis formalny i własności}
+
+Agent w sztucznej inteligencji to system, który postrzega środowisko przez sensory i oddziałuje na nie przez aktuatory. Formalnie agent realizuje odwzorowanie historii percepcji na akcje:
+\[
+f:P^*\to A,
+\]
+gdzie $P^*$ jest zbiorem możliwych historii perceptów, a $A$ zbiorem akcji. Często zamiast historii używa się stanu wewnętrznego, który jest jej skompresowaną reprezentacją.
+
+\subsubsection{Agent i środowisko}
+
+Cykl działania:
+\[
+\text{percepcja}\to\text{aktualizacja stanu}\to\text{wybór akcji}\to\text{zmiana środowiska}.
+\]
+Środowisko może być:
+\begin{itemize}
+  \item w pełni obserwowalne albo częściowo obserwowalne,
+  \item deterministyczne albo stochastyczne,
+  \item epizodyczne albo sekwencyjne,
+  \item statyczne albo dynamiczne,
+  \item dyskretne albo ciągłe,
+  \item jednoagentowe albo wieloagentowe,
+  \item znane albo nieznane.
+\end{itemize}
+
+\subsubsection{Racjonalność}
+
+Agent racjonalny wybiera akcję maksymalizującą oczekiwaną miarę skuteczności na podstawie dostępnej wiedzy i perceptów. Racjonalność nie oznacza wszechwiedzy. Agent może podjąć decyzję błędną ex post, jeśli była najlepsza ex ante przy dostępnej informacji.
+
+Formalnie można mówić o maksymalizacji oczekiwanej użyteczności:
+\[
+a^*=\argmax_a \mathbb{E}[U(\text{wynik})\mid \text{historia},a].
+\]
+
+\subsubsection{Typy agentów}
+
+\begin{description}
+  \item[Prosty agent reaktywny] wybiera akcję na podstawie bieżącej percepcji, reguł typu warunek-akcja.
+  \item[Agent ze stanem] utrzymuje stan wewnętrzny opisujący nieobserwowalne aspekty świata.
+  \item[Agent celowy] wybiera akcje prowadzące do celu.
+  \item[Agent użytecznościowy] porównuje różne wyniki przez funkcję użyteczności.
+  \item[Agent uczący się] poprawia działanie na podstawie doświadczenia.
+\end{description}
+
+\subsubsection{Własności agentów}
+
+W systemach wieloagentowych często wymienia się:
+\begin{itemize}
+  \item autonomię - agent działa bez bezpośredniego sterowania,
+  \item reaktywność - reaguje na zmiany środowiska,
+  \item proaktywność - inicjuje działania dla osiągania celów,
+  \item społeczność - komunikuje się i współpracuje z innymi agentami,
+  \item adaptacyjność - zmienia zachowanie na podstawie doświadczenia,
+  \item racjonalność - dobiera akcje zgodnie z miarą skuteczności,
+  \item ograniczoną racjonalność - działa przy ograniczonych zasobach obliczeniowych.
+\end{itemize}
+
+\subsubsection{Agent w uczeniu ze wzmocnieniem}
+
+W RL agent w stanie $S_t$ wybiera akcję $A_t$, środowisko zwraca nagrodę $R_{t+1}$ i kolejny stan $S_{t+1}$. Celem jest maksymalizacja oczekiwanego zdyskontowanego zwrotu:
+\[
+G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\dots.
+\]
+Polityka $\pi(a|s)$ opisuje zachowanie agenta.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Agent to system postrzegający środowisko i wykonujący akcje. Formalnie można go opisać jako funkcję z historii perceptów do akcji. Agent racjonalny maksymalizuje oczekiwaną miarę skuteczności przy dostępnej wiedzy. Ważne własności to autonomia, reaktywność, proaktywność, zdolność komunikacji i uczenie się.
+
+\subsection{Inteligencja rojowa: idea i przykłady realizacji}
+
+Inteligencja rojowa opisuje rozwiązywanie problemów przez wiele prostych jednostek, które lokalnie oddziałują ze sobą i środowiskiem, a globalnie tworzą złożone, adaptacyjne zachowanie. Inspiracją są mrówki, pszczoły, ptaki, ryby i inne systemy kolektywne.
+
+\subsubsection{Cechy systemów rojowych}
+
+\begin{itemize}
+  \item brak centralnego sterowania,
+  \item lokalne reguły zachowania,
+  \item komunikacja bezpośrednia albo przez środowisko,
+  \item samoorganizacja,
+  \item redundancja i odporność,
+  \item równoległość,
+  \item emergencja, czyli powstawanie globalnego wzorca z lokalnych interakcji.
+\end{itemize}
+
+Stigmergia oznacza komunikację przez ślady w środowisku. Klasyczny przykład to feromony mrówek.
+
+\subsubsection{Ant Colony Optimization}
+
+ACO rozwiązuje problemy kombinatoryczne przez sztuczne mrówki budujące rozwiązania krok po kroku. Prawdopodobieństwo wyboru elementu zależy od feromonu i heurystyki lokalnej:
+\[
+p_{ij}\propto \tau_{ij}^{\alpha}\eta_{ij}^{\beta},
+\]
+gdzie $\tau_{ij}$ to poziom feromonu, a $\eta_{ij}$ to atrakcyjność heurystyczna, np. odwrotność odległości w TSP.
+
+Po zbudowaniu rozwiązań feromon jest aktualizowany:
+\[
+\tau_{ij}\leftarrow (1-\rho)\tau_{ij}+\Delta\tau_{ij}.
+\]
+Parowanie feromonu zapobiega zbyt szybkiemu zablokowaniu na jednym rozwiązaniu.
+
+\subsubsection{Particle Swarm Optimization}
+
+PSO działa w przestrzeni ciągłej. Cząstka ma pozycję $x_i$ i prędkość $v_i$. Aktualizacja:
+\[
+v_i\leftarrow \omega v_i+c_1r_1(p_i-x_i)+c_2r_2(g-x_i),
+\]
+\[
+x_i\leftarrow x_i+v_i.
+\]
+Składniki oznaczają: bezwładność, przyciąganie do najlepszego własnego punktu $p_i$ i przyciąganie do najlepszego punktu roju $g$. PSO jest proste i skuteczne dla wielu problemów ciągłych, ale może przedwcześnie zbiegać.
+
+\subsubsection{Artificial Bee Colony}
+
+ABC inspiruje się zachowaniem pszczół. Rozwiązania są źródłami pożywienia. Występują pszczoły zatrudnione, obserwatorki i zwiadowczynie. Dobre źródła są eksploatowane, słabe porzucane, a zwiadowczynie szukają nowych regionów.
+
+\subsubsection{Boids i modele stadne}
+
+W symulacji stad ptaków lub ryb globalny ruch powstaje z trzech lokalnych reguł:
+\begin{itemize}
+  \item separacja - unikaj kolizji,
+  \item alignment - dopasuj kierunek do sąsiadów,
+  \item cohesion - trzymaj się grupy.
+\end{itemize}
+To przykład emergencji: z prostych reguł lokalnych powstaje złożone zachowanie zbiorowe.
+
+\subsubsection{Zastosowania}
+
+\begin{itemize}
+  \item TSP i optymalizacja tras,
+  \item harmonogramowanie,
+  \item dobór parametrów modeli,
+  \item robotyka rojowa,
+  \item routing w sieciach,
+  \item optymalizacja funkcji ciągłych,
+  \item klastrowanie i eksploracja danych.
+\end{itemize}
+
+\subsubsection{Co powiedzieć na obronie}
+
+Inteligencja rojowa polega na tym, że wiele prostych jednostek działających lokalnie tworzy globalnie inteligentne zachowanie. Nie ma centralnego sterowania, ważna jest samoorganizacja i komunikacja lokalna. Przykłady to ACO dla problemów kombinatorycznych, PSO dla optymalizacji ciągłej, ABC oraz modele stadne.
+
+\subsection{Programowanie w logice na przykładzie Prologu}
+
+Programowanie logiczne opisuje problem przez fakty i reguły, a obliczenie polega na logicznym wnioskowaniu. Prolog jest klasycznym językiem programowania logicznego opartym na klauzulach Horna, unifikacji i rezolucji SLD.
+
+\subsubsection{Fakty, reguły i zapytania}
+
+Fakt:
+\begin{lstlisting}[language=Prolog]
+parent(jan, anna).
+parent(anna, piotr).
+\end{lstlisting}
+
+Reguła:
+\begin{lstlisting}[language=Prolog]
+grandparent(X, Z) :- parent(X, Y), parent(Y, Z).
+\end{lstlisting}
+
+Zapytanie:
+\begin{lstlisting}[language=Prolog]
+?- grandparent(jan, piotr).
+\end{lstlisting}
+
+Regułę czytamy: $X$ jest dziadkiem/babcią $Z$, jeśli istnieje $Y$, takie że $X$ jest rodzicem $Y$ i $Y$ jest rodzicem $Z$.
+
+\subsubsection{Semantyka klauzul Horna}
+
+Klauzula Horna ma co najwyżej jeden literał pozytywny. Reguła Prologa:
+\[
+H\;:-\;B_1,\dots,B_k
+\]
+odpowiada formule:
+\[
+B_1\wedge\dots\wedge B_k\to H.
+\]
+Fakt to reguła z pustym ciałem. Zapytanie jest celem, którego Prolog próbuje dowieść.
+
+\subsubsection{Unifikacja}
+
+Unifikacja dopasowuje termy przez podstawienia. Dla zapytania:
+\begin{lstlisting}[language=Prolog]
+?- parent(jan, X).
+\end{lstlisting}
+i faktu:
+\begin{lstlisting}[language=Prolog]
+parent(jan, anna).
+\end{lstlisting}
+unifikator to $\{X/anna\}$. Prolog zwróci $X=anna$.
+
+\subsubsection{Rezolucja SLD i backtracking}
+
+Prolog bierze pierwszy cel z listy celów, szuka pierwszej pasującej klauzuli, unifikuje, zastępuje cel ciałem reguły i kontynuuje. Jeśli później dojdzie do porażki, cofa się do ostatniego punktu wyboru i próbuje kolejnej klauzuli. To backtracking.
+
+Kolejność reguł i kolejność celów w ciele ma znaczenie operacyjne, mimo że deklaratywnie mogą być równoważne. Źle ustawiona rekursja może powodować zapętlenie.
+
+\subsubsection{Rekursja}
+
+Przykład przodka:
+\begin{lstlisting}[language=Prolog]
+ancestor(X, Z) :- parent(X, Z).
+ancestor(X, Z) :- parent(X, Y), ancestor(Y, Z).
+\end{lstlisting}
+Pierwsza reguła jest przypadkiem bazowym, druga rekurencyjnym.
+
+\subsubsection{Negacja jako porażka}
+
+Prolog często używa negation as failure:
+\begin{lstlisting}[language=Prolog]
+not_p(X) :- \+ p(X).
+\end{lstlisting}
+Znaczy to: uznaj $\neg p(X)$, jeśli nie udało się dowieść $p(X)$. To nie jest klasyczna negacja logiczna; opiera się na założeniu zamkniętego świata. Jeśli czegoś nie ma w bazie i nie da się tego wywnioskować, traktujemy to jako fałsz.
+
+\subsubsection{Cut}
+
+Operator cut `!' ogranicza backtracking. Może poprawiać wydajność albo wymuszać deterministyczny wybór, ale osłabia deklaratywną czytelność programu. Cut zielony nie zmienia znaczenia logicznego, tylko przyspiesza. Cut czerwony zmienia odpowiedzi programu i wymaga ostrożności.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Prolog reprezentuje wiedzę przez fakty i reguły będące klauzulami Horna. Obliczenie polega na dowodzeniu zapytań przez unifikację, rezolucję SLD i backtracking. Program ma charakter deklaratywny, ale kolejność reguł i celów wpływa na działanie. Ważne pojęcia to unifikacja, rekursja, negacja jako porażka i cut.
+
+\subsection{Generowanie reguł minimalnych z bazy wiedzy w systemach eksperckich}
+
+System ekspertowy używa bazy wiedzy i mechanizmu wnioskowania do rozwiązywania problemów z danej dziedziny. Wiedza często ma postać reguł:
+\[
+IF\; warunki \; THEN\; decyzja.
+\]
+Reguły minimalne są regułami, z których nie można usunąć żadnego warunku bez utraty zdolności rozróżniania decyzji albo bez zmiany pokrycia zgodnego z założonym kryterium.
+
+\subsubsection{System informacyjny i decyzyjny}
+
+Dane można przedstawić jako tabelę decyzyjną:
+\[
+S=(U,A\cup\{d\}),
+\]
+gdzie $U$ jest zbiorem obiektów, $A$ zbiorem atrybutów warunkowych, a $d$ atrybutem decyzyjnym. Reguła ma postać:
+\[
+(a_1=v_1)\wedge\dots\wedge(a_k=v_k)\to(d=c).
+\]
+
+\subsubsection{Minimalność reguły}
+
+Reguła jest minimalna, jeśli:
+\begin{itemize}
+  \item jest poprawna albo wystarczająco wiarygodna według przyjętej miary,
+  \item konkluzja pozostaje określona przez warunki,
+  \item żaden warunek z poprzednika nie jest redundantny.
+\end{itemize}
+
+Minimalność nie zawsze oznacza najkrótszą możliwą regułę globalnie. Może oznaczać minimalność względem inkluzji zbioru warunków.
+
+\subsubsection{Podejście przez zbiory przybliżone}
+
+W teorii zbiorów przybliżonych obiekty są nierozróżnialne względem zbioru atrybutów $B$, jeśli mają te same wartości wszystkich atrybutów z $B$. Redukt to minimalny podzbiór atrybutów zachowujący zdolność klasyfikacyjną całego zbioru atrybutów. Core to część wspólna wszystkich reduktów, czyli atrybuty konieczne.
+
+Generowanie reguł:
+\begin{enumerate}
+  \item zbudować klasy decyzyjne,
+  \item wyznaczyć relacje nierozróżnialności,
+  \item znaleźć redukty lokalne albo globalne,
+  \item utworzyć reguły z minimalnych kombinacji atrybut-wartość,
+  \item usunąć warunki redundantne,
+  \item ocenić wsparcie, dokładność i pokrycie.
+\end{enumerate}
+
+\subsubsection{Macierz rozróżnialności}
+
+Dla par obiektów o różnych decyzjach buduje się zbiory atrybutów, na których obiekty się różnią. Aby reguła odróżniała obiekt od obiektów z inną decyzją, musi zawierać co najmniej jeden atrybut z każdego takiego zbioru. Problem sprowadza się do znalezienia minimalnych hitting sets, co może być kosztowne obliczeniowo.
+
+\subsubsection{Miary reguł}
+
+Dla reguły $r: P\to C$:
+\begin{description}
+  \item[Wsparcie] liczba obiektów spełniających $P$ i $C$.
+  \item[Pokrycie] jaka część klasy decyzyjnej jest pokryta przez regułę.
+  \item[Dokładność] odsetek obiektów spełniających $P$, które mają decyzję $C$:
+  \[
+  acc(r)=\frac{|P\cap C|}{|P|}.
+  \]
+  \item[Confidence] analog dokładności w regułach asocjacyjnych.
+  \item[Lift] porównanie z częstością klasy bazowej.
+\end{description}
+
+W danych zaszumionych wymóg stuprocentowej dokładności może prowadzić do zbyt specyficznych reguł. Dopuszcza się reguły przybliżone z minimalnym wsparciem i minimalną dokładnością.
+
+\subsubsection{Usuwanie redundancji}
+
+Regułę minimalizuje się przez testowanie każdego warunku:
+\begin{enumerate}
+  \item usuń warunek,
+  \item sprawdź, czy reguła nadal spełnia kryterium jakości,
+  \item jeśli tak, warunek był redundantny,
+  \item powtarzaj do punktu stałego.
+\end{enumerate}
+
+Usuwanie pojedynczych warunków nie zawsze daje globalnie najkrótszą regułę, ale jest praktyczne. Dokładniejsze metody przeszukują przestrzeń podzbiorów warunków.
+
+\subsubsection{Związek z drzewami decyzyjnymi}
+
+Reguły można generować z drzewa decyzyjnego: każda ścieżka od korzenia do liścia tworzy regułę. Następnie reguły można przycinać, usuwając warunki, które nie pogarszają jakości na danych walidacyjnych. Takie reguły są czytelne, choć zależą od heurystyki budowy drzewa.
+
+\subsubsection{Co powiedzieć na obronie}
+
+Reguły minimalne to reguły decyzyjne bez zbędnych warunków. Generuje się je z tabeli decyzyjnej przez analizę rozróżnialności obiektów, redukty atrybutów, zbiory przybliżone albo drzewa decyzyjne. Minimalizacja polega na usuwaniu warunków, które nie są potrzebne do zachowania decyzji lub jakości reguły. Reguły ocenia się przez wsparcie, dokładność i pokrycie.

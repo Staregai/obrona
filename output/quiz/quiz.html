@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz do obrony MSI</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef3f8;
+      --text: #18202a;
+      --muted: #617080;
+      --line: #d8e0e8;
+      --accent: #1f7a8c;
+      --accent-2: #6d597a;
+      --good: #247a4d;
+      --bad: #b33b3b;
+      --warn: #a56a1d;
+      --focus: #f2c14e;
+      --shadow: 0 12px 28px rgba(22, 35, 50, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      min-height: 38px;
+      border-radius: 7px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: #a9bac9;
+      background: #fafcfe;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(242, 193, 78, 0.65);
+      outline-offset: 2px;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .topline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      border-radius: 7px;
+      padding: 7px 10px;
+      min-width: 94px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(260px, 310px) minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    aside,
+    .study {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    aside {
+      align-self: start;
+      padding: 16px;
+      position: sticky;
+      top: 86px;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+    }
+
+    .group {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+
+    .group:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .segmented button {
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-radius: 0;
+      min-height: 42px;
+      background: var(--surface);
+    }
+
+    .segmented button:last-child { border-right: 0; }
+
+    .segmented button.active {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .search {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      min-height: 40px;
+      padding: 0 10px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .topics {
+      display: grid;
+      gap: 7px;
+    }
+
+    .topic-row {
+      display: grid;
+      grid-template-columns: 20px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 30px;
+    }
+
+    .topic-row input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .topic-row span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .switches {
+      display: grid;
+      gap: 8px;
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 32px;
+    }
+
+    .switch input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--accent-2);
+    }
+
+    .side-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .study {
+      min-height: calc(100vh - 116px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .progress-wrap {
+      min-width: min(360px, 100%);
+      flex: 1;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      background: #e8edf2;
+      border: 1px solid var(--line);
+    }
+
+    .progress div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--focus));
+      width: 0%;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-area {
+      padding: 22px;
+      display: grid;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill.good { color: var(--good); background: #edf7f1; border-color: #c6e4d2; }
+    .pill.bad { color: var(--bad); background: #fff0f0; border-color: #f1c9c9; }
+    .pill.warn { color: var(--warn); background: #fff6e8; border-color: #efd4aa; }
+
+    .question {
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.18;
+      font-weight: 800;
+      max-width: 1050px;
+      margin: 0;
+    }
+
+    .answer {
+      display: none;
+      border-left: 4px solid var(--accent);
+      background: #f7fbfc;
+      padding: 16px 18px;
+      border-radius: 0 8px 8px 0;
+      max-width: 1050px;
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .answer.visible {
+      display: block;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      max-width: 980px;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      min-height: 54px;
+      padding: 8px 12px;
+    }
+
+    .choice .key {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 800;
+      background: var(--surface-2);
+      color: var(--muted);
+    }
+
+    .choice.correct {
+      border-color: #a6d8b9;
+      background: #eef9f2;
+    }
+
+    .choice.correct .key {
+      background: var(--good);
+      color: #fff;
+    }
+
+    .choice.wrong {
+      border-color: #eab2b2;
+      background: #fff2f2;
+    }
+
+    .choice.wrong .key {
+      background: var(--bad);
+      color: #fff;
+    }
+
+    .feedback {
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: var(--muted);
+      background: #fbfcfe;
+      display: none;
+      max-width: 980px;
+      line-height: 1.45;
+    }
+
+    .feedback.visible { display: block; }
+    .feedback.good { color: var(--good); border-color: #bee4cc; background: #f0faf4; }
+    .feedback.bad { color: var(--bad); border-color: #edc0c0; background: #fff4f4; }
+
+    .bottom {
+      border-top: 1px solid var(--line);
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .rating {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 800;
+    }
+
+    .primary:hover {
+      background: #176a7a;
+      border-color: #176a7a;
+    }
+
+    .good-btn {
+      border-color: #afd8bf;
+      color: var(--good);
+      background: #f1faf5;
+    }
+
+    .warn-btn {
+      border-color: #e4c189;
+      color: var(--warn);
+      background: #fff7ea;
+    }
+
+    .bad-btn {
+      border-color: #e6b3b3;
+      color: var(--bad);
+      background: #fff2f2;
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      padding: 30px;
+      color: var(--muted);
+      border-radius: 8px;
+      background: #fbfcfe;
+      max-width: 720px;
+    }
+
+    @media (max-width: 880px) {
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .topline {
+        justify-content: flex-start;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+
+      aside {
+        position: static;
+        max-height: none;
+      }
+
+      .study {
+        min-height: 680px;
+      }
+
+      .question {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <h1>Quiz do obrony MSI</h1>
+      <div class="topline" aria-live="polite">
+        <div class="stat"><strong id="statDone">0</strong><span>umiane</span></div>
+        <div class="stat"><strong id="statHard">0</strong><span>trudne</span></div>
+        <div class="stat"><strong id="statTotal">0</strong><span>w puli</span></div>
+      </div>
+    </header>
+
+    <main>
+      <aside>
+        <div class="group">
+          <div class="label">Tryb</div>
+          <div class="segmented" role="tablist" aria-label="Tryb nauki">
+            <button id="modeFlash" class="active" type="button">Fiszki</button>
+            <button id="modeTest" type="button">Test</button>
+            <button id="modeOral" type="button">Ustny</button>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="label">Szukaj</div>
+          <input id="search" class="search" type="search" placeholder="np. Bellman, TSP, Hopfield">
+        </div>
+
+        <div class="group">
+          <div class="label">Działy</div>
+          <div id="topics" class="topics"></div>
+        </div>
+
+        <div class="group">
+          <div class="label">Sesja</div>
+          <div class="switches">
+            <label class="switch"><input id="onlyHard" type="checkbox"> Tylko trudne</label>
+            <label class="switch"><input id="shuffle" type="checkbox" checked> Losowa kolejność</label>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="label">Dane</div>
+          <div class="side-actions">
+            <button id="exportAnki" type="button">Anki CSV</button>
+            <button id="reset" type="button">Reset</button>
+          </div>
+        </div>
+      </aside>
+
+      <section class="study" aria-live="polite">
+        <div class="toolbar">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span id="counter">0 / 0</span>
+              <span id="topicName">-</span>
+            </div>
+            <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+          </div>
+          <div class="toolbar-actions">
+            <button id="prev" type="button">Poprzednie</button>
+            <button id="nextTop" type="button">Następne</button>
+          </div>
+        </div>
+
+        <div class="card-area" id="cardArea"></div>
+
+        <div class="bottom">
+          <div class="rating">
+            <button id="showAnswer" class="primary" type="button">Pokaż odpowiedź</button>
+            <button id="rateGood" class="good-btn" type="button">Umiem</button>
+            <button id="rateHard" class="warn-btn" type="button">Trudne</button>
+            <button id="rateBad" class="bad-btn" type="button">Nie umiem</button>
+          </div>
+          <button id="next" class="primary" type="button">Następne</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const cards = [
+      {
+        id: "chomsky-1",
+        topic: "Teoria i złożoność",
+        q: "Jaka jest kolejność klas w hierarchii Chomsky'ego od najprostszej do najszerszej?",
+        a: "Typ 3: języki regularne i automaty skończone. Typ 2: języki bezkontekstowe i automaty ze stosem. Typ 1: języki kontekstowe i liniowo ograniczone maszyny Turinga. Typ 0: gramatyki bez ograniczeń i maszyny Turinga.",
+        choices: ["regularne, bezkontekstowe, kontekstowe, typu 0", "typu 0, regularne, kontekstowe, bezkontekstowe", "bezkontekstowe, regularne, typu 0, kontekstowe", "regularne, kontekstowe, bezkontekstowe, typu 0"],
+        correct: 0
+      },
+      {
+        id: "chomsky-2",
+        topic: "Teoria i złożoność",
+        q: "Jaki automat odpowiada językom bezkontekstowym?",
+        a: "Językom bezkontekstowym odpowiada automat ze stosem. Stos daje pamięć LIFO, dzięki której można rozpoznawać struktury zagnieżdżone, np. poprawne nawiasowania albo język a^n b^n.",
+        choices: ["automat ze stosem", "automat skończony", "liniowo ograniczona maszyna Turinga", "automat bez pamięci"],
+        correct: 0
+      },
+      {
+        id: "complexity-1",
+        topic: "Teoria i złożoność",
+        q: "Co oznacza zapis T(n) = O(g(n))?",
+        a: "Oznacza asymptotyczne ograniczenie z góry: istnieją stałe c > 0 i n0, takie że dla każdego n >= n0 zachodzi T(n) <= c g(n). Pomijamy stałe i niższe rzędy, bo interesuje nas tempo wzrostu.",
+        choices: ["ograniczenie z góry z dokładnością do stałej", "dokładną liczbę operacji dla każdego n", "ograniczenie z dołu", "średni błąd algorytmu"],
+        correct: 0
+      },
+      {
+        id: "pnp-1",
+        topic: "Teoria i złożoność",
+        q: "Jaka jest różnica między klasami P i NP?",
+        a: "P zawiera problemy decyzyjne rozwiązywalne deterministycznie w czasie wielomianowym. NP zawiera problemy, dla których certyfikat odpowiedzi TAK można zweryfikować w czasie wielomianowym.",
+        choices: ["P to szybkie rozwiązywanie, NP to szybka weryfikacja certyfikatu", "P to problemy pamięciowe, NP to problemy numeryczne", "P to problemy losowe, NP to deterministyczne", "P i NP są z definicji rozłączne"],
+        correct: 0
+      },
+      {
+        id: "pnp-2",
+        topic: "Teoria i złożoność",
+        q: "Co znaczy, że problem jest NP-zupełny?",
+        a: "Problem jest w NP i jest NP-trudny, czyli każdy problem z NP redukuje się do niego w czasie wielomianowym. Gdyby jeden problem NP-zupełny miał algorytm wielomianowy, to P = NP.",
+        choices: ["należy do NP i każdy problem z NP redukuje się do niego", "nie da się go rozwiązać żadnym algorytmem", "jest trudniejszy niż wszystkie problemy nierozstrzygalne", "ma zawsze tylko jedną poprawną odpowiedź"],
+        correct: 0
+      },
+      {
+        id: "testing-random-1",
+        topic: "Teoria i złożoność",
+        q: "Dlaczego w testowaniu algorytmów losowych trzeba zapisywać ziarna generatorów?",
+        a: "Bez ziaren trudno odtworzyć przebieg, odróżnić błąd od naturalnej losowości i porównać poprawki kodu. Reprodukowalność jest pierwszym warunkiem sensownego debugowania metod losowych.",
+        choices: ["żeby dało się odtworzyć dokładny przebieg", "żeby algorytm przestał być losowy matematycznie", "żeby obniżyć złożoność pamięciową", "żeby ominąć walidację statystyczną"],
+        correct: 0
+      },
+      {
+        id: "experiment-1",
+        topic: "Teoria i złożoność",
+        q: "Co jest typowym błędem w eksperymentach obliczeniowych z ML?",
+        a: "Częsty błąd to przeciek danych: selekcja cech, skalowanie, imputacja albo dobór parametrów wykonane z użyciem zbioru testowego. Wynik testowy staje się wtedy zawyżony.",
+        choices: ["użycie informacji ze zbioru testowego podczas strojenia", "podanie średniej i odchylenia standardowego", "porównanie z baseline'em", "zapisanie wersji kodu"],
+        correct: 0
+      },
+      {
+        id: "tsp-1",
+        topic: "Algorytmy i numeryczne",
+        q: "Na czym polega problem komiwojażera?",
+        a: "Trzeba znaleźć najkrótszy cykl odwiedzający każde miasto dokładnie raz i wracający do punktu startowego. Wersja optymalizacyjna jest NP-trudna, a decyzyjna jest NP-zupełna.",
+        choices: ["na znalezieniu najkrótszego cyklu przez wszystkie miasta", "na znalezieniu dowolnej ścieżki między dwoma miastami", "na minimalnym drzewie rozpinającym", "na kolorowaniu grafu"],
+        correct: 0
+      },
+      {
+        id: "tsp-2",
+        topic: "Algorytmy i numeryczne",
+        q: "Jaką gwarancję daje algorytm Christofidesa dla symetrycznego metrycznego TSP?",
+        a: "Daje rozwiązanie o koszcie co najwyżej 3/2 optimum. Wykorzystuje MST, minimalne skojarzenie doskonałe na wierzchołkach nieparzystych, cykl Eulera i skracanie powtórzeń.",
+        choices: ["3/2 optimum", "dokładne optimum w czasie O(n^2)", "2^n optimum", "brak jakiejkolwiek gwarancji"],
+        correct: 0
+      },
+      {
+        id: "interpolation-1",
+        topic: "Algorytmy i numeryczne",
+        q: "Czym interpolacja różni się od aproksymacji?",
+        a: "Interpolacja wymaga dokładnego przejścia przez zadane punkty. Aproksymacja dopuszcza błąd w punktach i szuka funkcji najlepiej pasującej według wybranego kryterium.",
+        choices: ["interpolacja przechodzi przez punkty, aproksymacja nie musi", "aproksymacja zawsze używa wielomianów, interpolacja nigdy", "interpolacja działa tylko dla danych zaszumionych", "nie ma różnicy"],
+        correct: 0
+      },
+      {
+        id: "interpolation-2",
+        topic: "Algorytmy i numeryczne",
+        q: "Co to jest efekt Rungego?",
+        a: "To silne oscylacje wielomianu interpolacyjnego wysokiego stopnia, zwykle przy końcach przedziału dla równoodległych węzłów. Przeciwdziała się mu przez splajny albo węzły Czebyszewa.",
+        choices: ["oscylacje interpolacji wielomianowej wysokiego stopnia", "błąd zaokrąglenia w eliminacji Gaussa", "zbieżność kwadratowa Newtona", "utrata danych po normalizacji"],
+        correct: 0
+      },
+      {
+        id: "linear-1",
+        topic: "Algorytmy i numeryczne",
+        q: "Po co stosuje się pivoting w eliminacji Gaussa?",
+        a: "Pivoting wybiera stabilniejszy element główny, unika dzielenia przez zero albo bardzo małą liczbę i ogranicza narastanie błędów numerycznych.",
+        choices: ["dla stabilności i uniknięcia złego pivota", "żeby zmienić układ na nieliniowy", "żeby zawsze uzyskać macierz diagonalną", "żeby zmniejszyć liczbę niewiadomych"],
+        correct: 0
+      },
+      {
+        id: "linear-2",
+        topic: "Algorytmy i numeryczne",
+        q: "Kiedy szczególnie opłaca się rozkład LU?",
+        a: "Gdy rozwiązujemy wiele układów z tą samą macierzą A i różnymi prawymi stronami b. Rozkład liczymy raz, a potem wykonujemy szybkie podstawiania.",
+        choices: ["przy wielu prawych stronach dla tej samej macierzy", "tylko dla macierzy diagonalnych", "wyłącznie przy układach nieliniowych", "gdy nie wolno używać pamięci"],
+        correct: 0
+      },
+      {
+        id: "roots-1",
+        topic: "Algorytmy i numeryczne",
+        q: "Jaka jest aktualizacja w metodzie Newtona dla zera funkcji jednej zmiennej?",
+        a: "x_{k+1} = x_k - f(x_k) / f'(x_k). Metoda jest szybka lokalnie, ale wymaga pochodnej i dobrego punktu startowego.",
+        choices: ["x_{k+1} = x_k - f(x_k) / f'(x_k)", "x_{k+1} = (a+b)/2 zawsze", "x_{k+1} = f'(x_k)", "x_{k+1} = x_k + f(x_k)f'(x_k)"],
+        correct: 0
+      },
+      {
+        id: "roots-2",
+        topic: "Algorytmy i numeryczne",
+        q: "Dlaczego bisekcja jest wolniejsza, ale bezpieczna?",
+        a: "Działa dla funkcji ciągłej ze zmianą znaku na końcach przedziału i w każdym kroku zawęża przedział o połowę. Zbiega liniowo, ale ma gwarancję.",
+        choices: ["ma gwarancję przy ciągłości i zmianie znaku", "wymaga drugiej pochodnej", "działa tylko dla funkcji wypukłych", "zawsze znajduje wszystkie pierwiastki naraz"],
+        correct: 0
+      },
+      {
+        id: "integration-1",
+        topic: "Algorytmy i numeryczne",
+        q: "Kiedy metody Monte Carlo są atrakcyjne w całkowaniu numerycznym?",
+        a: "Szczególnie w dużym wymiarze, gdzie klasyczne siatki cierpią na przekleństwo wymiarowości. Błąd standardowy MC maleje jak O(N^{-1/2}), niezależnie od wymiaru w tempie względem liczby próbek.",
+        choices: ["przy całkach wysokowymiarowych", "wyłącznie dla wielomianów stopnia 2", "gdy funkcja jest dokładnie liniowa", "tylko dla przedziału [0,1]"],
+        correct: 0
+      },
+      {
+        id: "optimization-1",
+        topic: "Optymalizacja",
+        q: "Jaki jest warunek konieczny minimum lokalnego bez ograniczeń dla funkcji różniczkowalnej?",
+        a: "Jeśli minimum jest wewnętrzne i funkcja jest różniczkowalna, to gradient w punkcie minimum musi być zerowy: grad f(x*) = 0.",
+        choices: ["grad f(x*) = 0", "f(x*) = 0", "Hessian musi być ujemnie określony", "każda pochodna musi być równa 1"],
+        correct: 0
+      },
+      {
+        id: "optimization-2",
+        topic: "Optymalizacja",
+        q: "Czym metoda Newtona różni się od największego spadku?",
+        a: "Największy spadek używa tylko gradientu. Newton używa też Hessianu i rozwiązuje układ z krzywizną, dzięki czemu może mieć zbieżność kwadratową blisko minimum, ale jest droższy.",
+        choices: ["Newton używa Hessianu, gradient descent tylko gradientu", "Newton nie wymaga pochodnych", "gradient descent jest zawsze globalny", "to ta sama metoda"],
+        correct: 0
+      },
+      {
+        id: "kkt-1",
+        topic: "Optymalizacja",
+        q: "Jakie składniki mają warunki KKT?",
+        a: "Stacjonarność Lagrangianu, dopuszczalność pierwotna, dopuszczalność dualna mnożników nierówności i komplementarność lambda_i g_i(x) = 0.",
+        choices: ["stacjonarność, dopuszczalność, dualność, komplementarność", "tylko zerowy gradient funkcji celu", "tylko dodatnio określony Hessian", "wyłącznie warunki całkowitoliczbowe"],
+        correct: 0
+      },
+      {
+        id: "ptas-1",
+        topic: "Optymalizacja",
+        q: "Czym FPTAS różni się od PTAS?",
+        a: "PTAS jest wielomianowy w rozmiarze wejścia dla ustalonego epsilon. FPTAS jest wielomianowy zarówno w rozmiarze wejścia, jak i w 1/epsilon.",
+        choices: ["FPTAS jest wielomianowy także względem 1/epsilon", "PTAS zawsze daje rozwiązanie dokładne", "FPTAS działa tylko dla grafów", "nie ma różnicy"],
+        correct: 0
+      },
+      {
+        id: "dp-1",
+        topic: "Optymalizacja",
+        q: "Jakie dwie własności uzasadniają programowanie dynamiczne?",
+        a: "Optymalna podstruktura i nakładające się podproblemy. Dzięki temu rozwiązania podproblemów można zapamiętać i ponownie wykorzystać.",
+        choices: ["optymalna podstruktura i nakładające się podproblemy", "losowość i brak pamięci", "brak ograniczeń i liniowość", "tylko monotoniczność funkcji"],
+        correct: 0
+      },
+      {
+        id: "project-1",
+        topic: "Zarządzanie",
+        q: "Czym charakteryzuje się projekt informatyczny?",
+        a: "Jest tymczasowym przedsięwzięciem tworzącym unikalny rezultat IT. Ma cel, zakres, budżet, termin, interesariuszy, ryzyka i kryteria akceptacji.",
+        choices: ["tymczasowością i unikalnym rezultatem IT", "ciągłym wykonywaniem powtarzalnej pracy", "brakiem ryzyka i harmonogramu", "wyłącznie utrzymaniem SLA"],
+        correct: 0
+      },
+      {
+        id: "project-2",
+        topic: "Zarządzanie",
+        q: "Jaka jest główna różnica między projektem a pracą operacyjną?",
+        a: "Projekt wprowadza zmianę i ma koniec. Praca operacyjna jest ciągła, powtarzalna i utrzymuje działanie usługi lub procesu.",
+        choices: ["projekt jest tymczasowy, operacje są ciągłe", "operacje zawsze są bardziej twórcze", "projekt nie ma celu", "operacje nie mają jakości"],
+        correct: 0
+      },
+      {
+        id: "scrum-1",
+        topic: "Zarządzanie",
+        q: "Jakie są trzy role w Scrumie?",
+        a: "Product Owner odpowiada za wartość i backlog, Scrum Master za proces i usuwanie przeszkód, Developers za wytworzenie przyrostu.",
+        choices: ["Product Owner, Scrum Master, Developers", "Sponsor, Analityk, Audytor", "PMO, Tester, Administrator", "Architekt, DevOps, Klient"],
+        correct: 0
+      },
+      {
+        id: "methodologies-1",
+        topic: "Zarządzanie",
+        q: "Kiedy podejście kaskadowe ma sens?",
+        a: "Gdy wymagania są stabilne, potrzebna jest formalna dokumentacja i kontrola zmian, a koszt późnych zmian jest wysoki.",
+        choices: ["przy stabilnych wymaganiach i formalnej kontroli", "gdy wymagania zmieniają się codziennie", "gdy nie wolno planować", "wyłącznie w grach komputerowych"],
+        correct: 0
+      },
+      {
+        id: "resolution-1",
+        topic: "Reprezentacja wiedzy",
+        q: "Na czym polega dowód rezolucyjny przez sprzeczność?",
+        a: "Do teorii T dodaje się negację tezy beta i przekształca wszystko do klauzul. Jeśli da się wyprowadzić klauzulę pustą, to T implikuje beta.",
+        choices: ["dodajemy negację tezy i szukamy klauzuli pustej", "usuwamy wszystkie negacje z teorii", "dowodzimy tylko przez tablice prawdy", "zamieniamy predykaty na liczby"],
+        correct: 0
+      },
+      {
+        id: "resolution-2",
+        topic: "Reprezentacja wiedzy",
+        q: "Po co w rezolucji pierwszego rzędu jest unifikacja?",
+        a: "Literały nie muszą być identyczne syntaktycznie. Unifikacja znajduje podstawienie, które dopasowuje termy, np. Student(x) i Student(Piotr).",
+        choices: ["żeby dopasować literały przez podstawienia", "żeby usunąć wszystkie stałe", "żeby policzyć prawdopodobieństwa", "żeby uporządkować klauzule alfabetycznie"],
+        correct: 0
+      },
+      {
+        id: "resolution-3",
+        topic: "Reprezentacja wiedzy",
+        q: "Czym jest skolemizacja?",
+        a: "To usuwanie kwantyfikatorów egzystencjalnych przez stałe lub funkcje Skolema, z zachowaniem spełnialności potrzebnej w dowodzie refutacyjnym.",
+        choices: ["zastąpienie zmiennych egzystencjalnych stałymi lub funkcjami", "zamiana CNF na DNF", "usunięcie wszystkich predykatów", "wybór największej klauzuli"],
+        correct: 0
+      },
+      {
+        id: "actions-1",
+        topic: "Reprezentacja wiedzy",
+        q: "Co oznacza frame problem?",
+        a: "To problem reprezentowania tego, co nie zmienia się po wykonaniu akcji. Rozwiązaniem jest zwykle zasada inercji: fluenty zachowują wartości, jeśli akcja ich nie zmienia.",
+        choices: ["wnioskowanie o tym, co pozostaje bez zmian", "problem rysowania ramek wokół slajdów", "wybór funkcji aktywacji", "problem złożoności sortowania"],
+        correct: 0
+      },
+      {
+        id: "actions-2",
+        topic: "Reprezentacja wiedzy",
+        q: "Czym różni się ramification problem od qualification problem?",
+        a: "Ramification problem dotyczy skutków pośrednich akcji. Qualification problem dotyczy ogromnej liczby warunków i wyjątków potrzebnych, aby akcja była wykonalna i skuteczna.",
+        choices: ["pośrednie skutki vs warunki/wyjątki akcji", "czas działania vs pamięć algorytmu", "gradient vs Hessian", "klasyfikacja vs regresja"],
+        correct: 0
+      },
+      {
+        id: "evolution-1",
+        topic: "AI i eksperckie",
+        q: "Jak wygląda główna pętla algorytmu ewolucyjnego?",
+        a: "Inicjalizacja populacji, ocena dopasowania, selekcja rodziców, krzyżowanie, mutacja, ocena potomków, utworzenie nowej populacji i powtarzanie do warunku stopu.",
+        choices: ["populacja, ocena, selekcja, krzyżowanie, mutacja, nowe pokolenie", "gradient, Hessian, pivoting, LU", "CNF, Skolem, klauzula pusta", "train, validation, test, bootstrap"],
+        correct: 0
+      },
+      {
+        id: "evolution-2",
+        topic: "AI i eksperckie",
+        q: "Dlaczego reprezentacja osobnika jest krytyczna w algorytmie ewolucyjnym?",
+        a: "Operatory muszą generować sensowne i najlepiej dopuszczalne rozwiązania. Dla TSP zwykłe krzyżowanie bitowe mogłoby zepsuć permutację, więc stosuje się operatory permutacyjne.",
+        choices: ["bo operatory muszą zachować sens i dopuszczalność rozwiązania", "bo reprezentacja eliminuje potrzebę funkcji celu", "bo każda reprezentacja daje optimum", "bo mutacja działa tylko na macierzach"],
+        correct: 0
+      },
+      {
+        id: "mcts-1",
+        topic: "AI i eksperckie",
+        q: "Jakie są cztery fazy Monte Carlo Tree Search?",
+        a: "Selekcja, ekspansja, symulacja i propagacja wsteczna wyniku. MCTS rozbudowuje drzewo asymetrycznie tam, gdzie symulacje pokazują obiecujące ruchy.",
+        choices: ["selekcja, ekspansja, symulacja, backpropagation", "pivoting, faktoryzacja, podstawianie, normalizacja", "tokenizacja, embedding, dekoder, softmax", "sortowanie, haszowanie, kompresja, zapis"],
+        correct: 0
+      },
+      {
+        id: "agent-1",
+        topic: "AI i eksperckie",
+        q: "Jak formalnie można opisać agenta w SI?",
+        a: "Jako funkcję z historii perceptów do akcji: f: P* -> A. Agent postrzega środowisko sensorami i działa przez aktuatory.",
+        choices: ["jako funkcję z historii perceptów do akcji", "jako wyłącznie bazę danych", "jako równanie liniowe Ax=b", "jako statyczny plik konfiguracyjny"],
+        correct: 0
+      },
+      {
+        id: "swarm-1",
+        topic: "AI i eksperckie",
+        q: "Na czym polega inteligencja rojowa?",
+        a: "Wiele prostych jednostek działa lokalnie bez centralnego sterowania, a globalnie powstaje złożone zachowanie. Przykłady to ACO, PSO i modele stadne.",
+        choices: ["lokalne reguły wielu jednostek tworzą globalne zachowanie", "jeden centralny solver zna całe optimum", "wszystkie jednostki mają pełną wiedzę", "to tylko klasyczna regresja"],
+        correct: 0
+      },
+      {
+        id: "prolog-1",
+        topic: "AI i eksperckie",
+        q: "Na czym opiera się Prolog?",
+        a: "Na faktach i regułach w postaci klauzul Horna, unifikacji, rezolucji SLD i backtrackingu. Zapytanie jest celem, który Prolog próbuje dowieść.",
+        choices: ["klauzule Horna, unifikacja, SLD, backtracking", "Hessian, momentum, dropout", "MST, matching, Euler", "PCA, SVD, UMAP"],
+        correct: 0
+      },
+      {
+        id: "prolog-2",
+        topic: "AI i eksperckie",
+        q: "Czym jest negacja jako porażka w Prologu?",
+        a: "Uznajemy nie-p, jeśli nie udało się dowieść p. To nie jest klasyczna negacja, tylko założenie zamkniętego świata.",
+        choices: ["uznanie fałszu, gdy nie da się dowieść prawdy", "dowód przez tablicę prawdy", "automatyczna skolemizacja", "zawsze poprawna klasyczna negacja"],
+        correct: 0
+      },
+      {
+        id: "rules-1",
+        topic: "AI i eksperckie",
+        q: "Co znaczy, że reguła w systemie eksperckim jest minimalna?",
+        a: "Nie można usunąć żadnego warunku z poprzednika bez utraty wymaganej jakości, poprawności albo zdolności rozróżniania decyzji.",
+        choices: ["żaden warunek nie jest zbędny", "reguła ma zawsze jeden warunek", "reguła ma najkrótszą nazwę", "reguła nie ma konkluzji"],
+        correct: 0
+      },
+      {
+        id: "pca-1",
+        topic: "Dane",
+        q: "Co robi PCA?",
+        a: "Znajduje ortogonalne kierunki maksymalnej wariancji danych i pozwala rzutować dane na kilka pierwszych składowych głównych.",
+        choices: ["szuka kierunków maksymalnej wariancji", "wybiera losowe cechy", "uzupełnia braki medianą", "uczy polityki w MDP"],
+        correct: 0
+      },
+      {
+        id: "features-1",
+        topic: "Dane",
+        q: "Czym różni się redukcja wymiaru od selekcji cech?",
+        a: "Redukcja wymiaru tworzy nowe zmienne, np. składowe PCA. Selekcja cech wybiera podzbiór oryginalnych zmiennych.",
+        choices: ["redukcja tworzy nowe cechy, selekcja wybiera oryginalne", "selekcja zawsze tworzy embedding", "redukcja działa tylko z etykietami", "nie ma różnicy"],
+        correct: 0
+      },
+      {
+        id: "missing-1",
+        topic: "Dane",
+        q: "Co oznacza MNAR w brakach danych?",
+        a: "Missing Not At Random: prawdopodobieństwo braku zależy od brakującej wartości albo ukrytej zmiennej. To najtrudniejszy mechanizm, bo prosta imputacja może dać bias.",
+        choices: ["brak zależy od samej brakującej wartości lub ukrytej zmiennej", "brak jest całkowicie losowy", "brak dotyczy tylko danych tekstowych", "brak można zawsze usunąć bez biasu"],
+        correct: 0
+      },
+      {
+        id: "validation-1",
+        topic: "Dane",
+        q: "Po co oddziela się zbiór walidacyjny od testowego?",
+        a: "Walidacja służy do wyboru modelu i hiperparametrów. Test powinien być użyty na końcu do bezstronnej oceny generalizacji.",
+        choices: ["walidacja stroi, test ocenia końcowo", "test służy do uczenia wag", "walidacja jest zawsze większa od treningu", "to tylko nazwy tego samego zbioru"],
+        correct: 0
+      },
+      {
+        id: "rl-1",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Co jest podstawowym cyklem uczenia ze wzmocnieniem?",
+        a: "Agent obserwuje stan S_t, wybiera akcję A_t, środowisko zwraca nagrodę R_{t+1} i nowy stan S_{t+1}. Celem jest maksymalizacja oczekiwanego zwrotu.",
+        choices: ["stan, akcja, nagroda, kolejny stan", "wejście, etykieta, strata, gradient", "pivot, eliminacja, podstawianie, wynik", "klauzula, unifikacja, skolemizacja, CNF"],
+        correct: 0
+      },
+      {
+        id: "rl-2",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Czym różni się pasywne RL od aktywnego RL?",
+        a: "W pasywnym RL polityka jest dana i ją oceniamy. W aktywnym RL agent szuka dobrej polityki, więc musi równoważyć eksplorację i eksploatację.",
+        choices: ["pasywne ocenia daną politykę, aktywne szuka polityki", "pasywne nie ma nagród", "aktywne nie ma akcji", "to identyczne pojęcia"],
+        correct: 0
+      },
+      {
+        id: "mdp-1",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Z czego składa się MDP?",
+        a: "Zbiór stanów S, akcji A, model przejść i nagród p(s', r | s, a), funkcja nagrody oraz współczynnik dyskontowy gamma. Kluczowa jest własność Markowa.",
+        choices: ["S, A, przejścia/nagrody, gamma", "tylko funkcja straty i gradient", "same etykiety treningowe", "zbiór klauzul i MGU"],
+        correct: 0
+      },
+      {
+        id: "bellman-1",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Co wyraża równanie Bellmana?",
+        a: "Wartość stanu jako oczekiwaną nagrodę natychmiastową plus zdyskontowaną wartość następnych stanów. To rekurencyjny opis funkcji wartości.",
+        choices: ["wartość = nagroda teraz + zdyskontowana wartość przyszłości", "gradient funkcji straty względem wag", "warunek pivotingu", "liczbę klas w hierarchii Chomsky'ego"],
+        correct: 0
+      },
+      {
+        id: "td-1",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Jaki jest błąd TD(0)?",
+        a: "delta_t = R_{t+1} + gamma V(S_{t+1}) - V(S_t). Aktualizacja przesuwa V(S_t) w stronę jednkrokowego celu TD.",
+        choices: ["R + gamma V(S') - V(S)", "G_t - Q(S,A) bez bootstrappingu", "f(x)/f'(x)", "lambda g(x)"],
+        correct: 0
+      },
+      {
+        id: "td-2",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Czym TD różni się od Monte Carlo w predykcji wartości?",
+        a: "MC aktualizuje po pełnym zwrocie, zwykle po epizodzie. TD aktualizuje po każdym kroku, używając bootstrappingu R + gamma V(S').",
+        choices: ["TD aktualizuje po kroku i używa bootstrappingu", "TD wymaga końca epizodu, MC nie", "MC zawsze zna model", "TD nie używa nagród"],
+        correct: 0
+      },
+      {
+        id: "qlearning-1",
+        topic: "Uczenie ze wzmocnieniem",
+        q: "Dlaczego Q-learning jest off-policy?",
+        a: "Uczy wartości polityki zachłannej przez max_a Q(S', a), nawet jeśli dane generuje polityka eksploracyjna, np. epsilon-greedy.",
+        choices: ["uczy polityki zachłannej niezależnie od polityki generującej dane", "nie używa funkcji Q", "wymaga pełnego modelu środowiska", "działa tylko bez eksploracji"],
+        correct: 0
+      },
+      {
+        id: "nn-1",
+        topic: "Sieci neuronowe",
+        q: "Czym różni się uczenie nadzorowane od nienadzorowanego?",
+        a: "Nadzorowane ma pary wejście-etykieta i minimalizuje błąd względem celu. Nienadzorowane nie ma etykiet i odkrywa strukturę, np. klastry lub reprezentacje.",
+        choices: ["nadzorowane ma etykiety, nienadzorowane nie", "nienadzorowane zawsze używa backpropagation", "nadzorowane nie ma funkcji straty", "to identyczne tryby"],
+        correct: 0
+      },
+      {
+        id: "hopfield-1",
+        topic: "Sieci neuronowe",
+        q: "Jaka jest główna idea sieci Hopfielda?",
+        a: "To rekurencyjna pamięć skojarzeniowa. Zapamiętane wzorce są atraktorami, a zaszumiony wzorzec powinien zbiec do najbliższego zapamiętanego wzorca.",
+        choices: ["pamięć skojarzeniowa z atraktorami", "klasyfikator softmax bez wag", "mapa topologiczna SOM", "algorytm walidacji krzyżowej"],
+        correct: 0
+      },
+      {
+        id: "hopfield-2",
+        topic: "Sieci neuronowe",
+        q: "Jakie warunki gwarantują zbieżność asynchronicznej sieci Hopfielda do stanu stabilnego?",
+        a: "Wystarczające są symetryczne wagi i zera na przekątnej. Wtedy energia nie rośnie przy aktualizacji asynchronicznej, a liczba stanów jest skończona.",
+        choices: ["wagi symetryczne i zerowa przekątna", "losowe wagi i brak funkcji energii", "wyłącznie softmax", "ujemna pojemność pamięci"],
+        correct: 0
+      },
+      {
+        id: "som-1",
+        topic: "Sieci neuronowe",
+        q: "Co robi mapa Kohonena SOM?",
+        a: "Uczy nienadzorowaną mapę niskowymiarową, która zachowuje lokalną topologię danych. Aktualizowany jest zwycięski neuron i jego sąsiedzi.",
+        choices: ["tworzy samoorganizującą mapę topologiczną", "rozwiązuje układ Ax=b", "wyprowadza klauzulę pustą", "liczy pivot w LU"],
+        correct: 0
+      },
+      {
+        id: "grossberg-1",
+        topic: "Sieci neuronowe",
+        q: "Z jakim problemem kojarzą się modele Grossberga/ART?",
+        a: "Z kompromisem stabilność-plastyczność. ART tworzy lub wybiera kategorie przez rezonans i parametr czujności, aby uczyć się nowych wzorców bez niszczenia starych.",
+        choices: ["stability-plasticity i adaptacyjne kategorie", "wyłącznie obliczanie całek", "pivoting w macierzach", "problem P-NP"],
+        correct: 0
+      },
+      {
+        id: "architecture-1",
+        topic: "Sieci neuronowe",
+        q: "Jak dobrać architekturę sieci do typu danych?",
+        a: "MLP pasuje do danych wektorowych, CNN do obrazów, RNN/LSTM/Transformer do sekwencji, autoenkoder do kompresji, SOM do nienadzorowanej mapy, Hopfield do pamięci skojarzeniowej.",
+        choices: ["MLP-tablice, CNN-obrazy, modele sekwencyjne-sekwencje", "CNN wyłącznie do tekstu tabelarycznego", "Hopfield do pivotingu", "SOM tylko do regresji liniowej"],
+        correct: 0
+      },
+      {
+        id: "backprop-1",
+        topic: "Sieci neuronowe",
+        q: "Na czym polega backpropagation?",
+        a: "Najpierw liczy się wyjście sieci i stratę, potem gradienty względem wag przez propagację błędu wstecz regułą łańcuchową, a następnie aktualizuje parametry.",
+        choices: ["obliczanie gradientów przez propagację błędu wstecz", "losowe mutowanie populacji", "dowód rezolucyjny", "metoda bisekcji"],
+        correct: 0
+      },
+      {
+        id: "backprop-2",
+        topic: "Sieci neuronowe",
+        q: "Po co w backpropagation stosuje się momentum?",
+        a: "Momentum dodaje bezwładność do aktualizacji wag, ogranicza oscylacje i może przyspieszać ruch w płaskich dolinach funkcji błędu.",
+        choices: ["żeby ograniczać oscylacje i przyspieszać w płaskich regionach", "żeby usunąć funkcję straty", "żeby zamienić sieć na automat skończony", "żeby wymusić pełną obserwowalność"],
+        correct: 0
+      },
+      {
+        id: "forgetting-1",
+        topic: "Sieci neuronowe",
+        q: "Czym jest katastroficzne zapominanie?",
+        a: "Sieć uczona sekwencyjnie nowych zadań traci jakość na starych, bo nowe gradienty nadpisują wagi i reprezentacje istotne dla wcześniejszej wiedzy.",
+        choices: ["utrata starej wiedzy podczas uczenia nowych zadań", "brak zbieżności bisekcji", "przepełnienie tabeli hashującej", "niedziałający pivot"],
+        correct: 0
+      },
+      {
+        id: "forgetting-2",
+        topic: "Sieci neuronowe",
+        q: "Jak przeciwdziałać katastroficznemu zapominaniu?",
+        a: "Przez rehearsal/replay, generative replay, regularyzację ważnych wag, modularność, zamrażanie i współdzielenie cech, dynamiczne rozszerzanie architektury albo distillation.",
+        choices: ["replay, regularyzacja ważnych wag, modularność, zamrażanie cech", "usunięcie wszystkich starych klas", "zwiększenie epsilon w bisekcji", "zamiana CNF na DNF"],
+        correct: 0
+      }
+    ];
+
+    const STORAGE_KEY = "obronaQuizProgress.v1";
+    const state = {
+      mode: "flash",
+      index: 0,
+      order: [],
+      topics: new Set(cards.map(card => card.topic)),
+      progress: loadProgress()
+    };
+
+    const els = {
+      topics: document.getElementById("topics"),
+      search: document.getElementById("search"),
+      onlyHard: document.getElementById("onlyHard"),
+      shuffle: document.getElementById("shuffle"),
+      cardArea: document.getElementById("cardArea"),
+      counter: document.getElementById("counter"),
+      topicName: document.getElementById("topicName"),
+      progressBar: document.getElementById("progressBar"),
+      statDone: document.getElementById("statDone"),
+      statHard: document.getElementById("statHard"),
+      statTotal: document.getElementById("statTotal"),
+      showAnswer: document.getElementById("showAnswer"),
+      rateGood: document.getElementById("rateGood"),
+      rateHard: document.getElementById("rateHard"),
+      rateBad: document.getElementById("rateBad"),
+      next: document.getElementById("next"),
+      nextTop: document.getElementById("nextTop"),
+      prev: document.getElementById("prev"),
+      reset: document.getElementById("reset"),
+      exportAnki: document.getElementById("exportAnki"),
+      modeFlash: document.getElementById("modeFlash"),
+      modeTest: document.getElementById("modeTest"),
+      modeOral: document.getElementById("modeOral")
+    };
+
+    init();
+
+    function init() {
+      renderTopics();
+      bind();
+      rebuildOrder();
+      render();
+    }
+
+    function bind() {
+      els.search.addEventListener("input", () => {
+        state.index = 0;
+        rebuildOrder();
+        render();
+      });
+      els.onlyHard.addEventListener("change", () => {
+        state.index = 0;
+        rebuildOrder();
+        render();
+      });
+      els.shuffle.addEventListener("change", () => {
+        state.index = 0;
+        rebuildOrder();
+        render();
+      });
+      els.showAnswer.addEventListener("click", showAnswer);
+      els.rateGood.addEventListener("click", () => rate("good"));
+      els.rateHard.addEventListener("click", () => rate("hard"));
+      els.rateBad.addEventListener("click", () => rate("bad"));
+      els.next.addEventListener("click", next);
+      els.nextTop.addEventListener("click", next);
+      els.prev.addEventListener("click", prev);
+      els.reset.addEventListener("click", resetProgress);
+      els.exportAnki.addEventListener("click", exportAnki);
+      els.modeFlash.addEventListener("click", () => setMode("flash"));
+      els.modeTest.addEventListener("click", () => setMode("test"));
+      els.modeOral.addEventListener("click", () => setMode("oral"));
+    }
+
+    function renderTopics() {
+      const counts = countBy(cards, card => card.topic);
+      els.topics.innerHTML = "";
+      Object.keys(counts).sort().forEach(topic => {
+        const id = "topic-" + slug(topic);
+        const row = document.createElement("label");
+        row.className = "topic-row";
+        row.innerHTML = `
+          <input type="checkbox" id="${id}" checked>
+          <strong>${escapeHtml(topic)}</strong>
+          <span>${counts[topic]}</span>
+        `;
+        row.querySelector("input").addEventListener("change", event => {
+          if (event.target.checked) state.topics.add(topic);
+          else state.topics.delete(topic);
+          state.index = 0;
+          rebuildOrder();
+          render();
+        });
+        els.topics.appendChild(row);
+      });
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      els.modeFlash.classList.toggle("active", mode === "flash");
+      els.modeTest.classList.toggle("active", mode === "test");
+      els.modeOral.classList.toggle("active", mode === "oral");
+      render();
+    }
+
+    function rebuildOrder() {
+      const query = normalize(els.search.value);
+      let pool = cards.filter(card => {
+        if (!state.topics.has(card.topic)) return false;
+        if (els.onlyHard.checked && getStatus(card.id) !== "hard" && getStatus(card.id) !== "bad") return false;
+        if (!query) return true;
+        return normalize(card.q + " " + card.a + " " + card.topic).includes(query);
+      });
+      if (els.shuffle.checked) pool = shuffle(pool);
+      state.order = pool.map(card => card.id);
+      if (state.index >= state.order.length) state.index = Math.max(0, state.order.length - 1);
+    }
+
+    function render() {
+      renderStats();
+      const card = currentCard();
+      if (!card) {
+        els.cardArea.innerHTML = `<div class="empty">Brak pytań dla wybranych filtrów.</div>`;
+        els.counter.textContent = "0 / 0";
+        els.topicName.textContent = "-";
+        els.progressBar.style.width = "0%";
+        toggleAnswerControls(false);
+        return;
+      }
+
+      const current = state.index + 1;
+      const total = state.order.length;
+      els.counter.textContent = `${current} / ${total}`;
+      els.topicName.textContent = card.topic;
+      els.progressBar.style.width = `${Math.round((current / total) * 100)}%`;
+      toggleAnswerControls(state.mode !== "test");
+
+      if (state.mode === "test") renderTest(card);
+      else renderFlash(card, state.mode === "oral");
+    }
+
+    function renderFlash(card, oral) {
+      const status = getStatus(card.id);
+      els.cardArea.innerHTML = `
+        <div class="meta-row">
+          <span class="pill">${escapeHtml(card.topic)}</span>
+          ${statusPill(status)}
+        </div>
+        <h2 class="question">${escapeHtml(card.q)}</h2>
+        <div id="answer" class="answer">${formatAnswer(card.a)}</div>
+      `;
+      els.showAnswer.textContent = oral ? "Pokaż konspekt" : "Pokaż odpowiedź";
+    }
+
+    function renderTest(card) {
+      const status = getStatus(card.id);
+      const options = card.choices.map((choice, index) => ({ choice, index }));
+      els.cardArea.innerHTML = `
+        <div class="meta-row">
+          <span class="pill">${escapeHtml(card.topic)}</span>
+          ${statusPill(status)}
+        </div>
+        <h2 class="question">${escapeHtml(card.q)}</h2>
+        <div class="choices">
+          ${options.map((item, i) => `
+            <button class="choice" type="button" data-index="${item.index}">
+              <span class="key">${String.fromCharCode(65 + i)}</span>
+              <span>${escapeHtml(item.choice)}</span>
+            </button>
+          `).join("")}
+        </div>
+        <div id="feedback" class="feedback"></div>
+      `;
+      document.querySelectorAll(".choice").forEach(button => {
+        button.addEventListener("click", () => answerChoice(Number(button.dataset.index)));
+      });
+    }
+
+    function answerChoice(choiceIndex) {
+      const card = currentCard();
+      const feedback = document.getElementById("feedback");
+      const correct = choiceIndex === card.correct;
+      document.querySelectorAll(".choice").forEach(button => {
+        const idx = Number(button.dataset.index);
+        button.disabled = true;
+        if (idx === card.correct) button.classList.add("correct");
+        if (idx === choiceIndex && !correct) button.classList.add("wrong");
+      });
+      feedback.className = "feedback visible " + (correct ? "good" : "bad");
+      feedback.innerHTML = `<strong>${correct ? "Dobrze." : "Nie."}</strong> ${formatAnswer(card.a)}`;
+      mark(card.id, correct ? "good" : "bad");
+      renderStats();
+    }
+
+    function showAnswer() {
+      const answer = document.getElementById("answer");
+      if (answer) answer.classList.add("visible");
+    }
+
+    function rate(value) {
+      const card = currentCard();
+      if (!card) return;
+      mark(card.id, value);
+      renderStats();
+      next();
+    }
+
+    function mark(id, value) {
+      const item = state.progress[id] || { good: 0, hard: 0, bad: 0, status: "" };
+      item[value] = (item[value] || 0) + 1;
+      item.status = value;
+      item.updatedAt = Date.now();
+      state.progress[id] = item;
+      saveProgress();
+    }
+
+    function next() {
+      if (!state.order.length) return;
+      state.index = (state.index + 1) % state.order.length;
+      render();
+    }
+
+    function prev() {
+      if (!state.order.length) return;
+      state.index = (state.index - 1 + state.order.length) % state.order.length;
+      render();
+    }
+
+    function currentCard() {
+      const id = state.order[state.index];
+      return cards.find(card => card.id === id);
+    }
+
+    function getStatus(id) {
+      return state.progress[id]?.status || "";
+    }
+
+    function renderStats() {
+      const pool = state.order.length ? state.order : cards.map(card => card.id);
+      const statuses = cards.map(card => getStatus(card.id));
+      els.statDone.textContent = statuses.filter(status => status === "good").length;
+      els.statHard.textContent = statuses.filter(status => status === "hard" || status === "bad").length;
+      els.statTotal.textContent = pool.length;
+    }
+
+    function resetProgress() {
+      const ok = window.confirm("Usunąć zapisany postęp quizu?");
+      if (!ok) return;
+      state.progress = {};
+      saveProgress();
+      rebuildOrder();
+      render();
+    }
+
+    function exportAnki() {
+      const rows = [["Front", "Back", "Tags"]];
+      cards.forEach(card => {
+        rows.push([card.q, card.a, card.topic.replaceAll(" ", "_")]);
+      });
+      const csv = rows.map(row => row.map(csvCell).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "obrona_anki.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function toggleAnswerControls(show) {
+      els.showAnswer.style.display = show ? "" : "none";
+      els.rateGood.style.display = show ? "" : "none";
+      els.rateHard.style.display = show ? "" : "none";
+      els.rateBad.style.display = show ? "" : "none";
+    }
+
+    function statusPill(status) {
+      if (status === "good") return `<span class="pill good">umiane</span>`;
+      if (status === "hard") return `<span class="pill warn">trudne</span>`;
+      if (status === "bad") return `<span class="pill bad">do powtórki</span>`;
+      return `<span class="pill">nowe</span>`;
+    }
+
+    function loadProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+    }
+
+    function countBy(items, fn) {
+      return items.reduce((acc, item) => {
+        const key = fn(item);
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function normalize(value) {
+      return value.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function slug(value) {
+      return normalize(value).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatAnswer(value) {
+      return escapeHtml(value).replace(/\n/g, "<br>");
+    }
+
+    function csvCell(value) {
+      return `"${String(value).replaceAll('"', '""')}"`;
+    }
+  </script>
+</body>
+</html>
