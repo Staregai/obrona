@@ -19,9 +19,55 @@
       --warn: #a56a1d;
       --focus: #f2c14e;
       --shadow: 0 12px 28px rgba(22, 35, 50, 0.10);
+      --button-hover-bg: #fafcfe;
+      --button-hover-border: #a9bac9;
+      --input-bg: #ffffff;
+      --progress-bg: #e8edf2;
+      --answer-bg: #f7fbfc;
+      --empty-bg: #fbfcfe;
+      --good-bg: #edf7f1;
+      --good-line: #c6e4d2;
+      --bad-bg: #fff0f0;
+      --bad-line: #f1c9c9;
+      --warn-bg: #fff6e8;
+      --warn-line: #efd4aa;
+      --highlight: #fff29a;
+      --highlight-text: #1f1a00;
+      --edit-bg: #fffdf4;
     }
 
     * { box-sizing: border-box; }
+
+    body[data-theme="dark"] {
+      --bg: #11151b;
+      --surface: #18212b;
+      --surface-2: #222e3a;
+      --text: #edf2f7;
+      --muted: #a9b6c3;
+      --line: #344353;
+      --accent: #4aa3b5;
+      --accent-2: #c49bd0;
+      --good: #82d99b;
+      --bad: #ff8c8c;
+      --warn: #f0bd62;
+      --focus: #f2c14e;
+      --shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+      --button-hover-bg: #22303d;
+      --button-hover-border: #536577;
+      --input-bg: #121922;
+      --progress-bg: #101820;
+      --answer-bg: #14262d;
+      --empty-bg: #141b23;
+      --good-bg: #173525;
+      --good-line: #2e6743;
+      --bad-bg: #3b1d24;
+      --bad-line: #7a3a45;
+      --warn-bg: #362917;
+      --warn-line: #74542a;
+      --highlight: #ffdf6e;
+      --highlight-text: #1d1700;
+      --edit-bg: #211f18;
+    }
 
     body {
       margin: 0;
@@ -48,8 +94,8 @@
     }
 
     button:hover {
-      border-color: #a9bac9;
-      background: #fafcfe;
+      border-color: var(--button-hover-border);
+      background: var(--button-hover-bg);
     }
 
     button:focus-visible,
@@ -192,7 +238,7 @@
       min-height: 40px;
       padding: 0 10px;
       color: var(--text);
-      background: #fff;
+      background: var(--input-bg);
     }
 
     .topics {
@@ -279,7 +325,7 @@
       height: 10px;
       border-radius: 5px;
       overflow: hidden;
-      background: #e8edf2;
+      background: var(--progress-bg);
       border: 1px solid var(--line);
     }
 
@@ -319,9 +365,10 @@
       font-weight: 700;
     }
 
-    .pill.good { color: var(--good); background: #edf7f1; border-color: #c6e4d2; }
-    .pill.bad { color: var(--bad); background: #fff0f0; border-color: #f1c9c9; }
-    .pill.warn { color: var(--warn); background: #fff6e8; border-color: #efd4aa; }
+    .pill.good { color: var(--good); background: var(--good-bg); border-color: var(--good-line); }
+    .pill.bad { color: var(--bad); background: var(--bad-bg); border-color: var(--bad-line); }
+    .pill.warn { color: var(--warn); background: var(--warn-bg); border-color: var(--warn-line); }
+    .pill.note { color: var(--accent-2); }
 
     .question {
       font-size: clamp(24px, 3vw, 38px);
@@ -334,7 +381,7 @@
     .answer {
       display: none;
       border-left: 4px solid var(--accent);
-      background: #f7fbfc;
+      background: var(--answer-bg);
       padding: 16px 18px;
       border-radius: 0 8px 8px 0;
       max-width: 1050px;
@@ -344,6 +391,21 @@
 
     .answer.visible {
       display: block;
+    }
+
+    .answer[contenteditable="true"] {
+      display: block;
+      background: var(--edit-bg);
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+      min-height: 150px;
+    }
+
+    .answer mark {
+      background: var(--highlight);
+      color: var(--highlight-text);
+      padding: 0 2px;
+      border-radius: 3px;
     }
 
     .bottom {
@@ -362,6 +424,23 @@
       flex-wrap: wrap;
     }
 
+    .edit-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .edit-tools[hidden] {
+      display: none;
+    }
+
+    .format-btn {
+      min-width: 42px;
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
     .primary {
       background: var(--accent);
       color: #fff;
@@ -375,21 +454,21 @@
     }
 
     .good-btn {
-      border-color: #afd8bf;
+      border-color: var(--good-line);
       color: var(--good);
-      background: #f1faf5;
+      background: var(--good-bg);
     }
 
     .warn-btn {
-      border-color: #e4c189;
+      border-color: var(--warn-line);
       color: var(--warn);
-      background: #fff7ea;
+      background: var(--warn-bg);
     }
 
     .bad-btn {
-      border-color: #e6b3b3;
+      border-color: var(--bad-line);
       color: var(--bad);
-      background: #fff2f2;
+      background: var(--bad-bg);
     }
 
     .rating button.active {
@@ -402,7 +481,7 @@
       padding: 30px;
       color: var(--muted);
       border-radius: 8px;
-      background: #fbfcfe;
+      background: var(--empty-bg);
       max-width: 720px;
     }
 
@@ -457,6 +536,14 @@
         </div>
 
         <div class="group">
+          <div class="label">Motyw</div>
+          <div class="segmented" role="tablist" aria-label="Motyw">
+            <button id="themeLight" class="active" type="button">Jasny</button>
+            <button id="themeDark" type="button">Ciemny</button>
+          </div>
+        </div>
+
+        <div class="group">
           <div class="label">Szukaj</div>
           <input id="search" class="search" type="search" placeholder="np. Bellman, TSP, Hopfield">
         </div>
@@ -469,7 +556,10 @@
         <div class="group">
           <div class="label">Sesja</div>
           <div class="switches">
-            <label class="switch"><input id="onlyHard" type="checkbox"> Tylko trudne</label>
+            <label class="switch"><input id="filterThesis" type="checkbox"> Pytania do pracy</label>
+            <label class="switch"><input id="filterNew" type="checkbox"> Nowe</label>
+            <label class="switch"><input id="filterHard" type="checkbox"> Trudne</label>
+            <label class="switch"><input id="filterBad" type="checkbox"> Nie umiem</label>
             <label class="switch"><input id="shuffle" type="checkbox" checked> Losowa kolejność</label>
           </div>
         </div>
@@ -493,6 +583,14 @@
             <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
           </div>
           <div class="toolbar-actions">
+            <button id="editAnswer" type="button">Edytuj</button>
+            <div id="editTools" class="edit-tools" hidden>
+              <button id="formatBold" class="format-btn" type="button" title="Pogrub zaznaczenie"><strong>B</strong></button>
+              <button id="formatHighlight" class="format-btn" type="button" title="Zaznacz na żółto">HL</button>
+              <button id="saveNote" type="button">Zapisz</button>
+              <button id="cancelEdit" type="button">Anuluj</button>
+              <button id="clearNote" type="button">Wyczyść</button>
+            </div>
             <button id="prev" type="button">Poprzednie</button>
             <button id="nextTop" type="button">Następne</button>
           </div>
@@ -2098,22 +2196,290 @@
                 "topic": "SVS i audio",
                 "q": "Co mierzy MOS i dlaczego jest potrzebny obok metryk obiektywnych?",
                 "a": "MOS to średnia subiektywna ocena słuchaczy, np. naturalności, zrozumiałości lub jakości audio. Metryki obiektywne, takie jak błąd F0 albo mel L1, mierzą tylko wybrane aspekty sygnału. Dwa nagrania mogą mieć podobny mel lub pitch error, a różnić się barwą, artefaktami i odczuciem naturalności."
+          },
+          {
+                "id": "thesis-pipeline-1",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Jaki główny problem rozwiązuje praca?",
+                "a": "Praca rozwiązuje problem przejścia od dwuwymiarowego obrazu partytury z tekstem wokalnym do danych sterujących syntezą śpiewu. To wymaga połączenia lokalizacji tekstu, OCR, OMR, deterministycznej interpretacji zapisu nutowego, reprezentacji Score IR oraz modułu SVS generującego audio."
+          },
+          {
+                "id": "thesis-pipeline-2",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Dlaczego w pracy wybrano podejście modułowe zamiast jednego dużego modelu end-to-end?",
+                "a": "Podejście modułowe daje obserwowalność i kontrolę nad błędami. Można osobno ocenić lokalizację tekstu, OCR, OMR, interpretację Score IR i SVS, a potem wskazać, gdzie powstał błąd. W systemie end-to-end niska jakość audio mówi, że coś poszło źle, ale nie mówi, czy winny był tekst, nuty, rytm, fonemizacja czy model audio."
+          },
+          {
+                "id": "thesis-score-ir-1",
+                "topic": "Score IR i muzyka",
+                "thesis": true,
+                "q": "Jaką rolę pełni Score IR w systemie z pracy?",
+                "a": "Score IR jest kontraktem między modułami. Zbiera uporządkowane informacje o nutach, wysokościach, czasie, głosach, tekście, sylabach, powiązaniu tekstu z nutami i ostrzeżeniach diagnostycznych. Dzięki temu dalszy moduł SVS nie musi czytać obrazu partytury, tylko dostaje symboliczną reprezentację możliwą do walidacji i debugowania."
+          },
+          {
+                "id": "thesis-score-ir-2",
+                "topic": "Score IR i muzyka",
+                "thesis": true,
+                "q": "Dlaczego sama detekcja symboli OMR nie wystarcza do syntezy śpiewu?",
+                "a": "Detekcja daje położenia i klasy symboli, ale synteza potrzebuje muzycznego znaczenia: wysokości nut, czasu trwania, kolejności, głosu, aktualnego klucza, znaków przykluczowych, alteracji, pauz i przypisania sylab do nut. Dlatego potrzebna jest interpretacja partytury oraz reprezentacja pośrednia, a nie tylko lista bounding boxów."
+          },
+          {
+                "id": "thesis-error-1",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Na czym polega propagacja błędów w pipeline OMR/OCR/SVS?",
+                "a": "Błąd w jednym module staje się wejściem dla następnego. Przykładowo źle wykryta pięciolinia może zmienić wysokość nuty, błąd OCR może zepsuć tekst lub sylabizację, a źle przypisane sylaby zmienią dane dla SVS. Dlatego warto przenosić confidence, ostrzeżenia i alternatywne hipotezy zamiast ukrywać niepewność."
+          },
+          {
+                "id": "thesis-omr-exp-1",
+                "topic": "OMR/SVS: wyniki i metodologia",
+                "thesis": true,
+                "q": "Jak stride backbone'u może wpływać na wykrywanie symboli OMR?",
+                "a": "Stride określa, jak mocno mapa cech jest zmniejszona względem obrazu. Większy stride daje tańsze obliczenia i większy kontekst, ale może zgubić małe symbole lub cienkie elementy. Mniejszy stride zachowuje drobne szczegóły, ale zwiększa koszt pamięciowy i może wymagać ostrożniejszego doboru anchorów oraz kafli."
+          },
+          {
+                "id": "thesis-omr-exp-2",
+                "topic": "OMR/SVS: wyniki i metodologia",
+                "thesis": true,
+                "q": "Po co w OMR stosuje się kafelkowanie obrazu i overlap między kaflami?",
+                "a": "Partytury są duże, więc cały obraz może być zbyt kosztowny dla detektora. Kafelkowanie pozwala przetwarzać fragmenty w stałej rozdzielczości. Overlap zmniejsza ryzyko, że symbol przecięty granicą kafla zostanie pominięty lub źle wykryty, ale zwiększa liczbę predykcji i wymaga scalania wyników, np. przez NMS."
+          },
+          {
+                "id": "thesis-omr-exp-3",
+                "topic": "OMR/SVS: wyniki i metodologia",
+                "thesis": true,
+                "q": "Dlaczego augmentacje w OMR trzeba dobierać ostrożnie?",
+                "a": "Augmentacje mają symulować różne skany i zdjęcia, np. przesunięcia, skalę, rotację, kontrast, szum lub rozmycie. Zbyt słabe nie poprawią odporności, ale zbyt mocne mogą tworzyć obrazy nienaturalne albo zmieniać geometrię symboli muzycznych tak, że model uczy się artefaktów zamiast realnych wariantów zapisu."
+          },
+          {
+                "id": "thesis-omr-exp-4",
+                "topic": "OMR i detekcja",
+                "thesis": true,
+                "q": "Jakie klasy obiektów są szczególnie trudne w OMR i dlaczego?",
+                "a": "Trudne są małe symbole, cienkie kreski, znaki chromatyczne, kropki, łuki, beam'y i obiekty bardzo wydłużone albo przecinające granice kafli. Są małe względem strony, mogą zlewać się z liniami pięciolinii lub tekstem, mają nietypowe proporcje i często wymagają bardzo precyzyjnej lokalizacji."
+          },
+          {
+                "id": "thesis-domain-1",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Czym jest przesunięcie domenowe w kontekście tej pracy?",
+                "a": "Przesunięcie domenowe oznacza różnicę między danymi treningowymi a rzeczywistymi wejściami systemu. W tej pracy może dotyczyć stylu partytur, jakości skanu, fontów, układu tekstu, symboli muzycznych, języka, sylabizacji albo rozkładu głosów i stylów w SVS. Model może mieć dobre wyniki na zbiorze testowym, ale gorzej działać na innych partyturach."
+          },
+          {
+                "id": "thesis-ocr-1",
+                "topic": "OCR",
+                "thesis": true,
+                "q": "Dlaczego OCR tekstu wokalnego jest trudniejszy niż zwykłe rozpoznawanie tekstu z dokumentu?",
+                "a": "Tekst wokalny bywa rozbity na sylaby, rozciągnięty pod nutami, przecinany przez elementy zapisu i zapisywany z łącznikami lub melizmatami. Ważna jest nie tylko treść znaków, ale też przypisanie sylab do kolejnych nut. Błąd OCR może więc zepsuć zarówno tekst, jak i strukturę wejścia dla SVS."
+          },
+          {
+                "id": "thesis-svs-1",
+                "topic": "SVS i audio",
+                "thesis": true,
+                "q": "Dlaczego wyniki SVS w pracy należy interpretować ostrożnie?",
+                "a": "Moduł SVS został uruchomiony i pozwala ocenić prototyp end-to-end, ale ocena była oparta na ograniczonym golden secie i analizie diagnostycznej. Bez szerszej oceny odsłuchowej, wielu przykładów i porównania z referencjami trudno twierdzić, że jakość jest użytkowa. Można natomiast pokazać, że pipeline działa badawczo-inżyniersko."
+          },
+          {
+                "id": "thesis-svs-2",
+                "topic": "SVS i audio",
+                "thesis": true,
+                "q": "Czemu zgodność checkpointu, głosu, stylu i vocabu jest ważna w SVS?",
+                "a": "Checkpoint SVS ma sens tylko z architekturą, vocabularem, fonemizacją, listą głosów, stylami i normalizacją zgodną z treningiem. Jeśli użyje się innego głosu, stylu, zakresu nut lub niezgodnych tokenów, model może generować artefakty, błędną wymowę albo niestabilne audio mimo poprawnego Score IR."
+          },
+          {
+                "id": "thesis-lit-1",
+                "topic": "OMR i detekcja",
+                "thesis": true,
+                "q": "Po co w pracy odwoływać się do DeepScoresV2?",
+                "a": "DeepScoresV2 jest ważnym punktem odniesienia dla OMR jako detekcji obiektów w partyturach. Pokazuje skalę problemu, typy klas muzycznych, trudność małych symboli i sens stosowania detektorów takich jak Faster R-CNN. Jednocześnie zbiór referencyjny nie rozwiązuje całej integracji z tekstem, Score IR i SVS."
+          },
+          {
+                "id": "thesis-lit-2",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Jakie role pełnią w pracy Faster R-CNN, U-Net/Attention U-Net, CRNN/TrOCR i HiFi-GAN?",
+                "a": "Faster R-CNN reprezentuje detekcję symboli OMR, U-Net i Attention U-Net segmentację lub lokalizację tekstu, CRNN/TrOCR rozpoznawanie sekwencji znaków w OCR, a HiFi-GAN rodzinę wokoderów zamieniających reprezentację akustyczną, np. mel-spektrogram, na waveform. Każda architektura dotyczy innego etapu pipeline'u."
+          },
+          {
+                "id": "thesis-eval-1",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Dlaczego ocena systemu powinna obejmować metryki pośrednie, a nie tylko końcowe audio?",
+                "a": "Końcowe audio jest wynikiem wielu etapów, więc samo nie mówi, który moduł zawiódł. Metryki pośrednie, takie jak IoU/F1 lokalizacji tekstu, CER OCR, AP/mAP OMR, poprawność Score IR i diagnostyka SVS, pozwalają znaleźć źródło problemu oraz ocenić, czy poprawa jednego modułu realnie pomaga całemu pipeline'owi."
+          },
+          {
+                "id": "thesis-future-1",
+                "topic": "Integracja i ewaluacja",
+                "thesis": true,
+                "q": "Jakie realistyczne kierunki dalszego rozwoju wynikają z pracy?",
+                "a": "Naturalne kierunki to większy i bardziej zróżnicowany zbiór testowy, lepsza propagacja niepewności, ręczna korekta Score IR, mocniejsza integracja OCR z sylabizacją, poprawa słabych klas OMR, więcej eksperymentów SVS, ocena MOS z udziałem słuchaczy oraz testy na partyturach spoza domeny treningowej."
+          },
+          {
+                "id": "ml-basics-1",
+                "topic": "AI i eksperckie",
+                "q": "Czym różnią się AI, machine learning i deep learning?",
+                "a": "AI to najszerszy obszar budowania systemów wykonujących zadania kojarzone z inteligencją. Machine learning to część AI, w której model uczy się zależności z danych zamiast być w pełni zaprogramowany regułami. Deep learning to część ML wykorzystująca wielowarstwowe sieci neuronowe."
+          },
+          {
+                "id": "ml-basics-2",
+                "topic": "Dane",
+                "q": "Czym różni się uczenie nadzorowane, nienadzorowane i ze wzmocnieniem?",
+                "a": "Uczenie nadzorowane ma przykłady wejście-etykieta, np. klasyfikację lub regresję. Nienadzorowane szuka struktury bez etykiet, np. klastrów lub reprezentacji. Uczenie ze wzmocnieniem polega na tym, że agent wybiera akcje w środowisku i uczy się z nagród opóźnionych w czasie."
+          },
+          {
+                "id": "ml-basics-3",
+                "topic": "Dane",
+                "q": "Czym różni się klasyfikacja od regresji?",
+                "a": "Klasyfikacja przewiduje klasę lub rozkład prawdopodobieństw klas, np. czy obiekt jest nutą, pauzą albo tekstem. Regresja przewiduje wartość ciągłą, np. współrzędne bounding boxa, wysokość F0 albo czas trwania dźwięku."
+          },
+          {
+                "id": "ml-basics-4",
+                "topic": "Dane",
+                "q": "Po co dzieli się dane na train, validation i test?",
+                "a": "Train służy do uczenia parametrów modelu. Validation pomaga wybierać architekturę, hiperparametry, checkpoint i progi decyzyjne. Test powinien zostać użyty dopiero na końcu do uczciwej oceny generalizacji, żeby nie dopasować decyzji projektowych do danych testowych."
+          },
+          {
+                "id": "ml-basics-5",
+                "topic": "Dane",
+                "q": "Czym jest overfitting i jak można go ograniczać?",
+                "a": "Overfitting oznacza, że model zbyt dobrze dopasowuje się do danych treningowych, a słabo generalizuje. Ogranicza się go przez więcej danych, augmentacje, regularizację, dropout, prostszy model, early stopping, poprawny podział danych i kontrolę przecieku danych."
+          },
+          {
+                "id": "ml-basics-6",
+                "topic": "Dane",
+                "q": "Czym różnią się loss, optimizer i metric?",
+                "a": "Loss to funkcja minimalizowana w treningu, np. cross-entropy, BCE albo L1. Optimizer, np. SGD lub Adam, aktualizuje wagi na podstawie gradientów. Metric to miara raportowana do oceny jakości, np. accuracy, F1, CER, IoU albo mAP, która nie musi być bezpośrednio optymalizowana."
+          },
+          {
+                "id": "ml-basics-7",
+                "topic": "Dane",
+                "q": "Czym różnią się accuracy, precision, recall i F1?",
+                "a": "Accuracy to odsetek poprawnych predykcji. Precision mówi, jaka część predykcji pozytywnych była poprawna. Recall mówi, jaka część prawdziwych pozytywów została wykryta. F1 jest średnią harmoniczną precision i recall, przydatną zwłaszcza przy niezbalansowanych klasach."
+          },
+          {
+                "id": "ml-basics-8",
+                "topic": "Dane",
+                "q": "Czym jest data leakage?",
+                "a": "Data leakage to przeciek informacji z walidacji lub testu do treningu albo procesu wyboru modelu. Może powstać przez skalowanie na całym zbiorze, duplikaty między splitami, dobór progów na teście albo użycie informacji niedostępnej w prawdziwej inferencji. Daje zawyżone wyniki."
+          },
+          {
+                "id": "nn-basics-1",
+                "topic": "Sieci neuronowe",
+                "q": "Czym jest sztuczny neuron?",
+                "a": "Sztuczny neuron liczy ważoną sumę wejść z biasem, a potem przepuszcza wynik przez funkcję aktywacji. Wektor wag decyduje, które cechy są ważne, bias przesuwa próg decyzji, a aktywacja pozwala budować nieliniowe modele."
+          },
+          {
+                "id": "nn-basics-2",
+                "topic": "Sieci neuronowe",
+                "q": "Po co w sieci neuronowej są funkcje aktywacji?",
+                "a": "Aktywacje wprowadzają nieliniowość. Bez nich złożenie wielu warstw liniowych nadal byłoby tylko jedną transformacją liniową. Popularne aktywacje to ReLU, sigmoid, tanh, GELU i softmax na wyjściu klasyfikatora wieloklasowego."
+          },
+          {
+                "id": "nn-basics-3",
+                "topic": "Sieci neuronowe",
+                "q": "Na czym polega backpropagation?",
+                "a": "Backpropagation oblicza gradient straty względem wag, stosując regułę łańcuchową od wyjścia sieci do wcześniejszych warstw. Gradient mówi, jak zmienić parametry, żeby zmniejszyć loss, a optimizer wykorzystuje go do aktualizacji wag."
+          },
+          {
+                "id": "nn-basics-4",
+                "topic": "Sieci neuronowe",
+                "q": "Czym jest learning rate i co się dzieje, gdy jest źle dobrany?",
+                "a": "Learning rate określa wielkość kroku aktualizacji wag. Zbyt duży może powodować niestabilność, oscylacje lub rozbieganie treningu. Zbyt mały daje bardzo wolne uczenie i może utknąć w słabych rozwiązaniach. Często stosuje się scheduler learning rate."
+          },
+          {
+                "id": "nn-basics-5",
+                "topic": "Sieci neuronowe",
+                "q": "Czym jest konwolucja w CNN?",
+                "a": "Konwolucja przesuwa mały filtr po obrazie lub mapie cech i liczy lokalne odpowiedzi. Ten sam filtr jest współdzielony przestrzennie, dzięki czemu CNN dobrze wykrywa lokalne wzorce, takie jak krawędzie, tekstury, kreski, znaki lub fragmenty symboli."
+          },
+          {
+                "id": "nn-basics-6",
+                "topic": "Sieci neuronowe",
+                "q": "Co to jest pooling i jakie są jego podstawowe rodzaje?",
+                "a": "Pooling zmniejsza rozdzielczość mapy cech i agreguje lokalne informacje. Max pooling bierze największą wartość w oknie, average pooling średnią, a global average pooling uśrednia całą mapę kanału do jednej wartości. Pooling zwiększa odporność na małe przesunięcia, ale może gubić precyzję lokalizacji."
+          },
+          {
+                "id": "nn-basics-7",
+                "topic": "Sieci neuronowe",
+                "q": "Czym są padding i stride w konwolucji?",
+                "a": "Padding dodaje ramkę, zwykle zer, wokół wejścia, żeby kontrolować rozmiar wyjścia i zachować informacje przy brzegach. Stride to krok przesuwania filtra. Większy stride zmniejsza rozdzielczość mapy cech i koszt obliczeń, ale może tracić szczegóły."
+          },
+          {
+                "id": "nn-basics-8",
+                "topic": "Sieci neuronowe",
+                "q": "Czym różnią się batch normalization i dropout?",
+                "a": "Batch normalization stabilizuje rozkład aktywacji przez normalizację i uczone parametry skali oraz przesunięcia. Dropout losowo zeruje część aktywacji w treningu, aby ograniczać współadaptację neuronów i overfitting. Batch norm pomaga optymalizacji, dropout działa głównie regularizująco."
+          },
+          {
+                "id": "nn-basics-9",
+                "topic": "Sieci neuronowe",
+                "q": "Czym różni się embedding od one-hot encoding?",
+                "a": "One-hot encoding reprezentuje token jako rzadki wektor z jedną jedynką i nie koduje podobieństw. Embedding jest gęstym, uczonym wektorem, w którym model może umieszczać podobne tokeny bliżej siebie. Embeddingi są używane m.in. dla słów, fonemów, nut, pozycji lub klas."
+          },
+          {
+                "id": "cv-basics-1",
+                "topic": "Lokalizacja tekstu i CV",
+                "q": "Czym różnią się klasyfikacja obrazu, detekcja obiektów i segmentacja?",
+                "a": "Klasyfikacja przypisuje etykietę całemu obrazowi. Detekcja znajduje obiekty i zwraca klasy oraz ramki bounding box. Segmentacja przypisuje etykietę pikselom, tworząc maskę obiektu lub obszaru. W pracy lokalizacja tekstu jest bliżej segmentacji, a OMR bliżej detekcji obiektów."
+          },
+          {
+                "id": "cv-basics-2",
+                "topic": "Lokalizacja tekstu i CV",
+                "q": "Czym jest receptive field w CNN?",
+                "a": "Receptive field to fragment wejścia, który wpływa na daną aktywację w późniejszej warstwie. Głębsze warstwy i operacje ze stride, poolingiem lub dylatacją zwiększają pole recepcyjne. Duże pole daje kontekst, a małe pomaga zachować lokalne szczegóły."
+          },
+          {
+                "id": "ai-basics-1",
+                "topic": "AI i eksperckie",
+                "q": "Czym różni się model dyskryminacyjny od generatywnego?",
+                "a": "Model dyskryminacyjny uczy się bezpośrednio granicy decyzyjnej lub rozkładu etykiety przy danych wejściowych, np. klasyfikator obrazu. Model generatywny modeluje proces tworzenia danych albo generuje nowe próbki, np. tekst, obraz, mel-spektrogram lub waveform."
+          },
+          {
+                "id": "ai-basics-2",
+                "topic": "AI i eksperckie",
+                "q": "Czym różni się system ekspercki od modelu uczonego z danych?",
+                "a": "System ekspercki opiera się na jawnych regułach i wiedzy zapisanej przez człowieka. Model ML uczy zależności statystycznych z przykładów. System ekspercki jest bardziej interpretowalny, ale trudniej skalować go na złożone dane; ML lepiej wykorzystuje duże zbiory, ale wymaga danych i kontroli generalizacji."
           }
     ];
 
     const STORAGE_KEY = "obronaQuizProgress.v1";
+    const SESSION_KEY = "obronaQuizSession.v1";
+    const VALID_MODES = ["flash", "oral"];
+    const VALID_THEMES = ["light", "dark"];
+    const cardById = new Map(cards.map(card => [card.id, card]));
+    const allTopics = [...new Set(cards.map(card => card.topic))];
+    const THESIS_TOPICS = new Set([
+      "OMR/SVS: wyniki i metodologia",
+      "Lokalizacja tekstu i CV",
+      "OCR",
+      "OMR i detekcja",
+      "Score IR i muzyka",
+      "SVS i audio",
+      "Integracja i ewaluacja"
+    ]);
+    const THESIS_ID_PREFIXES = ["work-tech-", "thesis-"];
+    const savedSession = loadSession();
+
     const state = {
-      mode: "flash",
-      index: 0,
-      order: [],
-      topics: new Set(cards.map(card => card.topic)),
-      progress: loadProgress()
+      mode: VALID_MODES.includes(savedSession.mode) ? savedSession.mode : "flash",
+      theme: VALID_THEMES.includes(savedSession.theme) ? savedSession.theme : "light",
+      index: Number.isInteger(savedSession.index) ? savedSession.index : 0,
+      order: Array.isArray(savedSession.order) ? savedSession.order.filter(id => cardById.has(id)) : [],
+      topics: new Set(normalizeSavedTopics(savedSession.topics)),
+      progress: loadProgress(),
+      answerVisible: Boolean(savedSession.answerVisible),
+      editing: false
     };
 
     const els = {
       topics: document.getElementById("topics"),
       search: document.getElementById("search"),
-      onlyHard: document.getElementById("onlyHard"),
+      filterThesis: document.getElementById("filterThesis"),
+      filterNew: document.getElementById("filterNew"),
+      filterHard: document.getElementById("filterHard"),
+      filterBad: document.getElementById("filterBad"),
       shuffle: document.getElementById("shuffle"),
       cardArea: document.getElementById("cardArea"),
       counter: document.getElementById("counter"),
@@ -2132,31 +2498,50 @@
       reset: document.getElementById("reset"),
       exportAnki: document.getElementById("exportAnki"),
       modeFlash: document.getElementById("modeFlash"),
-      modeOral: document.getElementById("modeOral")
+      modeOral: document.getElementById("modeOral"),
+      themeLight: document.getElementById("themeLight"),
+      themeDark: document.getElementById("themeDark"),
+      editAnswer: document.getElementById("editAnswer"),
+      editTools: document.getElementById("editTools"),
+      formatBold: document.getElementById("formatBold"),
+      formatHighlight: document.getElementById("formatHighlight"),
+      saveNote: document.getElementById("saveNote"),
+      cancelEdit: document.getElementById("cancelEdit"),
+      clearNote: document.getElementById("clearNote")
     };
 
     init();
 
     function init() {
+      applyTheme();
+      applySessionToControls();
       renderTopics();
       bind();
-      rebuildOrder();
+      rebuildOrder(true);
       render();
     }
 
     function bind() {
       els.search.addEventListener("input", () => {
+        persistEditingIfNeeded();
         state.index = 0;
+        state.answerVisible = false;
         rebuildOrder();
         render();
       });
-      els.onlyHard.addEventListener("change", () => {
-        state.index = 0;
-        rebuildOrder();
-        render();
+      [els.filterThesis, els.filterNew, els.filterHard, els.filterBad].forEach(input => {
+        input.addEventListener("change", () => {
+          persistEditingIfNeeded();
+          state.index = 0;
+          state.answerVisible = false;
+          rebuildOrder();
+          render();
+        });
       });
       els.shuffle.addEventListener("change", () => {
+        persistEditingIfNeeded();
         state.index = 0;
+        state.answerVisible = false;
         rebuildOrder();
         render();
       });
@@ -2171,6 +2556,21 @@
       els.exportAnki.addEventListener("click", exportAnki);
       els.modeFlash.addEventListener("click", () => setMode("flash"));
       els.modeOral.addEventListener("click", () => setMode("oral"));
+      els.themeLight.addEventListener("click", () => setTheme("light"));
+      els.themeDark.addEventListener("click", () => setTheme("dark"));
+      els.editAnswer.addEventListener("click", () => setEditing(true));
+      [els.formatBold, els.formatHighlight].forEach(button => {
+        button.addEventListener("mousedown", event => event.preventDefault());
+      });
+      els.formatBold.addEventListener("click", () => formatSelection("bold"));
+      els.formatHighlight.addEventListener("click", () => formatSelection("highlight"));
+      els.saveNote.addEventListener("click", () => saveEditedAnswer());
+      els.cancelEdit.addEventListener("click", cancelEditing);
+      els.clearNote.addEventListener("click", clearEditedAnswer);
+      window.addEventListener("beforeunload", () => {
+        persistEditingIfNeeded();
+        saveSession();
+      });
     }
 
     function renderTopics() {
@@ -2181,14 +2581,16 @@
         const row = document.createElement("label");
         row.className = "topic-row";
         row.innerHTML = `
-          <input type="checkbox" id="${id}" checked>
+          <input type="checkbox" id="${id}" ${state.topics.has(topic) ? "checked" : ""}>
           <strong>${escapeHtml(topic)}</strong>
           <span>${counts[topic]}</span>
         `;
         row.querySelector("input").addEventListener("change", event => {
+          persistEditingIfNeeded();
           if (event.target.checked) state.topics.add(topic);
           else state.topics.delete(topic);
           state.index = 0;
+          state.answerVisible = false;
           rebuildOrder();
           render();
         });
@@ -2197,34 +2599,55 @@
     }
 
     function setMode(mode) {
+      persistEditingIfNeeded();
       state.mode = mode;
-      els.modeFlash.classList.toggle("active", mode === "flash");
-      els.modeOral.classList.toggle("active", mode === "oral");
+      syncModeButtons();
       render();
     }
 
-    function rebuildOrder() {
+    function setTheme(theme) {
+      state.theme = theme;
+      applyTheme();
+      syncThemeButtons();
+      saveSession();
+    }
+
+    function rebuildOrder(preserveOrder = false) {
       const query = normalize(els.search.value);
+      const statusFilters = getSelectedStatusFilters();
       let pool = cards.filter(card => {
         if (!state.topics.has(card.topic)) return false;
-        if (els.onlyHard.checked && getStatus(card.id) !== "hard" && getStatus(card.id) !== "bad") return false;
+        if (els.filterThesis.checked && !isThesisCard(card)) return false;
+        if (statusFilters.size && !matchesStatusFilter(card.id, statusFilters)) return false;
         if (!query) return true;
-        return normalize(card.q + " " + card.a + " " + card.topic).includes(query);
+        return normalize(card.q + " " + getSearchableAnswer(card) + " " + card.topic).includes(query);
       });
-      if (els.shuffle.checked) pool = shuffle(pool);
-      state.order = pool.map(card => card.id);
+      const poolIds = pool.map(card => card.id);
+      if (preserveOrder && state.order.length) {
+        const poolSet = new Set(poolIds);
+        const kept = state.order.filter(id => poolSet.has(id));
+        const keptSet = new Set(kept);
+        state.order = kept.concat(poolIds.filter(id => !keptSet.has(id)));
+      } else {
+        if (els.shuffle.checked) pool = shuffle(pool);
+        state.order = pool.map(card => card.id);
+      }
       if (state.index >= state.order.length) state.index = Math.max(0, state.order.length - 1);
+      if (state.index < 0) state.index = 0;
     }
 
     function render() {
       renderStats();
       const card = currentCard();
       if (!card) {
+        state.editing = false;
         els.cardArea.innerHTML = `<div class="empty">Brak pytań dla wybranych filtrów.</div>`;
         els.counter.textContent = "0 / 0";
         els.topicName.textContent = "-";
         els.progressBar.style.width = "0%";
         toggleAnswerControls(false);
+        syncEditControls(null);
+        saveSession();
         return;
       }
 
@@ -2236,17 +2659,23 @@
       toggleAnswerControls(true);
       updateRatingButtons(getStatus(card.id));
       renderFlash(card, state.mode === "oral");
+      syncEditControls(card);
+      saveSession();
     }
 
     function renderFlash(card, oral) {
       const status = getStatus(card.id);
+      const answerClasses = ["answer"];
+      if (state.answerVisible || state.editing) answerClasses.push("visible");
+      const editAttrs = state.editing ? ` contenteditable="true" spellcheck="false" aria-label="Edytowana odpowiedź"` : "";
       els.cardArea.innerHTML = `
         <div class="meta-row">
           <span class="pill">${escapeHtml(card.topic)}</span>
           ${statusPill(status)}
+          ${hasCustomAnswer(card.id) ? `<span class="pill note">notatki</span>` : ""}
         </div>
         <h2 class="question">${escapeHtml(card.q)}</h2>
-        <div id="answer" class="answer">${formatAnswer(card.a)}</div>
+        <div id="answer" class="${answerClasses.join(" ")}"${editAttrs}>${getAnswerHtml(card)}</div>
       `;
       els.showAnswer.textContent = oral ? "Pokaż konspekt" : "Pokaż odpowiedź";
     }
@@ -2254,19 +2683,37 @@
     function showAnswer() {
       const answer = document.getElementById("answer");
       if (answer) answer.classList.add("visible");
+      state.answerVisible = true;
+      saveSession();
     }
 
     function rate(value) {
       const card = currentCard();
       if (!card) return;
+      persistEditingIfNeeded();
       mark(card.id, value);
       renderStats();
-      next();
+      if (getSelectedStatusFilters().size) {
+        const previousIndex = state.index;
+        const previousId = card.id;
+        rebuildOrder(true);
+        const keptIndex = state.order.indexOf(previousId);
+        if (keptIndex >= 0 && state.order.length > 1) {
+          state.index = (keptIndex + 1) % state.order.length;
+        } else {
+          state.index = Math.min(previousIndex, Math.max(0, state.order.length - 1));
+        }
+        state.answerVisible = false;
+        render();
+      } else {
+        next();
+      }
     }
 
     function mark(id, value) {
       if (!["good", "hard", "bad"].includes(value)) return;
       state.progress[id] = {
+        ...(state.progress[id] || {}),
         status: value,
         updatedAt: Date.now()
       };
@@ -2276,19 +2723,23 @@
 
     function next() {
       if (!state.order.length) return;
+      persistEditingIfNeeded();
       state.index = (state.index + 1) % state.order.length;
+      state.answerVisible = false;
       render();
     }
 
     function prev() {
       if (!state.order.length) return;
+      persistEditingIfNeeded();
       state.index = (state.index - 1 + state.order.length) % state.order.length;
+      state.answerVisible = false;
       render();
     }
 
     function currentCard() {
       const id = state.order[state.index];
-      return cards.find(card => card.id === id);
+      return cardById.get(id);
     }
 
     function getStatus(id) {
@@ -2304,9 +2755,12 @@
     }
 
     function resetProgress() {
-      const ok = window.confirm("Usunąć zapisany postęp quizu?");
+      const ok = window.confirm("Usunąć zapisany postęp i notatki quizu?");
       if (!ok) return;
+      state.editing = false;
       state.progress = {};
+      state.index = 0;
+      state.answerVisible = false;
       saveProgress();
       rebuildOrder();
       render();
@@ -2334,6 +2788,8 @@
       els.rateGood.style.display = show ? "" : "none";
       els.rateHard.style.display = show ? "" : "none";
       els.rateBad.style.display = show ? "" : "none";
+      els.editAnswer.style.display = show ? "" : "none";
+      if (!show) els.editTools.hidden = true;
     }
 
     function updateRatingButtons(status) {
@@ -2345,7 +2801,7 @@
     function statusPill(status) {
       if (status === "good") return `<span class="pill good">umiane</span>`;
       if (status === "hard") return `<span class="pill warn">trudne</span>`;
-      if (status === "bad") return `<span class="pill bad">do powtórki</span>`;
+      if (status === "bad") return `<span class="pill bad">nie umiem</span>`;
       return `<span class="pill">nowe</span>`;
     }
 
@@ -2361,12 +2817,18 @@
 
     function normalizeProgress(raw) {
       return Object.entries(raw || {}).reduce((acc, [id, item]) => {
+        if (!cardById.has(id)) return acc;
         const status = typeof item === "string" ? item : item?.status;
+        const answerHtml = typeof item?.answerHtml === "string" ? sanitizeRichText(item.answerHtml) : "";
+        if (!["good", "hard", "bad"].includes(status) && !answerHtml) return acc;
+        acc[id] = {};
         if (["good", "hard", "bad"].includes(status)) {
-          acc[id] = {
-            status,
-            updatedAt: Number(item?.updatedAt) || 0
-          };
+          acc[id].status = status;
+          acc[id].updatedAt = Number(item?.updatedAt) || 0;
+        }
+        if (answerHtml) {
+          acc[id].answerHtml = answerHtml;
+          acc[id].editedAt = Number(item?.editedAt) || 0;
         }
         return acc;
       }, {});
@@ -2374,6 +2836,234 @@
 
     function saveProgress() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+    }
+
+    function loadSession() {
+      try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveSession() {
+      const session = {
+        mode: state.mode,
+        theme: state.theme,
+        index: state.index,
+        order: state.order,
+        topics: [...state.topics],
+        search: els.search?.value || "",
+        thesisOnly: Boolean(els.filterThesis?.checked),
+        statusFilters: [...getSelectedStatusFilters()],
+        shuffle: Boolean(els.shuffle?.checked),
+        answerVisible: state.answerVisible,
+        savedAt: Date.now()
+      };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    }
+
+    function applySessionToControls() {
+      els.search.value = typeof savedSession.search === "string" ? savedSession.search : "";
+      els.shuffle.checked = typeof savedSession.shuffle === "boolean" ? savedSession.shuffle : true;
+      els.filterThesis.checked = Boolean(savedSession.thesisOnly);
+      const filters = new Set(Array.isArray(savedSession.statusFilters) ? savedSession.statusFilters : []);
+      els.filterNew.checked = filters.has("new");
+      els.filterHard.checked = filters.has("hard");
+      els.filterBad.checked = filters.has("bad");
+      syncModeButtons();
+      syncThemeButtons();
+    }
+
+    function normalizeSavedTopics(topics) {
+      if (!Array.isArray(topics)) return allTopics;
+      const known = new Set(allTopics);
+      return topics.filter(topic => known.has(topic));
+    }
+
+    function applyTheme() {
+      document.body.dataset.theme = state.theme;
+    }
+
+    function syncModeButtons() {
+      els.modeFlash.classList.toggle("active", state.mode === "flash");
+      els.modeOral.classList.toggle("active", state.mode === "oral");
+    }
+
+    function syncThemeButtons() {
+      els.themeLight.classList.toggle("active", state.theme === "light");
+      els.themeDark.classList.toggle("active", state.theme === "dark");
+    }
+
+    function getSelectedStatusFilters() {
+      const filters = new Set();
+      if (els.filterNew?.checked) filters.add("new");
+      if (els.filterHard?.checked) filters.add("hard");
+      if (els.filterBad?.checked) filters.add("bad");
+      return filters;
+    }
+
+    function matchesStatusFilter(id, filters) {
+      const status = getStatus(id);
+      return (filters.has("new") && !status)
+        || (filters.has("hard") && status === "hard")
+        || (filters.has("bad") && status === "bad");
+    }
+
+    function isThesisCard(card) {
+      return Boolean(card.thesis)
+        || THESIS_TOPICS.has(card.topic)
+        || THESIS_ID_PREFIXES.some(prefix => card.id.startsWith(prefix));
+    }
+
+    function setEditing(active) {
+      const card = currentCard();
+      if (!card) return;
+      state.editing = active;
+      state.answerVisible = true;
+      render();
+      if (active) {
+        const answer = document.getElementById("answer");
+        if (answer) answer.focus();
+      }
+    }
+
+    function syncEditControls(card) {
+      const hasCard = Boolean(card);
+      els.editAnswer.disabled = !hasCard;
+      els.editAnswer.classList.toggle("active", state.editing);
+      els.editAnswer.textContent = state.editing ? "Edycja" : "Edytuj";
+      els.editTools.hidden = !state.editing;
+      els.clearNote.hidden = !card || !hasCustomAnswer(card.id);
+    }
+
+    function formatSelection(kind) {
+      const answer = document.getElementById("answer");
+      if (!state.editing || !answer) return;
+      answer.focus();
+      if (kind === "bold") {
+        document.execCommand("bold", false);
+        return;
+      }
+      if (kind === "highlight") {
+        const ok = document.execCommand("hiliteColor", false, "#fff29a");
+        if (!ok) document.execCommand("backColor", false, "#fff29a");
+      }
+    }
+
+    function saveEditedAnswer(options = {}) {
+      const { keepEditing = false, rerender = true } = options;
+      const card = currentCard();
+      const answer = document.getElementById("answer");
+      if (!card || !answer) return;
+      const cleaned = sanitizeRichText(answer.innerHTML);
+      const base = sanitizeRichText(formatAnswer(card.a));
+      const item = { ...(state.progress[card.id] || {}) };
+      if (normalizeRichText(cleaned) === normalizeRichText(base)) {
+        delete item.answerHtml;
+        delete item.editedAt;
+      } else {
+        item.answerHtml = cleaned;
+        item.editedAt = Date.now();
+      }
+      if (item.status || item.answerHtml) state.progress[card.id] = item;
+      else delete state.progress[card.id];
+      state.editing = keepEditing;
+      state.answerVisible = true;
+      saveProgress();
+      if (rerender) render();
+    }
+
+    function cancelEditing() {
+      state.editing = false;
+      render();
+    }
+
+    function clearEditedAnswer() {
+      const card = currentCard();
+      if (!card) return;
+      const item = { ...(state.progress[card.id] || {}) };
+      delete item.answerHtml;
+      delete item.editedAt;
+      if (item.status) state.progress[card.id] = item;
+      else delete state.progress[card.id];
+      state.editing = false;
+      state.answerVisible = true;
+      saveProgress();
+      render();
+    }
+
+    function persistEditingIfNeeded() {
+      if (state.editing) saveEditedAnswer({ keepEditing: false, rerender: false });
+    }
+
+    function hasCustomAnswer(id) {
+      return Boolean(state.progress[id]?.answerHtml);
+    }
+
+    function getAnswerHtml(card) {
+      return state.progress[card.id]?.answerHtml || formatAnswer(card.a);
+    }
+
+    function getSearchableAnswer(card) {
+      const customAnswer = state.progress[card.id]?.answerHtml || "";
+      return card.a + " " + plainTextFromHtml(customAnswer);
+    }
+
+    function sanitizeRichText(html) {
+      const template = document.createElement("template");
+      template.innerHTML = html;
+      const output = document.createElement("div");
+      template.content.childNodes.forEach(node => output.appendChild(sanitizeNode(node)));
+      return output.innerHTML.replace(/(<br>)+$/g, "");
+    }
+
+    function sanitizeNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return document.createTextNode(node.textContent || "");
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return document.createDocumentFragment();
+      }
+
+      const tag = node.tagName;
+      if (tag === "BR") return document.createElement("br");
+
+      const fragment = document.createDocumentFragment();
+      node.childNodes.forEach(child => fragment.appendChild(sanitizeNode(child)));
+
+      if (tag === "B" || tag === "STRONG") {
+        const strong = document.createElement("strong");
+        strong.appendChild(fragment);
+        return strong;
+      }
+
+      if (tag === "MARK" || hasHighlightStyle(node)) {
+        const mark = document.createElement("mark");
+        mark.appendChild(fragment);
+        return mark;
+      }
+
+      if (tag === "DIV" || tag === "P") {
+        fragment.appendChild(document.createElement("br"));
+      }
+
+      return fragment;
+    }
+
+    function hasHighlightStyle(node) {
+      const style = node.getAttribute("style") || "";
+      return /background(-color)?:/i.test(style);
+    }
+
+    function normalizeRichText(html) {
+      return html.replace(/\s+/g, " ").replace(/>\s+</g, "><").trim();
+    }
+
+    function plainTextFromHtml(html) {
+      const template = document.createElement("template");
+      template.innerHTML = html;
+      return template.content.textContent || "";
     }
 
     function countBy(items, fn) {
