@@ -285,6 +285,24 @@
       accent-color: var(--accent-2);
     }
 
+    .seed-row {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      padding-left: 25px;
+      word-break: break-all;
+    }
+
+    .seed-row code {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      padding: 2px 6px;
+    }
+
     .side-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -561,6 +579,7 @@
             <label class="switch"><input id="filterHard" type="checkbox"> Trudne</label>
             <label class="switch"><input id="filterBad" type="checkbox"> Nie umiem</label>
             <label class="switch"><input id="shuffle" type="checkbox" checked> Losowa kolejność</label>
+            <div id="seedRow" class="seed-row">Seed: <code id="seedValue"></code></div>
           </div>
         </div>
 
@@ -2460,16 +2479,20 @@
       "Integracja i ewaluacja"
     ]);
     const THESIS_ID_PREFIXES = ["work-tech-", "thesis-"];
+    const requestedSeed = getSeedFromUrl();
     const savedSession = loadSession();
+    const savedSeed = normalizeSeed(savedSession.seed);
+    const shouldRestoreOrder = !requestedSeed && savedSeed && Array.isArray(savedSession.order);
 
     const state = {
       mode: VALID_MODES.includes(savedSession.mode) ? savedSession.mode : "flash",
       theme: VALID_THEMES.includes(savedSession.theme) ? savedSession.theme : "light",
-      index: Number.isInteger(savedSession.index) ? savedSession.index : 0,
-      order: Array.isArray(savedSession.order) ? savedSession.order.filter(id => cardById.has(id)) : [],
+      index: shouldRestoreOrder && Number.isInteger(savedSession.index) ? savedSession.index : 0,
+      order: shouldRestoreOrder ? savedSession.order.filter(id => cardById.has(id)) : [],
       topics: new Set(normalizeSavedTopics(savedSession.topics)),
+      seed: requestedSeed || savedSeed || generateSeed(),
       progress: loadProgress(),
-      answerVisible: Boolean(savedSession.answerVisible),
+      answerVisible: shouldRestoreOrder && Boolean(savedSession.answerVisible),
       editing: false
     };
 
@@ -2481,6 +2504,8 @@
       filterHard: document.getElementById("filterHard"),
       filterBad: document.getElementById("filterBad"),
       shuffle: document.getElementById("shuffle"),
+      seedRow: document.getElementById("seedRow"),
+      seedValue: document.getElementById("seedValue"),
       cardArea: document.getElementById("cardArea"),
       counter: document.getElementById("counter"),
       topicName: document.getElementById("topicName"),
@@ -2629,7 +2654,7 @@
         const keptSet = new Set(kept);
         state.order = kept.concat(poolIds.filter(id => !keptSet.has(id)));
       } else {
-        if (els.shuffle.checked) pool = shuffle(pool);
+        if (els.shuffle.checked) pool = shuffle(pool, state.seed);
         state.order = pool.map(card => card.id);
       }
       if (state.index >= state.order.length) state.index = Math.max(0, state.order.length - 1);
@@ -2638,6 +2663,7 @@
 
     function render() {
       renderStats();
+      renderSeed();
       const card = currentCard();
       if (!card) {
         state.editing = false;
@@ -2857,6 +2883,7 @@
         thesisOnly: Boolean(els.filterThesis?.checked),
         statusFilters: [...getSelectedStatusFilters()],
         shuffle: Boolean(els.shuffle?.checked),
+        seed: state.seed,
         answerVisible: state.answerVisible,
         savedAt: Date.now()
       };
@@ -2879,6 +2906,34 @@
       if (!Array.isArray(topics)) return allTopics;
       const known = new Set(allTopics);
       return topics.filter(topic => known.has(topic));
+    }
+
+    function getSeedFromUrl() {
+      try {
+        return normalizeSeed(new URLSearchParams(window.location.search).get("seed"));
+      } catch {
+        return "";
+      }
+    }
+
+    function normalizeSeed(seed) {
+      const text = String(seed ?? "").trim();
+      return text ? text.replace(/[^\w.-]+/g, "").slice(0, 32) : "";
+    }
+
+    function generateSeed() {
+      const cryptoObj = window.crypto || window.msCrypto;
+      if (cryptoObj?.getRandomValues) {
+        const values = new Uint32Array(1);
+        cryptoObj.getRandomValues(values);
+        return String(values[0]);
+      }
+      return String((Date.now() + Math.floor(Math.random() * 0xffffffff)) >>> 0);
+    }
+
+    function renderSeed() {
+      els.seedRow.hidden = !els.shuffle.checked;
+      els.seedValue.textContent = state.seed;
     }
 
     function applyTheme() {
@@ -3074,13 +3129,34 @@
       }, {});
     }
 
-    function shuffle(items) {
+    function shuffle(items, seed) {
       const copy = [...items];
+      const random = createSeededRandom(seed);
       for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(random() * (i + 1));
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
+    }
+
+    function createSeededRandom(seed) {
+      let value = seedToUint32(seed) || 1;
+      return function random() {
+        value += 0x6D2B79F5;
+        let next = value;
+        next = Math.imul(next ^ (next >>> 15), next | 1);
+        next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
+        return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function seedToUint32(seed) {
+      let hash = 2166136261;
+      for (let i = 0; i < seed.length; i++) {
+        hash ^= seed.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
     }
 
     function normalize(value) {

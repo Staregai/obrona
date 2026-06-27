@@ -7,4 +7,5 @@ Materialy do nauki na obrone:
 - `output/latex/` - zrodla LaTeX opracowania.
 - `output/quiz/quiz.html` - interaktywny quiz/fiszki do otwarcia w przegladarce.
 - `output/quiz/obrona_anki.csv` - eksport fiszek do Anki.
+- `output/visualizer/index.html` - interaktywne laboratorium wizualne do sieci, RL, algorytmow ewolucyjnych i watkow z pracy.
 - `Slajdy/` oraz pliki PDF w katalogu glownym - materialy zrodlowe.

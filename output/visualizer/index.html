@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laboratorium wizualne - sieci, RL i ewolucja</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>Laboratorium wizualne</h1>
+        <p>Interaktywne modele do SN, RL, algorytmów ewolucyjnych i pracy OMR/SVS.</p>
+      </div>
+      <div class="top-actions" aria-label="Szybkie filtry">
+        <button class="category-tab is-active" data-category="all">Wszystko</button>
+        <button class="category-tab" data-category="task">Zadania</button>
+        <button class="category-tab" data-category="network">Sieci</button>
+        <button class="category-tab" data-category="rl">RL</button>
+        <button class="category-tab" data-category="evolution">Ewolucja</button>
+        <button class="category-tab" data-category="thesis">Praca</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Lista tematów">
+        <label class="search">
+          <span>Szukaj</span>
+          <input id="topicSearch" type="search" placeholder="np. pooling, Hopfield, DQN">
+        </label>
+        <div id="topicList" class="topic-list"></div>
+      </aside>
+
+      <section class="stage" aria-label="Wizualizacja">
+        <div class="stage-head">
+          <div>
+            <div id="topicGroup" class="kicker">Sieci neuronowe</div>
+            <h2 id="topicTitle">CNN i pooling</h2>
+          </div>
+          <div id="metricStrip" class="metric-strip"></div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="sceneCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+          <button id="playBtn" class="command" title="Start albo pauza animacji" aria-label="Start albo pauza animacji">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+            <span>Start</span>
+          </button>
+          <button id="stepBtn" class="command" title="Wykonaj jeden krok" aria-label="Wykonaj jeden krok">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5l8 7-8 7V5zm10 0h2v14h-2V5z"></path></svg>
+            <span>Krok</span>
+          </button>
+          <button id="resetBtn" class="command" title="Resetuj stan symulacji" aria-label="Resetuj stan symulacji">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.3 4H3l3.5-4L10 9H7.8A5 5 0 1 0 12 7V5z"></path></svg>
+            <span>Reset</span>
+          </button>
+          <label class="slider">
+            <span>Szybkość</span>
+            <input id="speedRange" type="range" min="0.4" max="2.4" step="0.1" value="1">
+          </label>
+          <label class="slider">
+            <span>Szum / eksploracja</span>
+            <input id="noiseRange" type="range" min="0" max="1" step="0.05" value="0.35">
+          </label>
+          <label class="slider">
+            <span>Próg / złożoność</span>
+            <input id="complexityRange" type="range" min="0" max="1" step="0.05" value="0.55">
+          </label>
+        </div>
+      </section>
+
+      <aside class="inspector" aria-label="Opis architektury">
+        <section>
+          <h3>Architektura</h3>
+          <div id="architecture" class="stack"></div>
+        </section>
+        <section>
+          <h3>Co obserwować</h3>
+          <ul id="observations" class="note-list"></ul>
+        </section>
+        <section>
+          <h3>Wzór / reguła</h3>
+          <pre id="formulaBox"></pre>
+        </section>
+        <section>
+          <h3>Na obronie</h3>
+          <p id="defenseNote" class="defense-note"></p>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
