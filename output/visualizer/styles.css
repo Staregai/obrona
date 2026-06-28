@@ -116,6 +116,12 @@ h1 {
   background: var(--teal);
 }
 
+.command.is-active {
+  color: #ffffff;
+  border-color: var(--teal);
+  background: var(--teal);
+}
+
 .layout {
   width: 100%;
   max-width: 1520px;

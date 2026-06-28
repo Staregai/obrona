@@ -246,6 +246,17 @@
       gap: 7px;
     }
 
+    .topic-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .topic-actions button {
+      padding: 8px 9px;
+    }
+
     .topic-row {
       display: grid;
       grid-template-columns: 20px 1fr auto;
@@ -287,6 +298,8 @@
 
     .seed-row {
       color: var(--muted);
+      display: grid;
+      gap: 6px;
       font-size: 12px;
       line-height: 1.35;
       padding-left: 25px;
@@ -301,6 +314,28 @@
       font: inherit;
       font-weight: 700;
       padding: 2px 6px;
+    }
+
+    .seed-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .seed-controls input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      padding: 7px 8px;
+    }
+
+    .seed-controls button {
+      padding: 7px 9px;
     }
 
     .side-actions {
@@ -568,6 +603,10 @@
 
         <div class="group">
           <div class="label">Działy</div>
+          <div class="topic-actions">
+            <button id="selectAllTopics" type="button">Zaznacz wszystkie</button>
+            <button id="clearAllTopics" type="button">Odznacz wszystkie</button>
+          </div>
           <div id="topics" class="topics"></div>
         </div>
 
@@ -575,11 +614,19 @@
           <div class="label">Sesja</div>
           <div class="switches">
             <label class="switch"><input id="filterThesis" type="checkbox"> Pytania do pracy</label>
+            <label class="switch"><input id="filterMini" type="checkbox"> Pytania ze strony MiNI</label>
             <label class="switch"><input id="filterNew" type="checkbox"> Nowe</label>
             <label class="switch"><input id="filterHard" type="checkbox"> Trudne</label>
             <label class="switch"><input id="filterBad" type="checkbox"> Nie umiem</label>
             <label class="switch"><input id="shuffle" type="checkbox" checked> Losowa kolejność</label>
-            <div id="seedRow" class="seed-row">Seed: <code id="seedValue"></code></div>
+            <div id="seedRow" class="seed-row">
+              <label for="seedInput">Seed</label>
+              <div class="seed-controls">
+                <input id="seedInput" type="text" autocomplete="off" spellcheck="false" aria-label="Seed losowania">
+                <button id="applySeed" type="button">Ustaw</button>
+                <button id="newSeed" type="button">Nowy</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1369,6 +1416,501 @@
                 "topic": "Uczenie ze wzmocnieniem",
                 "q": "Dlaczego eksploracja jest potrzebna w RL?",
                 "a": "Bez eksploracji agent może nigdy nie odkryć lepszych akcji i utknąć przy pierwszej sensownej strategii. Eksploracja zbiera informacje o konsekwencjach alternatywnych działań."
+          },
+          {
+                "id": "rl-extra-9",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym różni się zadanie epizodyczne od ciągłego w RL?",
+                "a": "W zadaniu epizodycznym interakcja kończy się stanem terminalnym, np. koniec gry albo dojazd do celu. W zadaniu ciągłym agent działa bez naturalnego końca, np. sterowanie procesem. Ma to wpływ na definicję zwrotu, dyskontowanie i sposób oceny polityki."
+          },
+          {
+                "id": "rl-extra-10",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym różni się polityka deterministyczna od stochastycznej?",
+                "a": "Polityka deterministyczna przypisuje każdemu stanowi jedną akcję. Polityka stochastyczna przypisuje rozkład prawdopodobieństwa po akcjach. Stochastyczność pomaga w eksploracji i jest naturalna w metodach opartych na gradiencie polityki."
+          },
+          {
+                "id": "rl-extra-11",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Na czym polega problem credit assignment w RL?",
+                "a": "Trzeba ustalić, które wcześniejsze akcje odpowiadają za późniejszą nagrodę lub karę. Jest to trudne, gdy nagroda jest opóźniona, epizody są długie, a wiele decyzji po drodze wpływa na wynik. Metody TD, n-step i eligibility traces pomagają rozdzielać ten sygnał w czasie."
+          },
+          {
+                "id": "rl-extra-12",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym jest problem wielorękiego bandyty?",
+                "a": "Agent wielokrotnie wybiera jedną z akcji, czyli ramion, i obserwuje nagrodę, ale nie ma przejść między stanami. Problem skupia się prawie wyłącznie na kompromisie eksploracja-eksploatacja: czy wybierać akcję, która dotąd była najlepsza, czy testować inne."
+          },
+          {
+                "id": "rl-extra-13",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Co oznacza regret w problemach bandyckich?",
+                "a": "Regret mierzy stratę względem strategii, która od początku wybierałaby najlepszą akcję. Jeśli agent długo eksperymentuje ze słabymi akcjami albo zbyt wcześnie przywiąże się do złej akcji, regret rośnie. To miara kosztu uczenia się przez eksplorację."
+          },
+          {
+                "id": "rl-extra-14",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym strategia greedy różni się od epsilon-greedy?",
+                "a": "Greedy zawsze wybiera akcję o najwyższej aktualnej estymacji wartości, więc może szybko utknąć przy błędnym wczesnym oszacowaniu. Epsilon-greedy czasem wybiera akcję losową, dzięki czemu utrzymuje prostą eksplorację kosztem części nagród krótkoterminowych."
+          },
+          {
+                "id": "rl-extra-15",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co zmniejsza się epsilon w trakcie uczenia?",
+                "a": "Duży epsilon na początku pomaga poznać środowisko, a mniejszy później pozwala częściej wykorzystywać znalezioną dobrą politykę. Taki harmonogram jest próbą przejścia od eksploracji do eksploatacji. Zbyt szybkie zmniejszenie grozi utknięciem, a zbyt wolne marnuje nagrody."
+          },
+          {
+                "id": "rl-extra-16",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Jak działa eksploracja softmax/Boltzmann?",
+                "a": "Akcje są losowane z rozkładu, w którym lepiej oceniane akcje mają większe prawdopodobieństwo, ale słabsze nadal mogą zostać wybrane. Temperatura steruje losowością: wysoka daje bardziej równy rozkład, niska zbliża wybór do greedy."
+          },
+          {
+                "id": "rl-extra-17",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Jaka jest intuicja strategii UCB?",
+                "a": "UCB wybiera akcje według sumy estymowanej wartości i premii za niepewność. Akcja rzadko próbowana dostaje większą premię, więc agent eksploruje tam, gdzie ma mało danych. Gdy akcja jest często sprawdzana, premia maleje i liczy się głównie średnia nagroda."
+          },
+          {
+                "id": "rl-extra-18",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym contextual bandit różni się od pełnego RL?",
+                "a": "Contextual bandit widzi kontekst, wybiera akcję i dostaje nagrodę, ale zwykle nie modeluje długiego wpływu akcji na przyszłe stany. Pełne RL uwzględnia sekwencję stanów i to, że dzisiejsza akcja zmienia sytuację decyzyjną w kolejnych krokach."
+          },
+          {
+                "id": "rl-extra-19",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Co robi policy evaluation?",
+                "a": "Policy evaluation oblicza lub przybliża funkcję wartości dla ustalonej polityki. Nie szuka jeszcze lepszej polityki, tylko odpowiada na pytanie: jaki zwrot osiągniemy, jeśli będziemy działać według tej reguły. To pierwszy krok w iteracji polityki."
+          },
+          {
+                "id": "rl-extra-20",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Co oznacza policy improvement?",
+                "a": "Policy improvement tworzy lepszą politykę na podstawie aktualnych wartości, zwykle wybierając akcje zachłannie względem V lub Q. Intuicja jest taka: jeśli znamy konsekwencje akcji, możemy w każdym stanie wybrać tę z najlepszym oczekiwanym zwrotem."
+          },
+          {
+                "id": "rl-extra-21",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym różni się policy iteration od value iteration?",
+                "a": "Policy iteration naprzemiennie ocenia bieżącą politykę i ją ulepsza. Value iteration łączy te idee, wykonując aktualizacje wartości bliższe równaniu optymalności Bellmana i dopiero z wartości odczytuje politykę. Obie metody wymagają modelu MDP."
+          },
+          {
+                "id": "rl-extra-22",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym jest generalized policy iteration?",
+                "a": "To ogólna idea, że uczenie wartości i poprawianie polityki mogą zachodzić równolegle lub naprzemiennie. Wiele algorytmów RL można rozumieć jako przybliżoną wersję tego schematu: estymacje wartości prowadzą politykę, a polityka generuje nowe doświadczenie."
+          },
+          {
+                "id": "rl-extra-23",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Na czym polega metoda Monte Carlo w predykcji wartości?",
+                "a": "Monte Carlo estymuje wartość stanu lub pary stan-akcja ze średnich zwrotów obserwowanych w pełnych epizodach. Nie potrzebuje modelu przejść, ale musi poczekać na koniec epizodu i może mieć dużą wariancję."
+          },
+          {
+                "id": "rl-extra-24",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Co oznaczają exploring starts w metodach Monte Carlo?",
+                "a": "Exploring starts zakładają, że epizody mogą zaczynać się z różnych par stan-akcja tak, aby każda para miała szansę zostać odwiedzona. To techniczne założenie pomaga zapewnić eksplorację, ale w praktycznych środowiskach często jest nierealistyczne."
+          },
+          {
+                "id": "rl-extra-25",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co w off-policy Monte Carlo stosuje się importance sampling?",
+                "a": "Importance sampling koryguje różnicę między polityką, która generowała dane, a polityką, którą chcemy ocenić. Dzięki temu można uczyć się o polityce docelowej z epizodów zebranych inną polityką, ale estymator może mieć dużą wariancję."
+          },
+          {
+                "id": "rl-extra-26",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym Expected SARSA różni się od zwykłej SARSA?",
+                "a": "SARSA używa wartości faktycznie wybranej następnej akcji. Expected SARSA bierze wartość oczekiwaną po możliwych następnych akcjach zgodnie z bieżącą polityką. Zwykle zmniejsza wariancję celu aktualizacji, ale wymaga policzenia średniej po akcjach."
+          },
+          {
+                "id": "rl-extra-27",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co stosuje się n-krokowe metody TD?",
+                "a": "Metody n-krokowe łączą TD(0) i Monte Carlo. Zamiast patrzeć tylko jeden krok albo aż do końca epizodu, używają zwrotu z kilku kolejnych kroków. Parametr n reguluje kompromis między biasem, wariancją i szybkością propagacji nagród."
+          },
+          {
+                "id": "rl-extra-28",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym są eligibility traces i TD(lambda)?",
+                "a": "Eligibility traces przechowują ślad niedawno odwiedzonych stanów lub akcji, aby późniejszy błąd TD mógł aktualizować kilka wcześniejszych decyzji. TD(lambda) steruje zanikiem tego śladu: lambda bliskie 0 przypomina TD(0), a bliskie 1 bardziej Monte Carlo."
+          },
+          {
+                "id": "rl-extra-29",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym jest Dyna-Q?",
+                "a": "Dyna-Q łączy bezpośrednie uczenie z doświadczenia z planowaniem na podstawie nauczonego modelu środowiska. Po prawdziwym kroku agent aktualizuje Q, zapisuje model przejścia i wykonuje dodatkowe symulowane aktualizacje. To przykład połączenia model-free i model-based."
+          },
+          {
+                "id": "rl-extra-30",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym model próbkowy różni się od pełnego modelu rozkładu przejść?",
+                "a": "Model próbkowy potrafi wygenerować przykładowy następny stan i nagrodę dla zadanej pary stan-akcja. Pełny model rozkładu opisuje prawdopodobieństwa wszystkich możliwych następnych stanów. Do planowania często wystarcza model próbkowy, zwłaszcza gdy przestrzeń jest duża."
+          },
+          {
+                "id": "rl-extra-31",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co stosuje się aproksymację funkcji w RL?",
+                "a": "Tablice V lub Q są możliwe tylko dla małych, dyskretnych przestrzeni. Przy wielu stanach, cechach ciągłych albo obrazach trzeba aproksymować wartości lub politykę modelem, np. liniowym albo siecią neuronową. Pozwala to generalizować między podobnymi stanami."
+          },
+          {
+                "id": "rl-extra-32",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Dlaczego sieci neuronowe mogą destabilizować uczenie RL?",
+                "a": "Dane nie są niezależne, bo kolejne obserwacje pochodzą z jednej trajektorii. Cele aktualizacji też się zmieniają, ponieważ model uczy się z własnych przewidywań. Do tego polityka zbierająca dane zmienia rozkład odwiedzanych stanów. Dlatego deep RL wymaga stabilizacji."
+          },
+          {
+                "id": "rl-extra-33",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Jaka jest idea semi-gradient TD przy aproksymacji wartości?",
+                "a": "Wartość V lub Q zależy od parametrów modelu, np. wag sieci. Semi-gradient TD aktualizuje parametry tak, aby zmniejszyć błąd względem celu TD, ale traktuje ten cel jako stały w danym kroku. To praktyczny kompromis używany w wielu algorytmach z aproksymacją."
+          },
+          {
+                "id": "rl-extra-34",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym jest DQN?",
+                "a": "DQN to deep Q-network, czyli Q-learning z siecią neuronową aproksymującą Q(s,a). Klasycznie stosuje experience replay i target network, aby ustabilizować uczenie. Dzięki temu Q-learning można zastosować np. do wejść obrazowych zamiast małych tabel."
+          },
+          {
+                "id": "rl-extra-35",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co w DQN stosuje się experience replay?",
+                "a": "Replay buffer przechowuje wcześniejsze przejścia i pozwala trenować na losowanych mini-batchach. Zmniejsza korelację kolejnych próbek, umożliwia wielokrotne wykorzystanie doświadczenia i stabilizuje uczenie sieci Q."
+          },
+          {
+                "id": "rl-extra-36",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co w DQN stosuje się target network?",
+                "a": "Target network to wolniej aktualizowana kopia sieci Q używana do liczenia celu TD. Dzięki temu cel nie zmienia się w każdym kroku tak gwałtownie jak bieżąca sieć, co ogranicza niestabilność i oscylacje uczenia."
+          },
+          {
+                "id": "rl-extra-37",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Jaki problem rozwiązuje Double DQN?",
+                "a": "Zwykły DQN może zawyżać wartości Q, bo ten sam model wybiera najlepszą akcję i ocenia jej wartość. Double DQN rozdziela wybór akcji od jej oceny, przez co zmniejsza overestimation bias i często daje stabilniejsze wyniki."
+          },
+          {
+                "id": "rl-extra-38",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Jaka jest intuicja dueling DQN?",
+                "a": "Dueling DQN rozdziela estymację wartości stanu od przewagi poszczególnych akcji. Pomaga to zwłaszcza wtedy, gdy wiele akcji ma podobny efekt i najpierw warto dobrze ocenić sam stan. Architektura potem składa te informacje w wartości Q."
+          },
+          {
+                "id": "rl-extra-39",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym metody policy gradient różnią się od metod wartości?",
+                "a": "Metody wartości uczą V lub Q i zwykle wybierają akcje pośrednio, np. zachłannie względem Q. Policy gradient optymalizuje parametry polityki bezpośrednio w kierunku większego oczekiwanego zwrotu. Jest to naturalne dla polityk stochastycznych i akcji ciągłych."
+          },
+          {
+                "id": "rl-extra-40",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym jest REINFORCE i po co dodaje się baseline?",
+                "a": "REINFORCE to podstawowy algorytm gradientu polityki, który wzmacnia akcje prowadzące do wysokiego zwrotu. Baseline, często przybliżenie V(s), odejmuje typową wartość zwrotu, dzięki czemu zmniejsza wariancję estymatora bez zmiany oczekiwanego kierunku gradientu."
+          },
+          {
+                "id": "rl-extra-41",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Na czym polega podejście actor-critic?",
+                "a": "Actor uczy polityki, czyli sposobu wyboru akcji. Critic ocenia działania aktora przez funkcję wartości lub błąd TD. Dzięki temu polityka dostaje bardziej informacyjny sygnał uczenia niż sam końcowy zwrot, a critic pomaga obniżyć wariancję gradientu."
+          },
+          {
+                "id": "rl-extra-42",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Jaka jest intuicja PPO?",
+                "a": "PPO aktualizuje politykę tak, aby poprawiać wynik, ale nie oddalać się zbyt gwałtownie od starej polityki. Ograniczenie zmiany stabilizuje uczenie, bo zbyt duży krok może zepsuć politykę i sprawić, że zebrane dane przestaną pasować do aktualnego modelu."
+          },
+          {
+                "id": "rl-extra-43",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Po co w niektórych metodach RL dodaje się premię za entropię?",
+                "a": "Premia za entropię zachęca politykę do pozostawania mniej pewną i bardziej eksploracyjną. Pomaga uniknąć zbyt szybkiego zapadnięcia się do jednej akcji. W metodach typu maximum entropy, takich jak SAC, eksploracja jest częścią samego celu optymalizacji."
+          },
+          {
+                "id": "rl-extra-44",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Dlaczego akcje ciągłe są trudniejsze dla klasycznego Q-learningu?",
+                "a": "W dyskretnym Q-learningu można policzyć maksimum po skończonej liczbie akcji. Przy akcjach ciągłych maksimum po akcjach jest problemem optymalizacji, często kosztownym i niestabilnym. Dlatego stosuje się metody actor-critic, w których actor bezpośrednio proponuje akcję."
+          },
+          {
+                "id": "rl-extra-45",
+                "topic": "Uczenie ze wzmocnieniem",
+                "q": "Czym jest multi-agent reinforcement learning?",
+                "a": "W multi-agent RL w środowisku działa wielu agentów, którzy mogą współpracować, konkurować albo robić jedno i drugie. Trudność polega na tym, że z perspektywy jednego agenta środowisko zmienia się wraz z uczeniem innych agentów, więc problem staje się niestacjonarny."
+          },
+          {
+                "id": "mini-chomsky-hierarchy",
+                "topic": "Teoria i złożoność",
+                "mini": true,
+                "q": "Hierarchia Chomsky'ego i odpowiadające jej hierarchie gramatyk i automatów.",
+                "a": "Hierarchia Chomsky'ego porządkuje klasy języków formalnych według siły gramatyk. Typ 3 to języki regularne, gramatyki regularne i automaty skończone. Typ 2 to języki bezkontekstowe, gramatyki bezkontekstowe i automaty ze stosem. Typ 1 to języki kontekstowe rozpoznawane przez liniowo ograniczone maszyny Turinga. Typ 0 to języki rekurencyjnie przeliczalne, gramatyki bez ograniczeń i maszyny Turinga. Każdy wyższy poziom obejmuje poprzedni i pozwala opisać bogatszą strukturę języka."
+          },
+          {
+                "id": "mini-algorithm-complexity",
+                "topic": "Teoria i złożoność",
+                "mini": true,
+                "q": "Czym jest złożoność obliczeniowa algorytmu?",
+                "a": "Złożoność obliczeniowa opisuje, jak rośnie koszt działania algorytmu wraz z rozmiarem wejścia. Najczęściej analizuje się czas i pamięć, używając notacji asymptotycznych O, Omega i Theta. Ważne jest odróżnienie złożoności pesymistycznej, średniej i oczekiwanej. Złożoność nie mówi o dokładnym czasie na konkretnym komputerze, tylko o skalowaniu metody i możliwości praktycznego użycia dla dużych danych."
+          },
+          {
+                "id": "mini-complexity-classes-p-np",
+                "topic": "Teoria i złożoność",
+                "mini": true,
+                "q": "Jak charakteryzuje się klasy problemów ze względu na złożoność obliczeniową algorytmów rozwiązujących je? Na czym polega problem P-NP?",
+                "a": "Problemy klasyfikuje się według zasobów potrzebnych do ich rozwiązania lub weryfikacji. P obejmuje problemy rozwiązywalne deterministycznie w czasie wielomianowym. NP obejmuje problemy, dla których kandydat rozwiązania może być zweryfikowany w czasie wielomianowym. Problemy NP-trudne są co najmniej tak trudne jak wszystkie problemy z NP, a NP-zupełne są jednocześnie w NP i NP-trudne. Pytanie P-NP brzmi, czy każdy problem z szybko weryfikowalnym rozwiązaniem ma też szybki algorytm znajdujący rozwiązanie. Powszechnie uważa się, że P jest różne od NP, ale nie ma dowodu."
+          },
+          {
+                "id": "mini-randomized-methods-testing",
+                "topic": "Teoria i złożoność",
+                "mini": true,
+                "q": "Jak testować i szukać błędów w implementacji metod inteligencji obliczeniowej, szczególnie wykorzystujących losowość?",
+                "a": "Najpierw trzeba zapewnić reprodukowalność: zapisywać seedy, wersje bibliotek, dane i parametry. Deterministyczne części algorytmu warto testować osobno testami jednostkowymi i na małych przykładach z oczekiwanym wynikiem. Dla części losowych uruchamia się wiele powtórzeń, analizuje rozkład wyników, sprawdza niezmienniki i porównuje z prostymi baseline'ami. Pojedynczy dobry lub zły przebieg nie wystarcza, bo może wynikać z naturalnej zmienności."
+          },
+          {
+                "id": "mini-computational-experiments",
+                "topic": "Teoria i złożoność",
+                "mini": true,
+                "q": "Jak prowadzić eksperymenty obliczeniowe?",
+                "a": "Eksperyment powinien mieć jasne pytanie badawcze, opis danych, protokół podziału na zbiory, ustalone metryki i uczciwe baseline'y. Parametry dobiera się na walidacji, a test zostawia do końcowej oceny. Dla metod losowych raportuje się wiele uruchomień, średnią, odchylenie lub medianę i kwartyle. Wyniki powinny być odtwarzalne: trzeba podać kod, konfigurację, seedy, sprzęt i wersje bibliotek. Ważna jest też interpretacja, czyli nie tylko kto wygrał, ale czy różnica jest istotna i praktycznie znacząca."
+          },
+          {
+                "id": "mini-tsp",
+                "topic": "Algorytmy i numeryczne",
+                "mini": true,
+                "q": "Problem komiwojażera - definicja i algorytmy rozwiązywania.",
+                "a": "W problemie komiwojażera trzeba znaleźć najkrótszy cykl odwiedzający każde miasto dokładnie raz i wracający do punktu startu. Wersja decyzyjna TSP jest NP-zupełna. Dokładnie można go rozwiązywać przeglądem permutacji, programowaniem dynamicznym Held-Karpa albo branch and bound, ale metody te szybko stają się kosztowne. W praktyce używa się heurystyk i metaheurystyk, np. najbliższego sąsiada, 2-opt, symulowanego wyżarzania, algorytmów genetycznych lub mrówkowych. Dla wariantu metrycznego istnieją też algorytmy aproksymacyjne."
+          },
+          {
+                "id": "mini-interpolation",
+                "topic": "Algorytmy i numeryczne",
+                "mini": true,
+                "q": "Na czym polegają zadania interpolacji i jakie są zastosowania interpolacji?",
+                "a": "Interpolacja polega na wyznaczeniu funkcji przechodzącej przez znane punkty pomiarowe, aby szacować wartości między nimi. Stosuje się wielomiany interpolacyjne, postać Lagrange'a lub Newtona, funkcje sklejane i splajny. Interpolacja przydaje się w aproksymacji danych, grafice, przetwarzaniu sygnałów, metodach numerycznych i rekonstrukcji brakujących próbek. Trzeba uważać na oscylacje wysokich wielomianów i odróżniać interpolację od aproksymacji, która nie musi przechodzić dokładnie przez punkty."
+          },
+          {
+                "id": "mini-linear-systems-finite",
+                "topic": "Algorytmy i numeryczne",
+                "mini": true,
+                "q": "Jakie są metody skończone rozwiązywania układów równań liniowych?",
+                "a": "Metody skończone, czyli bezpośrednie, dają rozwiązanie po skończonej liczbie operacji arytmetycznych w modelu dokładnym. Podstawą jest eliminacja Gaussa, często z pivotingiem dla stabilności numerycznej. Stosuje się też rozkłady macierzy: LU, Cholesky dla macierzy symetrycznych dodatnio określonych oraz QR, szczególnie w problemach najmniejszych kwadratów. W praktyce ważne są uwarunkowanie macierzy, błędy zaokrągleń, rzadkość macierzy i koszt rzędu O(n^3) dla pełnych macierzy."
+          },
+          {
+                "id": "mini-root-finding",
+                "topic": "Algorytmy i numeryczne",
+                "mini": true,
+                "q": "Jakie są metody poszukiwania zer funkcji jednej zmiennej?",
+                "a": "Dla funkcji jednej zmiennej można użyć metod przedziałowych, takich jak bisekcja, które są wolniejsze, ale bezpieczne przy zmianie znaku na przedziale. Metoda Newtona wykorzystuje pochodną i zwykle zbiega szybko lokalnie, ale wymaga dobrego punktu startowego i może się rozbiec. Metoda siecznych nie wymaga jawnej pochodnej, a regula falsi łączy ideę siecznej z utrzymaniem przedziału. W praktyce wybór zależy od dostępności pochodnej, wymaganej niezawodności i gładkości funkcji."
+          },
+          {
+                "id": "mini-numerical-integration",
+                "topic": "Algorytmy i numeryczne",
+                "mini": true,
+                "q": "Jakie są metody całkowania numerycznego?",
+                "a": "Całkowanie numeryczne przybliża wartość całki za pomocą skończonej liczby wartości funkcji. Proste reguły to metoda prostokątów, trapezów i Simpsona, a dokładniejsze podejścia obejmują kwadratury Newtona-Cotesa i Gaussa. Dla funkcji trudnych lub wysokowymiarowych stosuje się adaptacyjne dzielenie przedziału albo metody Monte Carlo. Błąd zależy od gładkości funkcji, kroku siatki i dobranej reguły; w wysokich wymiarach klasyczne siatki cierpią na przekleństwo wymiarowości."
+          },
+          {
+                "id": "mini-nonlinear-extremum",
+                "topic": "Optymalizacja",
+                "mini": true,
+                "q": "Jakie są metody poszukiwania ekstremum funkcji nieliniowej?",
+                "a": "Dla problemów bez ograniczeń stosuje się metody lokalne, takie jak największy spadek, Newton, quasi-Newton, gradient sprzężony i metody bezpochodne, np. Nelder-Mead. Kluczowe jest wyznaczenie kierunku poszukiwań i długości kroku. Dla funkcji wypukłych minimum lokalne jest globalne, ale dla niewypukłych metoda może utknąć w minimum lokalnym. Dlatego w trudnych zadaniach używa się wielostartu, heurystyk globalnych albo dodatkowej wiedzy o strukturze funkcji."
+          },
+          {
+                "id": "mini-constrained-optimization",
+                "topic": "Optymalizacja",
+                "mini": true,
+                "q": "Jak szukać ekstremum funkcji w obecności ograniczeń?",
+                "a": "Ograniczenia mogą być równościowe, nierównościowe, liniowe lub nieliniowe. Warunki Lagrange'a i KKT opisują punkty optymalne przy odpowiednich założeniach regularności. Algorytmicznie stosuje się metody rzutowanego gradientu, funkcje kary i bariery, aktywny zbiór ograniczeń, programowanie sekwencyjnie kwadratowe oraz metody punktu wewnętrznego. Trzeba pilnować dopuszczalności rozwiązania i rozróżniać optimum lokalne od globalnego."
+          },
+          {
+                "id": "mini-ptas",
+                "topic": "Algorytmy zaawansowane",
+                "mini": true,
+                "q": "Czym jest wielomianowy schemat aproksymacyjny?",
+                "a": "Wielomianowy schemat aproksymacyjny, czyli PTAS, to rodzina algorytmów aproksymacyjnych parametryzowana dokładnością epsilon. Dla każdego stałego epsilon większego od zera algorytm działa w czasie wielomianowym względem rozmiaru wejścia i zwraca rozwiązanie w granicy 1+epsilon od optimum dla minimalizacji albo 1-epsilon dla maksymalizacji. FPTAS jest silniejsze, bo czas jest wielomianowy także względem 1/epsilon. Takie schematy są ważne dla problemów NP-trudnych, gdzie optimum bywa zbyt kosztowne."
+          },
+          {
+                "id": "mini-dynamic-programming",
+                "topic": "Algorytmy zaawansowane",
+                "mini": true,
+                "q": "Na czym polega programowanie dynamiczne?",
+                "a": "Programowanie dynamiczne rozwiązuje problem przez podział na nakładające się podproblemy i zapamiętywanie ich wyników. Warunkiem jest optymalna podstruktura: rozwiązanie całości można zbudować z optymalnych rozwiązań mniejszych części. Można stosować podejście top-down z memoizacją albo bottom-up z tablicą. Typowe przykłady to plecak, najdłuższy wspólny podciąg, najkrótsze ścieżki i równania Bellmana w uczeniu ze wzmocnieniem."
+          },
+          {
+                "id": "mini-it-project-characteristics",
+                "topic": "Zarządzanie",
+                "mini": true,
+                "q": "Czym charakteryzuje się projekt informatyczny?",
+                "a": "Projekt informatyczny jest tymczasowym przedsięwzięciem prowadzącym do wytworzenia unikatowego produktu, usługi lub zmiany systemu. Ma określony cel, zakres, budżet, harmonogram, interesariuszy i ryzyka. Charakteryzuje się niepewnością wymagań, zależnościami technologicznymi, potrzebą komunikacji z użytkownikami i kontrolą jakości. Sukces oznacza nie tylko dostarczenie kodu, ale rozwiązanie problemu biznesowego w akceptowalnych ograniczeniach."
+          },
+          {
+                "id": "mini-project-vs-operations",
+                "topic": "Zarządzanie",
+                "mini": true,
+                "q": "Jakie są główne różnice między projektem a pracą operacyjną?",
+                "a": "Projekt jest tymczasowy, ma początek i koniec oraz tworzy coś unikatowego. Praca operacyjna jest powtarzalna i ciągła, służy utrzymaniu bieżącego działania organizacji. W projekcie większe są niepewność, ryzyko i potrzeba zarządzania zmianą, a w operacjach ważniejsze są stabilność, efektywność i standaryzacja. Po wdrożeniu rezultat projektu często przechodzi do utrzymania operacyjnego."
+          },
+          {
+                "id": "mini-project-methodologies",
+                "topic": "Zarządzanie",
+                "mini": true,
+                "q": "Jakie metodyki zarządzania projektami znasz? Czym się różnią i co mają wspólnego?",
+                "a": "Podejścia kaskadowe planują zakres i etapy z góry, dlatego pasują do stabilnych wymagań. Agile, np. Scrum i Kanban, rozwija produkt iteracyjnie, często zbiera feedback i łatwiej reaguje na zmiany. PRINCE2 mocno akcentuje uzasadnienie biznesowe, role i kontrolę etapów. Wspólne elementy to cel, role, planowanie, komunikacja, zarządzanie ryzykiem, monitorowanie postępu i kontrola jakości. Różnice dotyczą głównie stopnia formalizacji, elastyczności i sposobu pracy z wymaganiami."
+          },
+          {
+                "id": "mini-resolution-predicate",
+                "topic": "Reprezentacja wiedzy",
+                "mini": true,
+                "q": "Na czym polega metoda rezolucji w rachunku predykatów?",
+                "a": "Rezolucja to reguła wnioskowania używana do dowodzenia przez sprzeczność. Formuły sprowadza się do postaci klauzulowej, neguje tezę i dodaje ją do bazy wiedzy. Następnie szuka się par klauzul z literałami komplementarnymi, które można dopasować unifikacją. Jeśli da się wyprowadzić klauzulę pustą, otrzymujemy sprzeczność, a więc pierwotna teza wynika z bazy wiedzy. W rachunku predykatów kluczowa jest unifikacja zmiennych i termów."
+          },
+          {
+                "id": "mini-reasoning-actions",
+                "topic": "Reprezentacja wiedzy",
+                "mini": true,
+                "q": "Jakie są główne problemy w zagadnieniach wnioskowania o działaniach?",
+                "a": "Najbardziej znany jest frame problem: jak opisać, co pozostaje bez zmian po wykonaniu akcji, bez wypisywania ogromnej liczby oczywistości. Qualification problem dotyczy wszystkich warunków, które muszą zajść, aby akcja się udała. Ramification problem opisuje skutki pośrednie akcji. Dochodzą też działania współbieżne, czas, niepełna wiedza, efekty niedeterministyczne i potrzeba wnioskowania niemonotonicznego, bo nowe informacje mogą zmieniać wcześniejsze wnioski."
+          },
+          {
+                "id": "mini-evolutionary-algorithm",
+                "topic": "Algorytmy ewolucyjne",
+                "mini": true,
+                "q": "Jaki jest sposób działania algorytmu ewolucyjnego?",
+                "a": "Algorytm ewolucyjny utrzymuje populację kandydatów rozwiązań. Każdy osobnik jest oceniany funkcją przystosowania, a następnie selekcja wybiera lepsze osobniki do reprodukcji. Operatory krzyżowania i mutacji tworzą nowe warianty, które zastępują część populacji. Proces powtarza się do spełnienia warunku stopu. Siła metody wynika z populacyjnego, losowego przeszukiwania, ale jakość zależy od reprezentacji, funkcji celu, parametrów i utrzymania różnorodności."
+          },
+          {
+                "id": "mini-ea-vs-classical-optimization",
+                "topic": "Algorytmy ewolucyjne",
+                "mini": true,
+                "q": "Porównaj algorytm ewolucyjny z wybranymi metodami optymalizacji funkcji w R^n, np. Nelder-Mead, największy spadek lub metody quasi-Newtonowskie.",
+                "a": "Algorytm ewolucyjny jest metodą populacyjną i losową, nie wymaga gradientu i lepiej znosi funkcje niegładkie, wielomodalne lub złożone ograniczenia. Zwykle daje jednak słabsze gwarancje i wymaga wielu ewaluacji funkcji. Metody gradientowe i quasi-Newtonowskie są lokalne, ale przy funkcjach gładkich, dobrze uwarunkowanych, a zwłaszcza wypukłych, są dużo szybsze i dokładniejsze. Nelder-Mead nie wymaga gradientu, lecz także jest metodą lokalną. W praktyce ewolucję wybiera się dla trudnych czarnych skrzynek, a metody klasyczne dla problemów z użyteczną strukturą."
+          },
+          {
+                "id": "mini-monte-carlo-games",
+                "topic": "AI i eksperckie",
+                "mini": true,
+                "q": "Na czym polegają metody symulacji Monte Carlo w grach?",
+                "a": "Metody Monte Carlo oceniają ruchy przez wykonywanie wielu losowych lub częściowo heurystycznych symulacji rozgrywki i uśrednianie wyników. Prosty wariant wybiera ruch o najlepszej średniej nagrodzie z rolloutów. Monte Carlo Tree Search buduje drzewo tylko w obiecujących fragmentach przestrzeni stanów, łącząc selekcję, ekspansję, symulację i propagację wyniku wstecz. UCT dodaje kompromis między wykorzystywaniem dobrych ruchów a eksploracją słabiej sprawdzonych."
+          },
+          {
+                "id": "mini-agent-ai",
+                "topic": "AI i eksperckie",
+                "mini": true,
+                "q": "Czym jest agent w SI? Podaj opis formalny i własności.",
+                "a": "Agent to system postrzegający środowisko przez sensory i działający na nie przez aktuatory. Formalnie można opisać go funkcją agenta, która historii perceptów przypisuje akcję. Racjonalny agent wybiera działania maksymalizujące oczekiwaną miarę sukcesu przy dostępnej wiedzy. Ważne własności to autonomiczność, reaktywność, proaktywność, zdolność uczenia się, społeczność w systemach wieloagentowych oraz dopasowanie do środowiska opisanego np. przez PEAS: performance, environment, actuators, sensors."
+          },
+          {
+                "id": "mini-swarm-intelligence",
+                "topic": "AI i eksperckie",
+                "mini": true,
+                "q": "Czym jest inteligencja rojowa? Podaj ideę i przykłady realizacji.",
+                "a": "Inteligencja rojowa opisuje rozwiązywanie problemów przez wiele prostych agentów, których lokalne interakcje prowadzą do sensownego zachowania globalnego. Nie ma jednego centralnego planisty, a koordynacja wynika z reguł lokalnych i informacji w środowisku. Przykłady to ant colony optimization do tras i grafów, particle swarm optimization do optymalizacji ciągłej, algorytmy pszczele oraz modele stadne. Zaletą jest prostota i odporność, wadą trudniejsza analiza i dobór parametrów."
+          },
+          {
+                "id": "mini-prolog-logic-programming",
+                "topic": "AI i eksperckie",
+                "mini": true,
+                "q": "Na czym polega programowanie w logice na przykładzie Prologu?",
+                "a": "W programowaniu logicznym opisuje się fakty i reguły, a nie szczegółową sekwencję instrukcji. Prolog używa klauzul Horna, unifikacji i rezolucji SLD. Zapytanie jest celem, który interpreter próbuje udowodnić na podstawie bazy wiedzy, stosując przeszukiwanie z nawrotami. Program Prologowy dobrze nadaje się do relacji symbolicznych i reguł, ale kolejność klauzul i sposób przeszukiwania nadal wpływają na efektywność i zakończenie obliczeń."
+          },
+          {
+                "id": "mini-minimal-rules",
+                "topic": "AI i eksperckie",
+                "mini": true,
+                "q": "Na czym polega generowanie reguł minimalnych z bazy wiedzy w systemach eksperckich?",
+                "a": "Reguła minimalna zawiera tylko te warunki, które są potrzebne do zachowania jej konkluzji z odpowiednią jakością. Generowanie takich reguł polega na usuwaniu warunków nadmiarowych, łączeniu podobnych przypadków i sprawdzaniu, czy reguła nadal jest poprawna, spójna i wystarczająco ogólna. Można używać redukcji tablic decyzyjnych, teorii zbiorów przybliżonych, miar support i confidence albo minimalizacji logicznej. Celem jest baza wiedzy prostsza, bardziej interpretowalna i mniej podatna na sprzeczności."
+          },
+          {
+                "id": "mini-dimensionality-reduction",
+                "topic": "Dane",
+                "mini": true,
+                "q": "Jakie są metody redukcji wymiaru danych?",
+                "a": "Redukcja wymiaru tworzy mniejszą reprezentację danych, zachowując możliwie dużo istotnej informacji. PCA znajduje liniowe kierunki największej wariancji, a SVD jest jej ważnym narzędziem obliczeniowym. Metody nieliniowe, takie jak t-SNE i UMAP, służą często do wizualizacji struktury danych. Autoenkodery uczą nieliniowej kompresji przez sieć neuronową. Redukcja wymiaru może zmniejszyć szum, koszt obliczeń i problem przekleństwa wymiarowości, ale może też usunąć informację ważną dla zadania."
+          },
+          {
+                "id": "mini-feature-selection",
+                "topic": "Dane",
+                "mini": true,
+                "q": "Jakie są metody selekcji cech?",
+                "a": "Selekcja cech wybiera podzbiór oryginalnych zmiennych, zamiast tworzyć nowe cechy jak PCA. Metody filtrujące oceniają cechy niezależnie od modelu, np. korelacją, informacją wzajemną lub testami statystycznymi. Wrappery sprawdzają podzbiory cech przez trenowanie modelu, ale są kosztowne. Metody embedded wybierają cechy podczas uczenia, np. L1, drzewa i lasy losowe. Dobra selekcja zmniejsza wymiar, poprawia interpretowalność i może ograniczyć overfitting."
+          },
+          {
+                "id": "mini-missing-data",
+                "topic": "Dane",
+                "mini": true,
+                "q": "Jak postępować z brakami w danych?",
+                "a": "Najpierw trzeba zrozumieć mechanizm braków: czy są losowe, zależne od obserwowanych zmiennych, czy systematyczne. Proste podejścia to usunięcie wierszy lub kolumn, ale może to wprowadzić bias i stratę danych. Często stosuje się imputację średnią, medianą, modą, kNN, modelem predykcyjnym albo wielokrotną imputację. Warto dodać wskaźnik braku, jeśli sam fakt braku niesie informację. Imputację należy dopasowywać tylko na zbiorze treningowym, aby uniknąć przecieku danych."
+          },
+          {
+                "id": "mini-error-estimators",
+                "topic": "Dane",
+                "mini": true,
+                "q": "Czym są estymatory błędów i jakie przykłady warto znać?",
+                "a": "Estymator błędu służy do oszacowania, jak model będzie działał na nowych danych. Błąd treningowy jest zwykle zbyt optymistyczny, bo model był uczony na tych danych. Hold-out używa osobnego zbioru walidacyjnego lub testowego. Cross-validation uśrednia wynik po kilku podziałach, a leave-one-out jest jej skrajnym wariantem. Bootstrap losuje próbki z powtórzeniami i może szacować niepewność. Najważniejsze jest, aby test końcowy nie uczestniczył w wyborze modelu."
+          },
+          {
+                "id": "mini-rl-passive-active-policies",
+                "topic": "Uczenie ze wzmocnieniem",
+                "mini": true,
+                "q": "Czym jest uczenie ze wzmocnieniem: pasywne, aktywne i polityki?",
+                "a": "Uczenie ze wzmocnieniem opisuje agenta, który działa w środowisku, obserwuje stany, wybiera akcje i otrzymuje nagrody. Celem jest maksymalizacja oczekiwanego zwrotu. W pasywnym RL polityka jest dana i uczymy się oceniać jej wartość. W aktywnym RL agent sam szuka dobrej polityki, więc musi eksplorować i eksploatować. Polityka to reguła wyboru akcji w stanie; może być deterministyczna lub stochastyczna."
+          },
+          {
+                "id": "mini-mdp-definition-examples",
+                "topic": "Uczenie ze wzmocnieniem",
+                "mini": true,
+                "q": "Czym jest decyzyjny proces Markova? Podaj definicję i przykłady zagadnień.",
+                "a": "MDP opisuje sekwencyjny problem decyzyjny przez zbiór stanów, zbiór akcji, prawdopodobieństwa przejść, funkcję nagrody i współczynnik dyskontowania. Własność Markowa oznacza, że przyszłość zależy od bieżącego stanu i akcji, a nie od całej historii. Przykłady to robot poruszający się po siatce, gra, sterowanie zapasem energii, rekomendacje sekwencyjne albo problem taksówki. MDP jest formalną podstawą równań Bellmana, planowania i wielu algorytmów RL."
+          },
+          {
+                "id": "mini-td-learning",
+                "topic": "Uczenie ze wzmocnieniem",
+                "mini": true,
+                "q": "Na czym polega metoda różnic czasowych TD-learning? Jaki ma zakres stosowania, wady i zalety oraz jak wypada względem Monte Carlo?",
+                "a": "TD-learning aktualizuje estymację wartości po każdym kroku, używając nagrody i przewidywanej wartości następnego stanu. W TD(0) błąd ma postać r + gamma V(s') - V(s). Metoda nie wymaga modelu środowiska ani czekania na koniec epizodu, więc działa w zadaniach ciągłych i uczy online. W porównaniu z Monte Carlo ma zwykle mniejszą wariancję i szybszą propagację informacji, ale wprowadza bias przez bootstrapping. MC używa pełnych zwrotów z epizodu, jest prostsze koncepcyjnie, lecz często bardziej zmienne."
+          },
+          {
+                "id": "mini-supervised-unsupervised",
+                "topic": "Sieci neuronowe",
+                "mini": true,
+                "q": "Czym różni się uczenie nadzorowane od nienadzorowanego? Podaj definicje i przykłady.",
+                "a": "Uczenie nadzorowane korzysta z przykładów wejście-etykieta i uczy model przewidywania etykiety lub wartości, np. klasyfikacji obrazów, regresji cen albo rozpoznawania znaków. Uczenie nienadzorowane nie ma etykiet i szuka struktury w danych, np. klastrów, reprezentacji, anomalii lub składowych głównych. W praktyce nadzorowane metody optymalizują błąd względem znanego celu, a nienadzorowane wymagają ostrożniejszej interpretacji, bo nie ma jednej oczywistej odpowiedzi referencyjnej."
+          },
+          {
+                "id": "mini-hopfield-grossberg-kohonen",
+                "topic": "Sieci neuronowe",
+                "mini": true,
+                "q": "Porównaj modele sieciowe Hopfielda, Grossberga i Kohonena.",
+                "a": "Sieć Hopfielda jest rekurencyjną pamięcią skojarzeniową: stan sieci dąży do atraktora odpowiadającego zapamiętanemu wzorcowi. Modele Grossberga, zwłaszcza związane z adaptive resonance theory, akcentują stabilność-plastyczność, czyli uczenie nowych kategorii bez niszczenia starych. Sieć Kohonena, czyli samoorganizująca się mapa SOM, uczy nienadzorowanie topologicznego odwzorowania danych na zwykle dwuwymiarową siatkę neuronów. Hopfield służy do odtwarzania wzorców, Grossberg do adaptacyjnej kategoryzacji, a Kohonen do mapowania i wizualizacji struktury danych."
+          },
+          {
+                "id": "mini-neural-architecture-choice",
+                "topic": "Sieci neuronowe",
+                "mini": true,
+                "q": "Jak dobrać architekturę sieci neuronowej do realizacji wybranego zadania?",
+                "a": "Dobór architektury zależy od typu danych i celu. MLP jest dobrym punktem startu dla danych tabelarycznych, CNN dla obrazów i lokalnych wzorców przestrzennych, RNN/LSTM lub Transformery dla sekwencji, autoenkodery dla kompresji i detekcji anomalii, a SOM dla nienadzorowanej mapy danych. Trzeba uwzględnić rozmiar zbioru, koszt obliczeń, wymaganą interpretowalność i ryzyko overfittingu. Zwykle zaczyna się od prostego baseline'u i zwiększa złożoność dopiero, gdy jest uzasadniona."
+          },
+          {
+                "id": "mini-hopfield-associative-memory",
+                "topic": "Sieci neuronowe",
+                "mini": true,
+                "q": "Jaka jest idea i jakie są własności pamięci skojarzeniowych Hopfielda?",
+                "a": "Pamięć Hopfielda zapisuje wzorce w symetrycznych wagach sieci rekurencyjnej. Po podaniu niepełnego lub zaszumionego wzorca aktualizacje neuronów powinny sprowadzić stan do najbliższego zapamiętanego atraktora. Dla wag symetrycznych i zer na przekątnej istnieje funkcja energii, która nie rośnie przy aktualizacji asynchronicznej, więc sieć zbiega do stanu stabilnego. Ograniczeniem są minima lokalne, wzorce fałszywe i skończona pojemność pamięci."
+          },
+          {
+                "id": "mini-backpropagation",
+                "topic": "Sieci neuronowe",
+                "mini": true,
+                "q": "Na czym polega algorytm propagacji wstecznej błędu? Jakie ma własności i podstawowe modyfikacje?",
+                "a": "Backpropagation oblicza gradient funkcji straty względem wag sieci, stosując regułę łańcuchową od wyjścia do wcześniejszych warstw. Sam backprop liczy gradient, a optimizer, np. SGD lub Adam, używa go do aktualizacji parametrów. Własności metody to efektywność dla złożonych sieci różniczkowalnych, ale też podatność na zanikające lub eksplodujące gradienty i minima lokalne w problemach niewypukłych. Typowe modyfikacje to momentum, adaptacyjne learning rate, regularyzacja L2, dropout, batch normalization, inicjalizacja wag i early stopping."
+          },
+          {
+                "id": "mini-catastrophic-forgetting",
+                "topic": "Sieci neuronowe",
+                "mini": true,
+                "q": "Na czym polega problem katastroficznego zapominania i jak można mu przeciwdziałać?",
+                "a": "Katastroficzne zapominanie polega na tym, że sieć uczona kolejno nowych zadań traci umiejętność rozwiązywania wcześniejszych, bo te same parametry są nadpisywane przez nowe gradienty. Problem jest szczególnie ważny w continual learning. Przeciwdziałać można przez replay wcześniejszych przykładów, generative replay, regularyzację ważnych wag, np. EWC, zamrażanie części sieci, adaptery, osobne moduły dla zadań albo destylację wiedzy. Kluczowe jest utrzymanie równowagi między plastycznością a stabilnością."
           },
           {
                 "id": "nn-extra-1",
@@ -2498,14 +3040,19 @@
 
     const els = {
       topics: document.getElementById("topics"),
+      selectAllTopics: document.getElementById("selectAllTopics"),
+      clearAllTopics: document.getElementById("clearAllTopics"),
       search: document.getElementById("search"),
       filterThesis: document.getElementById("filterThesis"),
+      filterMini: document.getElementById("filterMini"),
       filterNew: document.getElementById("filterNew"),
       filterHard: document.getElementById("filterHard"),
       filterBad: document.getElementById("filterBad"),
       shuffle: document.getElementById("shuffle"),
       seedRow: document.getElementById("seedRow"),
-      seedValue: document.getElementById("seedValue"),
+      seedInput: document.getElementById("seedInput"),
+      applySeed: document.getElementById("applySeed"),
+      newSeed: document.getElementById("newSeed"),
       cardArea: document.getElementById("cardArea"),
       counter: document.getElementById("counter"),
       topicName: document.getElementById("topicName"),
@@ -2554,7 +3101,9 @@
         rebuildOrder();
         render();
       });
-      [els.filterThesis, els.filterNew, els.filterHard, els.filterBad].forEach(input => {
+      els.selectAllTopics.addEventListener("click", () => setAllTopics(true));
+      els.clearAllTopics.addEventListener("click", () => setAllTopics(false));
+      [els.filterThesis, els.filterMini, els.filterNew, els.filterHard, els.filterBad].forEach(input => {
         input.addEventListener("change", () => {
           persistEditingIfNeeded();
           state.index = 0;
@@ -2569,6 +3118,13 @@
         state.answerVisible = false;
         rebuildOrder();
         render();
+      });
+      els.applySeed.addEventListener("click", applySeedFromInput);
+      els.newSeed.addEventListener("click", () => setSeed(generateSeed()));
+      els.seedInput.addEventListener("keydown", event => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        applySeedFromInput();
       });
       els.showAnswer.addEventListener("click", showAnswer);
       els.rateGood.addEventListener("click", () => rate("good"));
@@ -2623,6 +3179,16 @@
       });
     }
 
+    function setAllTopics(selected) {
+      persistEditingIfNeeded();
+      state.topics = selected ? new Set(allTopics) : new Set();
+      state.index = 0;
+      state.answerVisible = false;
+      renderTopics();
+      rebuildOrder();
+      render();
+    }
+
     function setMode(mode) {
       persistEditingIfNeeded();
       state.mode = mode;
@@ -2643,6 +3209,7 @@
       let pool = cards.filter(card => {
         if (!state.topics.has(card.topic)) return false;
         if (els.filterThesis.checked && !isThesisCard(card)) return false;
+        if (els.filterMini.checked && !isMiniCard(card)) return false;
         if (statusFilters.size && !matchesStatusFilter(card.id, statusFilters)) return false;
         if (!query) return true;
         return normalize(card.q + " " + getSearchableAnswer(card) + " " + card.topic).includes(query);
@@ -2697,6 +3264,7 @@
       els.cardArea.innerHTML = `
         <div class="meta-row">
           <span class="pill">${escapeHtml(card.topic)}</span>
+          ${isMiniCard(card) ? `<span class="pill note">MiNI</span>` : ""}
           ${statusPill(status)}
           ${hasCustomAnswer(card.id) ? `<span class="pill note">notatki</span>` : ""}
         </div>
@@ -2795,7 +3363,9 @@
     function exportAnki() {
       const rows = [["Front", "Back", "Tags"]];
       cards.forEach(card => {
-        rows.push([card.q, card.a, card.topic.replaceAll(" ", "_")]);
+        const tags = [card.topic.replaceAll(" ", "_")];
+        if (isMiniCard(card)) tags.push("Pytania_ze_strony_MiNI");
+        rows.push([card.q, card.a, tags.join(" ")]);
       });
       const csv = rows.map(row => row.map(csvCell).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -2881,6 +3451,7 @@
         topics: [...state.topics],
         search: els.search?.value || "",
         thesisOnly: Boolean(els.filterThesis?.checked),
+        miniOnly: Boolean(els.filterMini?.checked),
         statusFilters: [...getSelectedStatusFilters()],
         shuffle: Boolean(els.shuffle?.checked),
         seed: state.seed,
@@ -2894,6 +3465,7 @@
       els.search.value = typeof savedSession.search === "string" ? savedSession.search : "";
       els.shuffle.checked = typeof savedSession.shuffle === "boolean" ? savedSession.shuffle : true;
       els.filterThesis.checked = Boolean(savedSession.thesisOnly);
+      els.filterMini.checked = Boolean(savedSession.miniOnly);
       const filters = new Set(Array.isArray(savedSession.statusFilters) ? savedSession.statusFilters : []);
       els.filterNew.checked = filters.has("new");
       els.filterHard.checked = filters.has("hard");
@@ -2933,7 +3505,21 @@
 
     function renderSeed() {
       els.seedRow.hidden = !els.shuffle.checked;
-      els.seedValue.textContent = state.seed;
+      els.seedInput.value = state.seed;
+    }
+
+    function applySeedFromInput() {
+      setSeed(els.seedInput.value);
+    }
+
+    function setSeed(seed) {
+      const nextSeed = normalizeSeed(seed) || generateSeed();
+      persistEditingIfNeeded();
+      state.seed = nextSeed;
+      state.index = 0;
+      state.answerVisible = false;
+      rebuildOrder();
+      render();
     }
 
     function applyTheme() {
@@ -2969,6 +3555,10 @@
       return Boolean(card.thesis)
         || THESIS_TOPICS.has(card.topic)
         || THESIS_ID_PREFIXES.some(prefix => card.id.startsWith(prefix));
+    }
+
+    function isMiniCard(card) {
+      return Boolean(card.mini) || card.id.startsWith("mini-");
     }
 
     function setEditing(active) {

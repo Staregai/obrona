@@ -13,6 +13,7 @@ const defenseNote = document.getElementById("defenseNote");
 const playBtn = document.getElementById("playBtn");
 const stepBtn = document.getElementById("stepBtn");
 const resetBtn = document.getElementById("resetBtn");
+const valueToggleBtn = document.getElementById("valueToggleBtn");
 const speedRange = document.getElementById("speedRange");
 const noiseRange = document.getElementById("noiseRange");
 const complexityRange = document.getElementById("complexityRange");
@@ -243,14 +244,14 @@ const topics = [
     title: "Maszyna Boltzmanna",
     short: "Stochastyczna sieć szuka stanów o niskiej energii.",
     visual: "boltzmann",
-    architecture: ["Neurony widoczne", "Neurony ukryte", "Symetryczne wagi", "Temperatura", "Próbkowanie stanów"],
+    architecture: ["Warstwa widoczna", "Warstwa ukryta", "Wagi dwudzielne RBM", "p(h|v), p(v|h)", "Gibbs sampling", "Energia próbki"],
     observations: [
       "Temperatura kontroluje losowość przejść między stanami.",
       "Niższa energia oznacza bardziej prawdopodobny stan.",
       "RBM upraszcza pełną maszynę Boltzmanna przez strukturę dwudzielną.",
     ],
-    formula: "P(s) = exp(-E(s)/T) / Z",
-    defense: "Maszyny Boltzmanna są probabilistycznymi modelami energetycznymi. Wykładowo łączą się z symulowanym wyżarzaniem i uczeniem generatywnym.",
+    formula: "P(s) = exp(-E(s)/T) / Z\nRBM: E(v,h)=-b^T v-c^T h-v^TWh",
+    defense: "Maszyny Boltzmanna są probabilistycznymi modelami energetycznymi. W wizualizacji używam RBM, bo łatwiej pokazać realne p(h|v), p(v|h) i Gibbs sampling.",
   },
   {
     id: "reservoir",
@@ -262,7 +263,8 @@ const topics = [
     observations: [
       "Wewnętrzne połączenia są zwykle ustalone losowo.",
       "Dynamika rezerwuaru tworzy bogate cechy czasowe.",
-      "Uczenie readoutu jest szybkie, ale zależy od jakości rezerwuaru.",
+      "Uczenie readoutu jest szybkie, ale zależy od jakości rezerwuaru i skali wag.",
+      "Na wykresie fioletowy odczyt próbuje dogonić opóźniony sygnał docelowy.",
     ],
     formula: "h_t = tanh(W_in x_t + W_res h_(t-1))\ny_t = W_out h_t",
     defense: "Reservoir computing przenosi ciężar modelowania na dynamikę losowego układu, a trenuje prosty odczyt.",
@@ -343,19 +345,49 @@ const topics = [
     defense: "MDP jest formalnym modelem RL. Bez niego trudno precyzyjnie mówić o polityce, wartości i optymalności.",
   },
   {
-    id: "td-qlearning",
+    id: "td-prediction",
     group: "rl",
-    title: "TD, SARSA i Q-learning",
-    short: "Wartość aktualizuje się z doświadczenia i własnego oszacowania następnego stanu.",
+    title: "TD(0): predykcja wartości",
+    short: "Wartość stanu uczy się po każdym przejściu przez bootstrapping.",
     visual: "rl",
-    architecture: ["Doświadczenie s,a,r,s'", "TD target", "Bootstrapping", "SARSA: on-policy", "Q-learning: off-policy"],
+    architecture: ["Stan s", "Akcja z polityki", "Nagroda r", "Następny stan s'", "TD target", "Aktualizacja V(s)"],
     observations: [
       "TD uczy się po każdym kroku, nie czeka na koniec epizodu jak Monte Carlo.",
-      "SARSA używa faktycznej następnej akcji polityki.",
-      "Q-learning używa maksymalnej wartości następnej akcji, więc jest off-policy.",
+      "Target zawiera własne oszacowanie V(s'), więc metoda bootstrapuje.",
+      "To jest predykcja wartości dla danej polityki, jeszcze nie pełna kontrola optymalnej akcji.",
+    ],
+    formula: "V(s) <- V(s) + alpha [r + gamma V(s') - V(s)]",
+    defense: "TD łączy Monte Carlo i programowanie dynamiczne: uczy się z próbek, ale aktualizuje przez bootstrapping.",
+  },
+  {
+    id: "sarsa",
+    group: "rl",
+    title: "SARSA: on-policy control",
+    short: "Aktualizacja używa faktycznej następnej akcji wybranej przez politykę.",
+    visual: "rl",
+    architecture: ["s", "a", "r", "s'", "a' z tej samej polityki", "Q(s,a) update"],
+    observations: [
+      "Nazwa SARSA pochodzi od ciągu: state, action, reward, state, action.",
+      "Jest on-policy: uczy wartości akcji, które faktycznie wykonuje eksplorująca polityka.",
+      "Przy epsilon-greedy SARSA bywa ostrożniejsza przy ryzykownych polach, bo uwzględnia eksplorację.",
+    ],
+    formula: "Q(s,a) <- Q(s,a) + alpha [r + gamma Q(s',a') - Q(s,a)]",
+    defense: "SARSA wyjaśnia, jak agent uczy się polityki, którą sam wykonuje. Następna akcja a' nie jest maksimum z tabeli, tylko realnie wybranym ruchem.",
+  },
+  {
+    id: "q-learning",
+    group: "rl",
+    title: "Q-learning: off-policy control",
+    short: "Aktualizacja patrzy na najlepszą następną akcję, nawet jeśli agent eksplorował.",
+    visual: "rl",
+    architecture: ["s", "a", "r", "s'", "max_a Q(s',a)", "Q(s,a) update"],
+    observations: [
+      "Q-learning jest off-policy: zachowanie może eksplorować, ale target zakłada najlepszą akcję.",
+      "Decyzja w symulacji jest epsilon-greedy: czasem losowa, zwykle z największym Q.",
+      "Różnica względem SARSA siedzi dokładnie w targetcie po przejściu do s'.",
     ],
     formula: "Q(s,a) <- Q(s,a) + alpha [r + gamma max_a' Q(s',a') - Q(s,a)]",
-    defense: "TD łączy Monte Carlo i programowanie dynamiczne: uczy się z próbek, ale aktualizuje przez bootstrapping.",
+    defense: "Q-learning uczy optymalnej funkcji akcji niezależnie od tego, że agent w trakcie nauki czasem eksploruje.",
   },
   {
     id: "dqn-policy",
@@ -408,14 +440,14 @@ const topics = [
     title: "Pipeline OMR - OCR - SVS",
     short: "Od obrazu nut do struktury muzycznej i syntezy śpiewu.",
     visual: "pipeline",
-    architecture: ["Obraz partytury", "Lokalizacja tekstu i symboli", "OCR", "Score IR / MIDI", "Model akustyczny SVS", "Wokoder"],
+    architecture: ["Obraz partytury", "OMR: Faster R-CNN dla symboli", "OCR tekstu wokalnego", "Score IR / MIDI", "Model akustyczny SVS", "Wokoder"],
     observations: [
       "Błędy wczesnego modułu propagują się do kolejnych etapów.",
       "Confidence i progi są ważne, bo pomagają sterować fallbackami.",
       "Metryka modułu, np. mAP, nie zawsze odpowiada jakości muzycznej końca pipeline'u.",
     ],
-    formula: "image -> detections/text -> Score IR -> acoustic features -> waveform",
-    defense: "W pracy najważniejsza jest integracja: OMR/OCR dostarczają strukturę, a SVS zamienia ją na śpiew lub audio.",
+    formula: "image -> OMR detections + OCR text -> Score IR -> acoustic features -> waveform",
+    defense: "W pracy najważniejsza jest integracja: OMR dostarcza symbole i pozycje muzyczne, OCR tekst, a SVS zamienia strukturę na śpiew lub audio.",
   },
   {
     id: "unet-segmentation",
@@ -553,6 +585,7 @@ const state = {
   speed: Number(speedRange.value),
   noise: Number(noiseRange.value),
   complexity: Number(complexityRange.value),
+  showValues: false,
   local: {},
 };
 
@@ -602,16 +635,62 @@ function createData() {
 
 function createLocalState(topicId) {
   const rand = mulberry32(hashCode(topicId) + 99);
+  if (topicId === "dim-reduction") {
+    const model = buildPcaModel(data.highDim);
+    return {
+      ...model,
+      v1: normalizeVec([0.42, 0.75, 0.51]),
+      v2: normalizeVec([-0.64, 0.24, 0.73]),
+      iteration: 0,
+    };
+  }
+  if (topicId === "rnn-lstm-gru") {
+    return {
+      tokens: ["nu", "ta", "śpie", "wu", "pauza"],
+      inputs: [
+        [1, 0, 0],
+        [0.7, 0.7, 0.1],
+        [0.1, 1, 0.8],
+        [0.2, 0.5, 1],
+        [0, 0, 0.4],
+      ],
+      wx: [
+        [0.9, -0.3, 0.45],
+        [-0.2, 0.82, 0.38],
+        [0.42, 0.28, -0.72],
+      ],
+      wh: [
+        [0.48, -0.28, 0.12],
+        [0.24, 0.52, -0.34],
+        [-0.18, 0.31, 0.44],
+      ],
+      b: [0.06, -0.04, 0.02],
+      h: [0, 0, 0],
+      index: 0,
+      history: [],
+      gates: { input: 0.5, forget: 0.5, output: 0.5 },
+    };
+  }
   if (topicId === "hopfield") {
-    const target = [
-      1, 0, 0, 0, 1,
-      0, 1, 0, 1, 0,
-      0, 0, 1, 0, 0,
-      0, 1, 0, 1, 0,
-      1, 0, 0, 0, 1,
-    ];
-    const current = target.map((v) => (rand() < 0.28 ? 1 - v : v));
-    return { target, current, energy: [-19] };
+    const patterns = hopfieldPatterns();
+    const targetIndex = 0;
+    const target = patterns[targetIndex].bits;
+    const weights = makeHopfieldWeights(patterns.map((pattern) => pattern.bits));
+    const current = target.map((value) => (rand() < 0.28 ? -value : value));
+    const order = Array.from({ length: target.length }, (_, index) => index).sort(() => rand() - 0.5);
+    return {
+      patterns,
+      targetIndex,
+      target,
+      weights,
+      current,
+      order,
+      cursor: 0,
+      lastNeuron: -1,
+      lastField: 0,
+      updates: [],
+      energy: [hopfieldEnergy(current, weights)],
+    };
   }
   if (topicId === "som") {
     const nodes = [];
@@ -620,7 +699,7 @@ function createLocalState(topicId) {
         nodes.push({ gx: x, gy: y, x: 0.15 + rand() * 0.7, y: 0.15 + rand() * 0.7 });
       }
     }
-    return { nodes, sampleIndex: 0 };
+    return { nodes, sampleIndex: 0, lastSample: data.points[0], lastBest: nodes[0], lastRadius: 3.4 };
   }
   if (topicId === "art") {
     return {
@@ -646,17 +725,68 @@ function createLocalState(topicId) {
       totalReward: 0,
     };
   }
+  if (topicId === "boltzmann") {
+    return {
+      visible: [1, 0, 1, 0, 1, 0],
+      hidden: [0, 1, 0, 1],
+      vBias: [0.15, -0.05, 0.18, -0.12, 0.08, 0.02],
+      hBias: [0.06, -0.02, 0.12, -0.08],
+      weights: [
+        [0.8, -0.4, 0.35, -0.15],
+        [0.62, -0.32, 0.12, 0.2],
+        [-0.22, 0.7, -0.25, 0.4],
+        [-0.42, 0.55, 0.35, -0.12],
+        [0.34, -0.18, 0.72, 0.25],
+        [-0.16, 0.22, -0.38, 0.65],
+      ],
+      phase: "h|v",
+      probs: [],
+      energy: [],
+    };
+  }
+  if (topicId === "reservoir") {
+    const count = 18;
+    const wres = Array.from({ length: count }, (_, i) =>
+      Array.from({ length: count }, (_, j) => ((i * 17 + j * 11) % 7 === 0 ? (rand() - 0.5) * 0.55 : 0))
+    );
+    return {
+      nodes: circularNodes(0, 0, 1, count),
+      win: Array.from({ length: count }, () => rand() * 1.8 - 0.9),
+      wres,
+      wout: Array.from({ length: count }, () => rand() * 0.08 - 0.04),
+      h: Array.from({ length: count }, () => 0),
+      t: 0,
+      input: 0,
+      target: 0,
+      output: 0,
+      error: 0,
+      history: [],
+    };
+  }
   if (topicId === "evolution" || topicId === "neuroevolution") {
     return {
       generation: 0,
-      population: Array.from({ length: 38 }, () => ({ x: rand() * 2 - 1, mutation: rand() })),
+      population: Array.from({ length: 52 }, () => ({ x: rand() * 2 - 1, y: rand() * 2 - 1, mutation: rand() })),
+      bestPath: [],
     };
   }
-  if (topicId === "td-qlearning" || topicId === "mdp-bellman" || topicId === "dqn-policy") {
+  if (["mdp-bellman", "td-prediction", "sarsa", "q-learning"].includes(topicId)) {
+    return createGridWorldState(topicId, rand);
+  }
+  if (topicId === "dqn-policy") {
     return {
-      agent: { x: 0, y: 4 },
-      values: Array.from({ length: 25 }, () => rand() * 0.2),
-      path: [],
+      dqnQ: [0.18, 0.42, 0.24, 0.36],
+      targetQ: [0.26, 0.52, 0.31, 0.44],
+      policy: [0.24, 0.26, 0.2, 0.3],
+      replay: [
+        { s: [0, 4], a: 1, r: -0.03, sp: [0, 3] },
+        { s: [1, 2], a: 0, r: -0.03, sp: [2, 2] },
+        { s: [3, 1], a: 1, r: 1, sp: [4, 0] },
+      ],
+      replayIndex: 0,
+      tdError: 0,
+      sampledAction: 0,
+      advantage: 0,
     };
   }
   return {};
@@ -680,6 +810,18 @@ function lerp(a, b, t) {
 
 function formatPercent(value) {
   return `${Math.round(value * 100)}%`;
+}
+
+function sigmoid(value) {
+  return 1 / (1 + Math.exp(-value));
+}
+
+function softmax(values, temperature = 1) {
+  const scaled = values.map((value) => value / temperature);
+  const max = Math.max(...scaled);
+  const exps = scaled.map((value) => Math.exp(value - max));
+  const sum = exps.reduce((a, b) => a + b, 0) || 1;
+  return exps.map((value) => value / sum);
 }
 
 function activeTopic() {
@@ -804,28 +946,125 @@ function animationLoop(ts) {
 function advanceTopic() {
   state.step += 1;
   const topic = activeTopic();
+  if (topic.id === "dim-reduction") advancePca();
+  if (topic.id === "rnn-lstm-gru") advanceSequenceModel();
   if (topic.id === "hopfield") advanceHopfield();
   if (topic.id === "som") advanceSom();
   if (topic.id === "art") advanceArt();
+  if (topic.id === "boltzmann") advanceBoltzmann();
+  if (topic.id === "reservoir") advanceReservoir();
   if (topic.id === "bandit") advanceBandit();
   if (topic.id === "evolution" || topic.id === "neuroevolution") advanceEvolution();
-  if (topic.id === "td-qlearning" || topic.id === "mdp-bellman" || topic.id === "dqn-policy") advanceRl();
+  if (topic.id === "mdp-bellman") advanceBellman();
+  if (topic.id === "td-prediction") advanceTdPrediction();
+  if (topic.id === "sarsa" || topic.id === "q-learning") advanceControlRl(topic.id);
+  if (topic.id === "dqn-policy") advanceDeepRlModel();
+}
+
+function buildPcaModel(points) {
+  const vectors = points.map((p) => [p.x, p.y, p.z]);
+  const mean = [0, 1, 2].map((dim) => vectors.reduce((sum, v) => sum + v[dim], 0) / vectors.length);
+  const centered = vectors.map((v) => v.map((value, dim) => value - mean[dim]));
+  const cov = Array.from({ length: 3 }, (_, r) =>
+    Array.from({ length: 3 }, (_, c) => centered.reduce((sum, v) => sum + v[r] * v[c], 0) / (centered.length - 1))
+  );
+  return { mean, centered, cov, totalVariance: cov[0][0] + cov[1][1] + cov[2][2] };
+}
+
+function matVec(matrix, vector) {
+  return matrix.map((row) => row.reduce((sum, value, index) => sum + value * vector[index], 0));
+}
+
+function dot(a, b) {
+  return a.reduce((sum, value, index) => sum + value * b[index], 0);
+}
+
+function normalizeVec(vector) {
+  const norm = Math.hypot(...vector) || 1;
+  return vector.map((value) => value / norm);
+}
+
+function orthogonalize(vector, basis) {
+  const projection = dot(vector, basis);
+  return normalizeVec(vector.map((value, index) => value - projection * basis[index]));
+}
+
+function advancePca() {
+  const local = state.local;
+  local.v1 = normalizeVec(matVec(local.cov, local.v1));
+  local.v2 = orthogonalize(matVec(local.cov, local.v2), local.v1);
+  local.iteration += 1;
+}
+
+function advanceSequenceModel() {
+  const local = state.local;
+  const x = local.inputs[local.index % local.inputs.length];
+  const prev = local.h;
+  const z = local.wx.map((row, neuron) => dot(row, x) + dot(local.wh[neuron], prev) + local.b[neuron]);
+  const h = z.map((value) => Math.tanh(value));
+  const gates = {
+    input: sigmoid(0.7 * x[0] + 0.5 * x[1] - 0.3 * prev[2]),
+    forget: sigmoid(0.8 - 0.6 * x[2] + 0.45 * prev[0]),
+    output: sigmoid(0.25 + 0.7 * h[1] + 0.25 * x[2]),
+  };
+  local.h = h;
+  local.gates = gates;
+  local.history.push({ token: local.tokens[local.index % local.tokens.length], h: [...h], gates });
+  if (local.history.length > 12) local.history.shift();
+  local.index += 1;
+}
+
+function hopfieldPatterns() {
+  const fromRows = (name, rows) => ({
+    name,
+    bits: rows.join("").split("").map((char) => (char === "1" ? 1 : -1)),
+  });
+  return [
+    fromRows("X", ["10001", "01010", "00100", "01010", "10001"]),
+    fromRows("T", ["11111", "00100", "00100", "00100", "00100"]),
+    fromRows("L", ["10000", "10000", "10000", "10000", "11111"]),
+  ];
+}
+
+function makeHopfieldWeights(patterns) {
+  const n = patterns[0].length;
+  return Array.from({ length: n }, (_, i) =>
+    Array.from({ length: n }, (_, j) => {
+      if (i === j) return 0;
+      return patterns.reduce((sum, pattern) => sum + pattern[i] * pattern[j], 0) / n;
+    })
+  );
+}
+
+function hopfieldEnergy(bits, weights) {
+  let energy = 0;
+  for (let i = 0; i < bits.length; i += 1) {
+    for (let j = 0; j < bits.length; j += 1) {
+      energy += weights[i][j] * bits[i] * bits[j];
+    }
+  }
+  return -0.5 * energy;
 }
 
 function advanceHopfield() {
   const local = state.local;
-  const mismatches = local.current
-    .map((value, index) => (value !== local.target[index] ? index : -1))
-    .filter((index) => index >= 0);
-  if (mismatches.length) {
-    const index = mismatches[state.step % mismatches.length];
-    local.current[index] = local.target[index];
-  } else if (state.noise > 0.55 && state.step % 5 === 0) {
-    const index = state.step % local.current.length;
-    local.current[index] = 1 - local.current[index];
+  const index = local.order[local.cursor % local.order.length];
+  const field = dot(local.weights[index], local.current);
+  const next = field >= 0 ? 1 : -1;
+  const before = local.current[index];
+  local.current[index] = next;
+  local.cursor += 1;
+  local.lastNeuron = index;
+  local.lastField = field;
+  local.updates.push({ index, before, after: next, field });
+  if (local.updates.length > 18) local.updates.shift();
+  if (before === next && state.noise > 0.82 && local.cursor % 18 === 0) {
+    const flip = local.order[(local.cursor + 7) % local.order.length];
+    local.current[flip] *= -1;
+    local.lastNeuron = flip;
+    local.lastField = dot(local.weights[flip], local.current);
   }
-  const wrong = local.current.reduce((sum, value, index) => sum + (value === local.target[index] ? 0 : 1), 0);
-  local.energy.push(-20 + wrong * 1.8 - state.step * 0.06);
+  local.energy.push(hopfieldEnergy(local.current, local.weights));
   if (local.energy.length > 34) local.energy.shift();
 }
 
@@ -846,10 +1085,14 @@ function advanceSom() {
   local.nodes.forEach((node) => {
     const gridDist = Math.hypot(node.gx - best.gx, node.gy - best.gy);
     const influence = Math.exp(-(gridDist ** 2) / (2 * radius ** 2));
-    const alpha = 0.13 * influence;
+    const mode = state.complexity < 0.35 ? (gridDist === 0 ? 1 : 0) : influence;
+    const alpha = 0.13 * mode;
     node.x += alpha * (sample.x - node.x);
     node.y += alpha * (sample.y - node.y);
   });
+  local.lastSample = sample;
+  local.lastBest = best;
+  local.lastRadius = radius;
 }
 
 function advanceArt() {
@@ -898,22 +1141,91 @@ function advanceBandit() {
   local.totalReward += reward;
 }
 
+function advanceReservoir() {
+  const local = state.local;
+  local.t += 1;
+  const input = Math.sin(local.t * 0.22) + 0.45 * Math.sin(local.t * 0.071);
+  const target = Math.sin((local.t - 6) * 0.22);
+  const next = local.h.map((_, i) => {
+    const recurrent = local.wres[i].reduce((sum, weight, j) => sum + weight * local.h[j], 0);
+    return Math.tanh(local.win[i] * input + recurrent);
+  });
+  const output = dot(local.wout, next);
+  const error = target - output;
+  const lr = 0.018;
+  local.wout = local.wout.map((weight, i) => weight + lr * error * next[i]);
+  local.h = next;
+  local.input = input;
+  local.target = target;
+  local.output = output;
+  local.error = error;
+  local.history.push({ input, target, output });
+  if (local.history.length > 72) local.history.shift();
+}
+
+function boltzmannTemp() {
+  return lerp(0.35, 1.9, state.noise);
+}
+
+function rbmEnergy(visible, hidden, local) {
+  let energy = 0;
+  visible.forEach((value, index) => {
+    energy -= local.vBias[index] * value;
+  });
+  hidden.forEach((value, index) => {
+    energy -= local.hBias[index] * value;
+  });
+  visible.forEach((v, i) => {
+    hidden.forEach((h, j) => {
+      energy -= v * local.weights[i][j] * h;
+    });
+  });
+  return energy;
+}
+
+function advanceBoltzmann() {
+  const local = state.local;
+  const temp = boltzmannTemp();
+  const rand = mulberry32(5000 + state.step);
+  if (local.phase === "h|v") {
+    local.probs = local.hidden.map((_, j) => {
+      const field = local.hBias[j] + local.visible.reduce((sum, v, i) => sum + v * local.weights[i][j], 0);
+      return sigmoid(field / temp);
+    });
+    local.hidden = local.probs.map((prob) => (rand() < prob ? 1 : 0));
+    local.phase = "v|h";
+  } else {
+    local.probs = local.visible.map((_, i) => {
+      const field = local.vBias[i] + local.hidden.reduce((sum, h, j) => sum + h * local.weights[i][j], 0);
+      return sigmoid(field / temp);
+    });
+    local.visible = local.probs.map((prob) => (rand() < prob ? 1 : 0));
+    local.phase = "h|v";
+  }
+  local.energy.push(rbmEnergy(local.visible, local.hidden, local));
+  if (local.energy.length > 40) local.energy.shift();
+}
+
 function advanceEvolution() {
   const local = state.local;
   const scored = local.population
-    .map((item) => ({ ...item, fitness: fitness(item.x) }))
+    .map((item) => ({ ...item, fitness: fitness2d(item.x, item.y) }))
     .sort((a, b) => b.fitness - a.fitness);
   const eliteCount = 6;
   const elites = scored.slice(0, eliteCount);
   const rand = mulberry32(800 + local.generation);
-  const next = elites.map((item) => ({ x: item.x, mutation: item.mutation }));
+  const next = elites.map((item) => ({ x: item.x, y: item.y, mutation: item.mutation }));
   while (next.length < local.population.length) {
     const a = elites[Math.floor(rand() * elites.length)];
     const b = elites[Math.floor(rand() * elites.length)];
-    const childX = clamp((a.x + b.x) / 2 + (rand() - 0.5) * lerp(0.36, 0.08, state.complexity) + (rand() - 0.5) * state.noise * 0.24, -1, 1);
-    next.push({ x: childX, mutation: rand() });
+    const sigma = lerp(0.38, 0.08, state.complexity) + state.noise * 0.16;
+    const childX = clamp((a.x + b.x) / 2 + (rand() - 0.5) * sigma, -1, 1);
+    const childY = clamp((a.y + b.y) / 2 + (rand() - 0.5) * sigma, -1, 1);
+    next.push({ x: childX, y: childY, mutation: rand() });
   }
   local.population = next;
+  local.bestPath.push({ x: elites[0].x, y: elites[0].y, fitness: elites[0].fitness });
+  if (local.bestPath.length > 28) local.bestPath.shift();
   local.generation += 1;
 }
 
@@ -921,48 +1233,195 @@ function fitness(x) {
   return 0.58 + 0.24 * Math.sin(7 * x) + 0.18 * Math.cos(3 * x) - 0.22 * (x - 0.22) ** 2;
 }
 
-function advanceRl() {
-  const local = state.local;
-  const goal = { x: 4, y: 0 };
-  const actions = [
-    { x: 1, y: 0 },
-    { x: 0, y: -1 },
-    { x: -1, y: 0 },
-    { x: 0, y: 1 },
-  ];
-  const action = actions[state.step % actions.length];
-  if (Math.abs(goal.x - local.agent.x) > Math.abs(goal.y - local.agent.y)) {
-    action.x = Math.sign(goal.x - local.agent.x);
-    action.y = 0;
-  } else {
-    action.x = 0;
-    action.y = Math.sign(goal.y - local.agent.y);
-  }
-  if (mulberry32(state.step + 1200)() < state.noise * 0.22) {
-    const randomAction = actions[Math.floor(mulberry32(state.step + 1300)() * actions.length)];
-    action.x = randomAction.x;
-    action.y = randomAction.y;
-  }
-  local.agent.x = clamp(local.agent.x + action.x, 0, 4);
-  local.agent.y = clamp(local.agent.y + action.y, 0, 4);
-  const idx = local.agent.y * 5 + local.agent.x;
-  const reward = local.agent.x === goal.x && local.agent.y === goal.y ? 1 : -0.03;
-  const target = reward + 0.88 * Math.max(...neighbors(local.values, local.agent.x, local.agent.y));
-  local.values[idx] += 0.22 * (target - local.values[idx]);
-  local.path.push({ ...local.agent });
-  if (local.path.length > 18) local.path.shift();
-  if (local.agent.x === goal.x && local.agent.y === goal.y) {
-    local.agent = { x: 0, y: 4 };
-  }
+function fitness2d(x, y) {
+  const peakA = Math.exp(-((x - 0.42) ** 2 + (y + 0.28) ** 2) / 0.16);
+  const peakB = 0.74 * Math.exp(-((x + 0.48) ** 2 + (y - 0.34) ** 2) / 0.11);
+  const ripple = 0.16 * Math.sin(7 * x) * Math.cos(6 * y);
+  return clamp(0.18 + 0.58 * peakA + 0.38 * peakB + ripple, 0, 1);
 }
 
-function neighbors(values, x, y) {
-  return [
-    values[y * 5 + clamp(x + 1, 0, 4)],
-    values[clamp(y - 1, 0, 4) * 5 + x],
-    values[y * 5 + clamp(x - 1, 0, 4)],
-    values[clamp(y + 1, 0, 4) * 5 + x],
-  ];
+const gridActions = [
+  { name: "R", dx: 1, dy: 0 },
+  { name: "U", dx: 0, dy: -1 },
+  { name: "L", dx: -1, dy: 0 },
+  { name: "D", dx: 0, dy: 1 },
+];
+
+const gridWorld = {
+  width: 5,
+  height: 5,
+  start: { x: 0, y: 4 },
+  goal: { x: 4, y: 0 },
+  trap: { x: 2, y: 2 },
+  walls: [{ x: 1, y: 2 }],
+  gamma: 0.88,
+};
+
+function createGridWorldState(topicId, rand) {
+  const q = Array.from({ length: 25 }, () => Array.from({ length: 4 }, () => rand() * 0.04));
+  return {
+    agent: { ...gridWorld.start },
+    values: Array.from({ length: 25 }, () => 0),
+    q,
+    action: topicId === "sarsa" ? chooseGridAction(q, gridWorld.start, 0.18, rand) : 0,
+    path: [{ ...gridWorld.start }],
+    backupIndex: 0,
+    last: {
+      state: { ...gridWorld.start },
+      action: 0,
+      reward: 0,
+      next: { ...gridWorld.start },
+      nextAction: 0,
+      target: 0,
+      old: 0,
+      tdError: 0,
+      reason: "start",
+    },
+  };
+}
+
+function gridIndex(pos) {
+  return pos.y * gridWorld.width + pos.x;
+}
+
+function sameCell(a, b) {
+  return a.x === b.x && a.y === b.y;
+}
+
+function isWall(pos) {
+  return gridWorld.walls.some((wall) => sameCell(wall, pos));
+}
+
+function isTerminal(pos) {
+  return sameCell(pos, gridWorld.goal) || sameCell(pos, gridWorld.trap);
+}
+
+function stepGrid(pos, actionIndex) {
+  const action = gridActions[actionIndex];
+  const next = {
+    x: clamp(pos.x + action.dx, 0, gridWorld.width - 1),
+    y: clamp(pos.y + action.dy, 0, gridWorld.height - 1),
+  };
+  if (isWall(next)) return { next: { ...pos }, reward: -0.12 };
+  if (sameCell(next, gridWorld.goal)) return { next, reward: 1 };
+  if (sameCell(next, gridWorld.trap)) return { next, reward: -0.8 };
+  return { next, reward: -0.04 };
+}
+
+function bestActionFromValues(values, pos) {
+  return gridActions.reduce((best, _, index) => {
+    const { next, reward } = stepGrid(pos, index);
+    const score = reward + gridWorld.gamma * values[gridIndex(next)];
+    return score > best.score ? { index, score } : best;
+  }, { index: 0, score: -Infinity }).index;
+}
+
+function bestQAction(q, pos) {
+  const row = q[gridIndex(pos)];
+  return row.reduce((best, value, index, arr) => (value > arr[best] ? index : best), 0);
+}
+
+function chooseGridAction(q, pos, epsilon, rand) {
+  if (rand() < epsilon) return Math.floor(rand() * gridActions.length);
+  return bestQAction(q, pos);
+}
+
+function advanceBellman() {
+  const local = state.local;
+  let idx = local.backupIndex % 25;
+  let pos = { x: idx % 5, y: Math.floor(idx / 5) };
+  while (isWall(pos) || isTerminal(pos)) {
+    local.backupIndex += 1;
+    idx = local.backupIndex % 25;
+    pos = { x: idx % 5, y: Math.floor(idx / 5) };
+  }
+  const old = local.values[idx];
+  const candidates = gridActions.map((_, actionIndex) => {
+    const { next, reward } = stepGrid(pos, actionIndex);
+    return reward + gridWorld.gamma * local.values[gridIndex(next)];
+  });
+  const target = Math.max(...candidates);
+  local.values[idx] = lerp(old, target, 0.55);
+  local.agent = pos;
+  local.last = {
+    state: pos,
+    action: candidates.indexOf(target),
+    reward: target,
+    next: pos,
+    nextAction: candidates.indexOf(target),
+    target,
+    old,
+    tdError: target - old,
+    reason: "pełny backup z modelu przejść",
+  };
+  local.backupIndex += 1;
+}
+
+function advanceTdPrediction() {
+  const local = state.local;
+  const s = { ...local.agent };
+  const actionIndex = bestActionFromValues(local.values, s);
+  const { next, reward } = stepGrid(s, actionIndex);
+  const idx = gridIndex(s);
+  const old = local.values[idx];
+  const target = reward + gridWorld.gamma * local.values[gridIndex(next)];
+  local.values[idx] += 0.28 * (target - old);
+  local.agent = isTerminal(next) ? { ...gridWorld.start } : next;
+  local.path.push({ ...local.agent });
+  if (local.path.length > 22) local.path.shift();
+  local.last = {
+    state: s,
+    action: actionIndex,
+    reward,
+    next,
+    nextAction: bestActionFromValues(local.values, next),
+    target,
+    old,
+    tdError: target - old,
+    reason: "polityka wybiera najlepszy sąsiad według V",
+  };
+}
+
+function advanceControlRl(topicId) {
+  const local = state.local;
+  const rand = mulberry32(7300 + state.step);
+  const epsilon = lerp(0.02, 0.42, state.noise);
+  const s = { ...local.agent };
+  const actionIndex = topicId === "sarsa" ? local.action : chooseGridAction(local.q, s, epsilon, rand);
+  const greedy = bestQAction(local.q, s);
+  const reason = actionIndex === greedy ? "greedy: największe Q(s,a)" : "eksploracja epsilon-greedy";
+  const { next, reward } = stepGrid(s, actionIndex);
+  const nextAction = chooseGridAction(local.q, next, epsilon, rand);
+  const idx = gridIndex(s);
+  const old = local.q[idx][actionIndex];
+  const bootstrap = topicId === "sarsa"
+    ? local.q[gridIndex(next)][nextAction]
+    : Math.max(...local.q[gridIndex(next)]);
+  const target = reward + gridWorld.gamma * (isTerminal(next) ? 0 : bootstrap);
+  local.q[idx][actionIndex] += 0.32 * (target - old);
+  local.values = local.q.map((row) => Math.max(...row));
+  local.agent = isTerminal(next) ? { ...gridWorld.start } : next;
+  local.action = topicId === "sarsa" ? nextAction : chooseGridAction(local.q, local.agent, epsilon, rand);
+  local.path.push({ ...local.agent });
+  if (local.path.length > 22) local.path.shift();
+  local.last = { state: s, action: actionIndex, reward, next, nextAction, target, old, tdError: target - old, reason };
+}
+
+function advanceDeepRlModel() {
+  const local = state.local;
+  const sample = local.replay[local.replayIndex % local.replay.length];
+  const old = local.dqnQ[sample.a];
+  const target = sample.r + gridWorld.gamma * Math.max(...local.targetQ);
+  const tdError = target - old;
+  local.dqnQ[sample.a] += 0.22 * tdError;
+  local.targetQ = local.targetQ.map((value, index) => lerp(value, local.dqnQ[index], 0.08));
+  const action = local.policy.reduce((best, value, index, arr) => (value > arr[best] ? index : best), 0);
+  const advantage = sample.r + 0.35 - local.policy[action];
+  local.policy = softmax(local.policy.map((prob, index) => Math.log(prob + 1e-6) + (index === action ? 0.18 * advantage : -0.04 * advantage)));
+  local.replayIndex += 1;
+  local.tdError = tdError;
+  local.sampledAction = action;
+  local.advantage = advantage;
 }
 
 function axisArea() {
@@ -1105,33 +1564,48 @@ function renderClustering() {
 }
 
 function renderDimReduction() {
+  const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
   const left = { x: 44, y: 48, w: w * 0.39, h: h - 96 };
   const right = { x: w * 0.56, y: 48, w: w * 0.36, h: h - 96 };
-  drawPanelTitle("przestrzeń wysoka", left.x, left.y - 18);
-  drawPanelTitle("rzut 2D", right.x, right.y - 18);
+  drawPanelTitle("dane 3D: cechy wejściowe", left.x, left.y - 18);
+  drawPanelTitle("rzut na PC1/PC2", right.x, right.y - 18);
   drawBox(left);
   drawBox(right);
-  data.highDim.forEach((point) => {
+  data.highDim.forEach((point, index) => {
     const depth = point.z;
     const p3 = {
       x: left.x + point.x * left.w + (depth - 0.5) * 52,
       y: left.y + point.y * left.h - (depth - 0.5) * 32,
     };
     drawPoint(p3, point.color, 3 + depth * 3);
-    const p2 = {
-      x: right.x + (0.12 + point.x * 0.76) * right.w,
-      y: right.y + (0.12 + (point.y * 0.72 + point.z * 0.18)) * right.h,
-    };
-    drawPoint(p2, point.color, 4.2);
+    if (index % 18 === 0) line(p3.x, p3.y, p3.x + 34, p3.y - 22, palette.line, 1);
+  });
+  const projections = local.centered.map((vector, index) => ({
+    u: dot(vector, local.v1),
+    v: dot(vector, local.v2),
+    color: data.highDim[index].color,
+  }));
+  const maxAbs = Math.max(0.001, ...projections.flatMap((p) => [Math.abs(p.u), Math.abs(p.v)]));
+  line(right.x + right.w / 2, right.y + 20, right.x + right.w / 2, right.y + right.h - 20, palette.line, 1);
+  line(right.x + 20, right.y + right.h / 2, right.x + right.w - 20, right.y + right.h / 2, palette.line, 1);
+  projections.forEach((p) => {
+    drawPoint({
+      x: right.x + right.w / 2 + (p.u / maxAbs) * right.w * 0.42,
+      y: right.y + right.h / 2 - (p.v / maxAbs) * right.h * 0.42,
+    }, p.color, 4.2);
   });
   arrow(left.x + left.w + 22, left.y + left.h / 2, right.x - 24, right.y + right.h / 2, palette.ink);
-  label("PCA / UMAP / AE", w / 2, h / 2 - 16, palette.ink, 14, "center");
+  const pc1Var = dot(local.v1, matVec(local.cov, local.v1));
+  const pc2Var = dot(local.v2, matVec(local.cov, local.v2));
+  const explained = clamp((pc1Var + pc2Var) / local.totalVariance, 0, 1);
+  label(`power iteration: ${local.iteration}`, w / 2, h / 2 - 18, palette.ink, 14, "center");
+  label("PC1 maksymalizuje wariancję, PC2 jest ortogonalny do PC1", w / 2, h - 34, palette.muted, 13, "center");
   return [
     { value: "d -> 2", label: "wymiary" },
-    { value: formatPercent(0.78), label: "wariancja" },
-    { value: "z", label: "kod" },
+    { value: formatPercent(explained), label: "wariancja" },
+    { value: String(local.iteration), label: "iteracje" },
   ];
 }
 
@@ -1244,35 +1718,47 @@ function pool2d(matrix, mode) {
 }
 
 function renderSequence() {
+  const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  const tokens = ["x1", "x2", "x3", "x4", "x5"];
-  const y = h * 0.44;
+  const tokens = local.tokens;
+  const y = h * 0.34;
   const start = w * 0.14;
   const gap = (w * 0.72) / (tokens.length - 1);
   tokens.forEach((token, index) => {
     const x = start + gap * index;
-    drawCell(x, y, token, index <= state.step % 7 ? palette.teal : palette.muted);
+    const active = index === (local.index - 1 + tokens.length) % tokens.length;
+    drawCell(x, y, token, active ? palette.teal : palette.muted);
     if (index > 0) arrow(x - gap + 38, y, x - 38, y, palette.ink);
     arrow(x, y + 44, x, y + 86, palette.violet);
-    label(`h${index + 1}`, x, y + 118, palette.violet, 13, "center");
+    label(index < local.history.length ? local.history[Math.max(0, local.history.length - tokens.length + index)]?.h?.[0]?.toFixed(2) || "h" : "h", x, y + 118, palette.violet, 12, "center");
   });
-  ctx.strokeStyle = palette.amber;
-  ctx.lineWidth = 2;
-  for (let i = 0; i < tokens.length - 1; i += 1) {
-    const x1 = start + gap * i;
-    const x2 = start + gap * (i + 1);
+  const gateX = w * 0.13;
+  ["input", "forget", "output"].forEach((name, index) => {
+    const value = local.gates[name];
+    drawGauge(gateX, h * 0.64 + index * 34, w * 0.27, 18, value, [palette.teal, palette.amber, palette.violet][index]);
+    label(`${name} gate ${value.toFixed(2)}`, gateX + w * 0.29, h * 0.64 + index * 34 + 14, palette.ink, 12, "left");
+  });
+  const chart = { x: w * 0.52, y: h * 0.58, w: w * 0.34, h: h * 0.25 };
+  drawBox(chart);
+  label("historia h_t[0]", chart.x + 8, chart.y - 10, palette.muted, 12, "left");
+  if (local.history.length > 1) {
+    ctx.strokeStyle = palette.teal;
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(x1 + 18, y - 38);
-    ctx.quadraticCurveTo((x1 + x2) / 2, y - 78, x2 - 18, y - 38);
+    local.history.forEach((item, index) => {
+      const x = chart.x + (index / (local.history.length - 1)) * chart.w;
+      const yLine = chart.y + chart.h / 2 - item.h[0] * chart.h * 0.38;
+      if (index === 0) ctx.moveTo(x, yLine);
+      else ctx.lineTo(x, yLine);
+    });
     ctx.stroke();
   }
-  label("bramki LSTM/GRU kontrolują pamięć i zapominanie", w / 2, 48, palette.ink, 15, "center");
-  label("BPTT rozwija tę samą komórkę przez czas", w / 2, h - 38, palette.muted, 13, "center");
+  label("h_t = tanh(Wx x_t + Wh h_{t-1} + b), bramki pokazują intuicję LSTM/GRU", w / 2, h - 34, palette.muted, 13, "center");
   return [
     { value: "h_t", label: "stan" },
-    { value: "BPTT", label: "uczenie" },
-    { value: "gates", label: "LSTM/GRU" },
+    { value: tokens[(local.index - 1 + tokens.length) % tokens.length], label: "token" },
+    { value: local.h[0].toFixed(2), label: "aktywacja" },
   ];
 }
 
@@ -1280,30 +1766,56 @@ function renderTransformer() {
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
   const tokens = ["nu", "ta", "śpie", "wu", "pitch"];
-  const left = 64;
-  const top = 72;
+  const embeddings = [
+    [0.8, 0.1, 0.4],
+    [0.72, 0.35, 0.28],
+    [0.12, 0.9, 0.55],
+    [0.22, 0.6, 0.82],
+    [0.45, 0.42, 0.95],
+  ];
+  const wq = [[0.7, -0.2, 0.25], [0.1, 0.6, 0.45], [-0.25, 0.3, 0.72]];
+  const wk = [[0.62, 0.14, -0.22], [-0.1, 0.78, 0.24], [0.22, 0.42, 0.58]];
+  const wv = [[0.52, -0.12, 0.32], [0.18, 0.48, 0.34], [-0.18, 0.24, 0.76]];
+  const q = embeddings.map((v) => matVec(wq, v));
+  const k = embeddings.map((v) => matVec(wk, v));
+  const values = embeddings.map((v) => matVec(wv, v));
+  const attention = q.map((query) => softmax(k.map((key) => dot(query, key) / Math.sqrt(3))));
+  const activeRow = state.step % tokens.length;
+  const compact = w < 760;
+  const top = compact ? 36 : 72;
+  const tokenGap = compact ? Math.min(78, (w - 108) / tokens.length) : Math.min(90, w * 0.1);
+  const left = compact ? 38 : 54;
   tokens.forEach((token, index) => {
-    const x = left + index * 92;
-    drawToken(x, top, token, index === state.step % tokens.length);
-    arrow(x + 32, top + 58, x + 32, top + 104, palette.teal);
-    label(["Q", "K", "V"][index % 3], x + 32, top + 132, palette.teal, 14, "center");
+    const tx = left + index * tokenGap;
+    drawToken(tx, top, token, index === activeRow);
+    if (!compact) {
+      arrow(tx + 32, top + 58, tx + 32, top + 104, palette.teal);
+      label(index === activeRow ? "Q" : "K/V", tx + 32, top + 132, palette.teal, 13, "center");
+    }
   });
-  const matrixX = w * 0.53;
-  const matrixY = 74;
-  label("macierz attention", matrixX + 116, matrixY - 18, palette.ink, 14, "center");
+  const matrixSize = compact ? Math.min(210, w - 92) : Math.min(250, w * 0.32);
+  const cell = matrixSize / tokens.length;
+  const tokenEnd = left + (tokens.length - 1) * tokenGap + 64;
+  const matrixX = compact ? (w - matrixSize) / 2 : Math.min(w - matrixSize - 46, tokenEnd + 74);
+  const matrixY = compact ? 164 : 72;
+  label("softmax(QK^T / sqrt(d))", matrixX + matrixSize / 2, matrixY - 18, palette.ink, 14, "center");
   for (let y = 0; y < tokens.length; y += 1) {
     for (let x = 0; x < tokens.length; x += 1) {
-      const value = 0.15 + 0.75 * Math.abs(Math.sin((x + 1) * (y + 2) + state.step * 0.22));
-      ctx.fillStyle = blend("#ffffff", palette.violet, value);
-      ctx.fillRect(matrixX + x * 42, matrixY + y * 42, 38, 38);
+      const value = attention[y][x];
+      ctx.fillStyle = blend("#ffffff", y === activeRow ? palette.teal : palette.violet, 0.18 + value * 0.82);
+      ctx.fillRect(matrixX + x * cell, matrixY + y * cell, cell - 4, cell - 4);
+      label(value.toFixed(2), matrixX + x * cell + cell / 2, matrixY + y * cell + cell / 2 + 4, value > 0.42 ? "#ffffff" : palette.ink, 10, "center");
     }
   }
-  drawBox({ x: 62, y: h - 122, w: w - 124, h: 62 });
-  label("embedding + pozycja -> attention -> feed-forward -> residual/normalizacja", w / 2, h - 84, palette.ink, 15, "center");
+  const output = [0, 1, 2].map((dim) => attention[activeRow].reduce((sum, weight, index) => sum + weight * values[index][dim], 0));
+  const boxY = compact ? h - 112 : h - 122;
+  drawBox({ x: 62, y: boxY, w: w - 124, h: 70 });
+  label(`query: "${tokens[activeRow]}" miesza V -> [${output.map((v) => v.toFixed(2)).join(", ")}]`, w / 2, boxY + 28, palette.ink, 14, "center");
+  label("im jaśniejszy wiersz, tym większa waga attention dla danego tokenu", w / 2, boxY + 52, palette.muted, 12, "center");
   return [
     { value: "QK^T", label: "podobieństwo" },
     { value: "softmax", label: "wagi" },
-    { value: "V", label: "mieszanie" },
+    { value: tokens[activeRow], label: "query" },
   ];
 }
 
@@ -1334,11 +1846,22 @@ function renderHopfield() {
   const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  drawPattern(local.current, w * 0.18, h * 0.19, 30, "stan sieci");
-  drawPattern(local.target, w * 0.52, h * 0.19, 30, "atraktor");
-  arrow(w * 0.34, h * 0.36, w * 0.48, h * 0.36, palette.teal);
-  label("asynchroniczne aktualizacje obniżają energię", w / 2, h * 0.13, palette.ink, 15, "center");
-  const chart = { x: w * 0.18, y: h * 0.68, w: w * 0.64, h: h * 0.2 };
+  const cell = clamp(w * 0.045, 20, 29);
+  const currentX = w * 0.09;
+  const targetX = w * 0.39;
+  const baseX = w * 0.68;
+  const top = h * 0.15;
+  drawPattern(local.current, currentX, top, cell, "stan po aktualizacjach", local.lastNeuron);
+  drawPattern(local.target, targetX, top, cell, "atraktor najbliższy");
+  arrow(currentX + cell * 5.4, top + cell * 2.5, targetX - 22, top + cell * 2.5, palette.teal);
+  label("baza wzorców Hebba", baseX, top - 14, palette.ink, 13, "left");
+  local.patterns.forEach((pattern, index) => {
+    drawPattern(pattern.bits, baseX, top + index * (cell * 1.55), cell * 0.48, pattern.name);
+  });
+  const fieldY = top + cell * 5.6;
+  label(`aktualizowany neuron: ${local.lastNeuron >= 0 ? local.lastNeuron + 1 : "-"} | pole h_i=${local.lastField.toFixed(2)}`, currentX, fieldY, palette.ink, 13, "left");
+  label("reguła: s_i = sign(sum_j w_ij s_j)", currentX, fieldY + 22, palette.muted, 12, "left");
+  const chart = { x: w * 0.12, y: h * 0.68, w: w * 0.76, h: h * 0.18 };
   drawBox(chart);
   label("energia E", chart.x + 10, chart.y - 10, palette.muted, 12, "left");
   const values = local.energy;
@@ -1358,7 +1881,7 @@ function renderHopfield() {
   return [
     { value: String(wrong), label: "błędne bity" },
     { value: values.at(-1).toFixed(1), label: "energia" },
-    { value: "Hebb", label: "uczenie" },
+    { value: state.showValues ? "+/-" : "grid", label: "pola" },
   ];
 }
 
@@ -1369,26 +1892,65 @@ function renderSom() {
   const left = { x: 50, y: 54, w: w * 0.42, h: h - 120 };
   const right = { x: w * 0.58, y: 54, w: w * 0.32, h: h - 120 };
   drawPanelTitle("przestrzeń danych", left.x, left.y - 18);
-  drawPanelTitle("siatka SOM", right.x, right.y - 18);
+  drawPanelTitle("siatka SOM: prototypy i U-matrix", right.x, right.y - 18);
   drawBox(left);
   drawBox(right);
   data.points.forEach((point) => drawPoint(mapPoint(left, point), point.color, 3.8));
+  for (let gy = 0; gy < 8; gy += 1) {
+    for (let gx = 0; gx < 8; gx += 1) {
+      const node = local.nodes.find((item) => item.gx === gx && item.gy === gy);
+      const rightNode = local.nodes.find((item) => item.gx === gx + 1 && item.gy === gy);
+      const downNode = local.nodes.find((item) => item.gx === gx && item.gy === gy + 1);
+      if (rightNode) {
+        const a = mapPoint(left, node);
+        const b = mapPoint(left, rightNode);
+        line(a.x, a.y, b.x, b.y, "rgba(23,33,43,0.18)", 1);
+      }
+      if (downNode) {
+        const a = mapPoint(left, node);
+        const b = mapPoint(left, downNode);
+        line(a.x, a.y, b.x, b.y, "rgba(23,33,43,0.18)", 1);
+      }
+    }
+  }
   local.nodes.forEach((node) => {
     const p = mapPoint(left, node);
-    drawPoint(p, palette.ink, 2.2);
+    const isBest = node === local.lastBest;
+    drawPoint(p, isBest ? palette.amber : palette.ink, isBest ? 7 : 2.6);
   });
+  const samplePoint = mapPoint(left, local.lastSample || data.points[0]);
+  drawNode(samplePoint.x, samplePoint.y, 9, palette.coral, "#ffffff");
+  if (local.lastBest) {
+    const bmu = mapPoint(left, local.lastBest);
+    arrow(samplePoint.x, samplePoint.y, bmu.x, bmu.y, palette.coral);
+  }
   local.nodes.forEach((node) => {
-    const x = right.x + (node.gx / 7) * right.w;
-    const y = right.y + (node.gy / 7) * right.h;
+    const cell = Math.min(right.w, right.h) / 8;
+    const gridX = right.x + 18 + node.gx * cell;
+    const gridY = right.y + 28 + node.gy * cell;
+    const neighbors = local.nodes.filter((other) => Math.abs(other.gx - node.gx) + Math.abs(other.gy - node.gy) === 1);
+    const u = neighbors.length
+      ? neighbors.reduce((sum, other) => sum + Math.hypot(other.x - node.x, other.y - node.y), 0) / neighbors.length
+      : 0;
     const color = rgbFromPosition(node.x, node.y);
     ctx.fillStyle = color;
-    ctx.fillRect(x - 7, y - 7, 14, 14);
+    ctx.fillRect(gridX, gridY, cell - 2, cell - 2);
+    ctx.globalAlpha = clamp(u * 0.7, 0, 0.35);
+    ctx.fillStyle = palette.ink;
+    ctx.fillRect(gridX, gridY, cell - 2, cell - 2);
+    ctx.globalAlpha = 1;
+    if (node === local.lastBest) {
+      ctx.strokeStyle = palette.amber;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(gridX + 1, gridY + 1, cell - 4, cell - 4);
+    }
   });
-  const radius = lerp(3.4, 0.7, clamp(state.step / 80, 0, 1));
+  const radius = local.lastRadius || lerp(3.4, 0.7, clamp(state.step / 80, 0, 1));
+  label(state.complexity < 0.35 ? "tryb WTA: aktualizuje się tylko BMU" : "tryb WTM: BMU + sąsiedzi poruszają się razem", w / 2, h - 38, palette.muted, 13, "center");
   return [
     { value: radius.toFixed(1), label: "promień" },
     { value: String(local.nodes.length), label: "neurony" },
-    { value: "BMU", label: "zwycięzca" },
+    { value: local.lastBest ? `${local.lastBest.gx},${local.lastBest.gy}` : "BMU", label: "BMU" },
   ];
 }
 
@@ -1419,59 +1981,100 @@ function renderArt() {
 }
 
 function renderBoltzmann() {
+  const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  const temp = lerp(1.8, 0.25, state.complexity);
-  const nodes = circularNodes(w * 0.28, h * 0.46, 110, 8);
-  nodes.forEach((a, i) => {
-    nodes.forEach((b, j) => {
-      if (j <= i) return;
-      ctx.globalAlpha = 0.16;
-      line(a.x, a.y, b.x, b.y, palette.muted, 1);
+  const temp = boltzmannTemp();
+  const leftX = w * 0.14;
+  const rightX = w * 0.43;
+  const top = h * 0.18;
+  const gapV = h * 0.085;
+  const gapH = h * 0.115;
+  const visibleNodes = local.visible.map((value, index) => ({ x: leftX, y: top + index * gapV, value }));
+  const hiddenNodes = local.hidden.map((value, index) => ({ x: rightX, y: top + 20 + index * gapH, value }));
+  visibleNodes.forEach((v, i) => {
+    hiddenNodes.forEach((hh, j) => {
+      const weight = local.weights[i][j];
+      ctx.globalAlpha = 0.18 + Math.min(0.34, Math.abs(weight) * 0.28);
+      line(v.x, v.y, hh.x, hh.y, weight >= 0 ? palette.teal : palette.coral, 1 + Math.abs(weight) * 1.8);
       ctx.globalAlpha = 1;
     });
   });
-  nodes.forEach((node, index) => {
-    const active = Math.sin(state.time * 2 + index * 1.8) > temp - 1.2;
-    drawNode(node.x, node.y, 18, active ? palette.violet : "#dce5ea", active ? "#ffffff" : palette.muted);
+  visibleNodes.forEach((node, index) => {
+    drawNode(node.x, node.y, 18, node.value ? palette.teal : "#dce5ea", node.value ? "#ffffff" : palette.muted);
+    label(`v${index + 1}`, node.x - 34, node.y + 4, palette.muted, 12, "right");
   });
-  const chart = { x: w * 0.55, y: h * 0.2, w: w * 0.32, h: h * 0.52 };
-  drawEnergyLandscape(chart, temp);
-  label("temperatura steruje losowością próbkowania", w * 0.28, h - 44, palette.muted, 13, "center");
+  hiddenNodes.forEach((node, index) => {
+    drawNode(node.x, node.y, 18, node.value ? palette.violet : "#dce5ea", node.value ? "#ffffff" : palette.muted);
+    label(`h${index + 1}`, node.x + 34, node.y + 4, palette.muted, 12, "left");
+  });
+  const probPanel = { x: w * 0.58, y: h * 0.16, w: w * 0.32, h: h * 0.32 };
+  drawBox(probPanel);
+  label(`Gibbs: ${local.phase}`, probPanel.x + 12, probPanel.y + 24, palette.ink, 13, "left");
+  const probs = local.probs.length ? local.probs : local.hidden.map((_, j) => sigmoid((local.hBias[j] + local.visible.reduce((sum, v, i) => sum + v * local.weights[i][j], 0)) / temp));
+  probs.slice(0, 6).forEach((prob, index) => {
+    drawGauge(probPanel.x + 18, probPanel.y + 50 + index * 26, probPanel.w - 36, 14, prob, index % 2 ? palette.violet : palette.teal);
+    label(`p${index + 1}=${prob.toFixed(2)}`, probPanel.x + 22, probPanel.y + 61 + index * 26, palette.ink, 10, "left");
+  });
+  const chart = { x: w * 0.58, y: h * 0.56, w: w * 0.32, h: h * 0.25 };
+  drawBox(chart);
+  label("energia próbek", chart.x + 8, chart.y - 10, palette.muted, 12, "left");
+  if (local.energy.length > 1) {
+    ctx.strokeStyle = palette.coral;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    const minE = Math.min(...local.energy);
+    const maxE = Math.max(...local.energy);
+    local.energy.forEach((energy, index) => {
+      const x = chart.x + (index / (local.energy.length - 1)) * chart.w;
+      const y = chart.y + chart.h - ((energy - minE) / Math.max(0.01, maxE - minE)) * chart.h;
+      if (index === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }
+  label("wysoka temperatura = więcej losowości; niska = silniejszy spadek energii", w / 2, h - 42, palette.muted, 13, "center");
   return [
     { value: temp.toFixed(2), label: "temperatura" },
-    { value: "E(s)", label: "energia" },
-    { value: "P(s)", label: "rozkład" },
+    { value: local.energy.at(-1)?.toFixed(2) || "E", label: "energia" },
+    { value: local.phase, label: "krok" },
   ];
 }
 
 function renderReservoir() {
+  const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
   const centerX = w * 0.47;
   const centerY = h * 0.47;
-  const nodes = circularNodes(centerX, centerY, Math.min(w, h) * 0.24, 18);
+  const nodes = circularNodes(centerX, centerY, Math.min(w, h) * 0.22, local.h.length);
   nodes.forEach((a, i) => {
     nodes.forEach((b, j) => {
-      if (j <= i || (i * 13 + j * 7) % 5 !== 0) return;
-      ctx.globalAlpha = 0.22;
-      arrow(a.x, a.y, b.x, b.y, palette.muted);
+      if (!local.wres[i] || Math.abs(local.wres[i][j]) < 0.001) return;
+      ctx.globalAlpha = 0.12 + Math.abs(local.wres[i][j]) * 0.35;
+      arrow(a.x, a.y, b.x, b.y, local.wres[i][j] >= 0 ? palette.teal : palette.coral);
       ctx.globalAlpha = 1;
     });
   });
   nodes.forEach((node, index) => {
-    const active = 0.5 + 0.5 * Math.sin(state.time * 2 + index);
-    drawNode(node.x, node.y, 10 + active * 5, blend("#dce5ea", palette.teal, active), "#ffffff");
+    const active = (local.h[index] + 1) / 2;
+    drawNode(node.x, node.y, 8 + active * 7, blend("#dce5ea", palette.teal, active), "#ffffff");
   });
   drawCell(w * 0.12, centerY, "x_t", palette.teal);
-  drawCell(w * 0.82, centerY, "y_t", palette.violet);
+  drawCell(w * 0.84, centerY, "y_hat", palette.violet);
   arrow(w * 0.16, centerY, centerX - Math.min(w, h) * 0.24, centerY, palette.teal);
   arrow(centerX + Math.min(w, h) * 0.24, centerY, w * 0.78, centerY, palette.violet);
-  label("rezerwuar jest prawie stały, uczony jest readout", w / 2, h - 42, palette.muted, 13, "center");
+  const chart = { x: w * 0.08, y: h * 0.08, w: w * 0.84, h: h * 0.18 };
+  drawBox(chart);
+  label("wejście, target i odczyt", chart.x + 8, chart.y - 10, palette.muted, 12, "left");
+  drawHistoryLine(local.history, chart, "input", palette.teal, 1.2);
+  drawHistoryLine(local.history, chart, "target", palette.amber, 1.2);
+  drawHistoryLine(local.history, chart, "output", palette.violet, 2.6);
+  label("W_res jest zamrożone; uczy się tylko liniowy readout W_out", w / 2, h - 42, palette.muted, 13, "center");
   return [
-    { value: "fixed", label: "W_res" },
-    { value: "W_out", label: "uczone" },
-    { value: "echo", label: "stan" },
+    { value: local.input.toFixed(2), label: "x_t" },
+    { value: local.output.toFixed(2), label: "y_hat" },
+    { value: Math.abs(local.error).toFixed(2), label: "błąd" },
   ];
 }
 
@@ -1609,64 +2212,134 @@ function renderRl(topic) {
   const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  const size = Math.min(h * 0.68, w * 0.44);
-  const x0 = w * 0.12;
-  const y0 = h * 0.16;
+  const size = Math.min(h * 0.64, w * 0.42);
+  const x0 = w * 0.09;
+  const y0 = h * 0.14;
   const cell = size / 5;
   for (let y = 0; y < 5; y += 1) {
     for (let x = 0; x < 5; x += 1) {
       const idx = y * 5 + x;
       const value = clamp(local.values[idx], 0, 1);
-      ctx.fillStyle = blend("#ffffff", palette.violet, value);
+      const pos = { x, y };
+      ctx.fillStyle = isWall(pos) ? "#26313b" : blend("#ffffff", palette.violet, value);
       ctx.fillRect(x0 + x * cell, y0 + y * cell, cell - 2, cell - 2);
-      label(value.toFixed(1), x0 + x * cell + cell / 2, y0 + y * cell + cell / 2 + 4, value > 0.55 ? "#ffffff" : palette.ink, 12, "center");
+      if (sameCell(pos, gridWorld.goal)) {
+        ctx.fillStyle = palette.green;
+        ctx.fillRect(x0 + x * cell + 6, y0 + y * cell + 6, cell - 14, cell - 14);
+        label("G", x0 + x * cell + cell / 2, y0 + y * cell + cell / 2 + 5, "#ffffff", 14, "center");
+      } else if (sameCell(pos, gridWorld.trap)) {
+        ctx.fillStyle = palette.coral;
+        ctx.fillRect(x0 + x * cell + 6, y0 + y * cell + 6, cell - 14, cell - 14);
+        label("T", x0 + x * cell + cell / 2, y0 + y * cell + cell / 2 + 5, "#ffffff", 14, "center");
+      } else if (!isWall(pos)) {
+        label(value.toFixed(2), x0 + x * cell + cell / 2, y0 + y * cell + cell / 2 + 5, value > 0.55 ? "#ffffff" : palette.ink, 11, "center");
+        if (topic.id !== "td-prediction" && topic.id !== "mdp-bellman") {
+          drawPolicyArrow(x0 + x * cell + cell / 2, y0 + y * cell + cell / 2 - 13, bestQAction(local.q, pos), value > 0.55 ? "#ffffff" : palette.ink);
+        } else if (!isTerminal(pos)) {
+          drawPolicyArrow(x0 + x * cell + cell / 2, y0 + y * cell + cell / 2 - 13, bestActionFromValues(local.values, pos), value > 0.55 ? "#ffffff" : palette.ink);
+        }
+      }
     }
   }
-  ctx.fillStyle = palette.green;
-  ctx.fillRect(x0 + 4 * cell + 6, y0 + 6, cell - 14, cell - 14);
-  label("R", x0 + 4 * cell + cell / 2, y0 + cell / 2 + 4, "#ffffff", 14, "center");
+  local.path.forEach((point, index) => {
+    ctx.globalAlpha = 0.18 + (index / Math.max(1, local.path.length - 1)) * 0.34;
+    drawPoint({ x: x0 + point.x * cell + cell / 2, y: y0 + point.y * cell + cell / 2 }, palette.amber, 5);
+    ctx.globalAlpha = 1;
+  });
   const ax = x0 + local.agent.x * cell + cell / 2;
   const ay = y0 + local.agent.y * cell + cell / 2;
   drawNode(ax, ay, cell * 0.22, palette.amber, "#ffffff");
   label("agent", ax, ay + cell * 0.48, palette.ink, 12, "center");
-  const panel = { x: w * 0.62, y: y0, w: w * 0.28, h: size };
+  const panel = { x: w * 0.58, y: y0, w: w * 0.34, h: size };
   drawBox(panel);
-  const title = topic.id === "mdp-bellman" ? "Bellman backup" : "TD target";
+  const title = topic.id === "mdp-bellman" ? "Bellman: value iteration" : topic.id === "td-prediction" ? "TD(0): predykcja V" : `${topic.title}`;
   label(title, panel.x + panel.w / 2, panel.y + 34, palette.ink, 15, "center");
-  const rows = topic.id === "mdp-bellman"
-    ? ["V(s)", "r", "gamma V(s')", "suma oczekiwana"]
-    : ["Q(s,a)", "r + gamma max Q", "TD error", "aktualizacja"];
-  rows.forEach((row, index) => {
-    drawCell(panel.x + panel.w / 2, panel.y + 86 + index * 62, row, [palette.teal, palette.amber, palette.violet, palette.green][index]);
-    if (index > 0) arrow(panel.x + panel.w / 2, panel.y + 52 + index * 62, panel.x + panel.w / 2, panel.y + 66 + index * 62, palette.muted);
+  const last = local.last;
+  const actionName = gridActions[last.action]?.name || "-";
+  const nextActionName = gridActions[last.nextAction]?.name || "-";
+  const lines = topic.id === "mdp-bellman"
+    ? [
+      `stan s=(${last.state.x},${last.state.y})`,
+      `sprawdź wszystkie akcje`,
+      `najlepsza akcja: ${actionName}`,
+      `V(s): ${last.old.toFixed(2)} -> ${(last.old + 0.55 * last.tdError).toFixed(2)}`,
+    ]
+    : topic.id === "td-prediction"
+      ? [
+        `s=(${last.state.x},${last.state.y}), a=${actionName}`,
+        `r=${last.reward.toFixed(2)}, s'=(${last.next.x},${last.next.y})`,
+        `target=${last.target.toFixed(2)}`,
+        `TD error=${last.tdError.toFixed(2)}`,
+      ]
+      : [
+        `s=(${last.state.x},${last.state.y}), a=${actionName}`,
+        actionName === gridActions[bestQAction(local.q, last.state)]?.name ? "decyzja: greedy" : "decyzja: eksploracja",
+        topic.id === "sarsa" ? `target: Q(s',${nextActionName})` : "target: max Q(s',a)",
+        `TD error=${last.tdError.toFixed(2)}`,
+      ];
+  lines.forEach((lineText, index) => {
+    drawCell(panel.x + panel.w / 2, panel.y + 82 + index * 58, lineText, [palette.teal, palette.amber, palette.violet, palette.green][index]);
   });
+  if (topic.id === "sarsa" || topic.id === "q-learning") {
+    const qRow = local.q[gridIndex(local.agent)];
+    qRow.forEach((value, index) => {
+      const barX = panel.x + 28 + index * ((panel.w - 56) / 4);
+      const base = panel.y + panel.h - 28;
+      const barH = clamp(value + 0.2, 0, 1) * 70;
+      ctx.fillStyle = index === bestQAction(local.q, local.agent) ? palette.amber : palette.violet;
+      ctx.fillRect(barX, base - barH, 24, barH);
+      label(gridActions[index].name, barX + 12, base + 18, palette.ink, 11, "center");
+    });
+  }
   return [
-    { value: topic.id === "mdp-bellman" ? "model" : "sample" , label: "źródło" },
-    { value: "gamma", label: "dyskonto" },
+    { value: topic.id === "mdp-bellman" ? "model" : "sample", label: "źródło" },
+    { value: gridWorld.gamma.toFixed(2), label: "gamma" },
     { value: `${local.agent.x},${local.agent.y}`, label: "stan" },
   ];
 }
 
 function renderDeepRl() {
+  const local = state.local;
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  drawMiniGrid(w * 0.08, h * 0.26, 150);
-  arrow(w * 0.26, h * 0.44, w * 0.36, h * 0.44, palette.ink);
-  drawNetwork([6, 7, 5, 4], w * 0.38, h * 0.16, w * 0.28, h * 0.58, { pulse: state.time, compact: true });
-  arrow(w * 0.68, h * 0.44, w * 0.76, h * 0.44, palette.ink);
-  const bars = [0.28, 0.64, 0.42, 0.78].map((v, i) => clamp(v + Math.sin(state.time + i) * 0.06, 0, 1));
-  bars.forEach((value, index) => {
-    const x = w * 0.78 + index * 42;
-    const y = h * 0.66;
-    ctx.fillStyle = index === 3 ? palette.amber : palette.violet;
-    ctx.fillRect(x, y - value * 150, 28, value * 150);
-    label(["L", "U", "R", "D"][index], x + 14, y + 22, palette.ink, 12, "center");
+  const left = { x: w * 0.06, y: h * 0.1, w: w * 0.42, h: h * 0.68 };
+  const right = { x: w * 0.54, y: h * 0.1, w: w * 0.38, h: h * 0.68 };
+  drawBox(left);
+  drawBox(right);
+  label("DQN: replay + target network", left.x + left.w / 2, left.y + 26, palette.ink, 15, "center");
+  drawMiniGrid(left.x + 22, left.y + 56, Math.min(116, left.w * 0.34));
+  drawNetwork([5, 7, 4], left.x + left.w * 0.38, left.y + 54, left.w * 0.34, left.h * 0.38, { pulse: state.time, compact: true });
+  const base = left.y + left.h - 72;
+  local.dqnQ.forEach((value, index) => {
+    const x = left.x + left.w * 0.14 + index * (left.w * 0.16);
+    const barH = clamp(value, -0.2, 1) * 105;
+    ctx.fillStyle = index === local.replay[local.replayIndex % local.replay.length]?.a ? palette.amber : palette.violet;
+    ctx.fillRect(x, base - barH, 24, barH);
+    label(gridActions[index].name, x + 12, base + 18, palette.ink, 11, "center");
   });
-  label("DQN: sieć zastępuje tabelę Q; replay i target network stabilizują uczenie", w / 2, h - 42, palette.muted, 13, "center");
+  const sample = local.replay[(local.replayIndex + local.replay.length - 1) % local.replay.length] || local.replay[0];
+  label(`sample: s=(${sample.s.join(",")}), a=${gridActions[sample.a].name}, r=${sample.r.toFixed(2)}`, left.x + 18, left.y + left.h - 34, palette.muted, 12, "left");
+  label(`TD error=${local.tdError.toFixed(2)}`, left.x + left.w - 18, left.y + left.h - 34, palette.coral, 12, "right");
+  label("Policy gradient: bezpośrednio zmienia pi(a|s)", right.x + right.w / 2, right.y + 26, palette.ink, 15, "center");
+  const center = { x: right.x + right.w * 0.33, y: right.y + right.h * 0.42 };
+  drawNode(center.x, center.y, 28, palette.teal, "#ffffff");
+  label("policy", center.x, center.y + 56, palette.teal, 13, "center");
+  local.policy.forEach((prob, index) => {
+    const angle = -Math.PI / 2 + index * (Math.PI / 2);
+    const x = right.x + right.w * 0.66 + Math.cos(angle) * right.w * 0.18;
+    const y = right.y + right.h * 0.42 + Math.sin(angle) * right.h * 0.22;
+    arrow(center.x + 28, center.y, x - 20, y, index === local.sampledAction ? palette.amber : palette.muted);
+    drawNode(x, y, 18 + prob * 16, index === local.sampledAction ? palette.amber : palette.violet, "#ffffff");
+    label(`${gridActions[index].name} ${prob.toFixed(2)}`, x, y + 42, palette.ink, 11, "center");
+  });
+  drawBox({ x: right.x + 24, y: right.y + right.h - 118, w: right.w - 48, h: 72 });
+  label(`grad log pi(a|s) * advantage`, right.x + right.w / 2, right.y + right.h - 86, palette.ink, 13, "center");
+  label(`advantage=${local.advantage.toFixed(2)}`, right.x + right.w / 2, right.y + right.h - 60, palette.muted, 12, "center");
+  label("DQN uczy wartości akcji, policy gradient uczy rozkładu akcji", w / 2, h - 42, palette.muted, 13, "center");
   return [
-    { value: "Q(s,a)", label: "wyjście" },
-    { value: "replay", label: "bufor" },
-    { value: "target", label: "sieć celu" },
+    { value: local.tdError.toFixed(2), label: "TD error" },
+    { value: "replay", label: "DQN" },
+    { value: local.policy[local.sampledAction].toFixed(2), label: "pi(a)" },
   ];
 }
 
@@ -1675,30 +2348,40 @@ function renderEvolution() {
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
   const area = { x: 54, y: 50, w: w - 108, h: h - 118 };
-  drawAxes(area, "rozwiązanie x", "fitness");
-  ctx.strokeStyle = palette.ink;
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  for (let i = 0; i <= 160; i += 1) {
-    const nx = i / 160;
-    const x = nx * 2 - 1;
-    const y = 1 - clamp(fitness(x), 0, 1);
-    const p = mapPoint(area, { x: nx, y });
-    if (i === 0) ctx.moveTo(p.x, p.y);
-    else ctx.lineTo(p.x, p.y);
+  drawBox(area);
+  const cols = 26;
+  const rows = 18;
+  for (let gy = 0; gy < rows; gy += 1) {
+    for (let gx = 0; gx < cols; gx += 1) {
+      const x = (gx / (cols - 1)) * 2 - 1;
+      const y = (gy / (rows - 1)) * 2 - 1;
+      const value = fitness2d(x, y);
+      ctx.fillStyle = blend("#ffffff", value > 0.55 ? palette.green : palette.violet, value);
+      ctx.fillRect(area.x + (gx / cols) * area.w, area.y + (gy / rows) * area.h, area.w / cols + 1, area.h / rows + 1);
+    }
   }
-  ctx.stroke();
-  const scored = local.population.map((item) => ({ ...item, fitness: fitness(item.x) }));
+  const scored = local.population.map((item) => ({ ...item, fitness: fitness2d(item.x, item.y) }));
   const best = scored.reduce((a, b) => (b.fitness > a.fitness ? b : a), scored[0]);
   scored.forEach((item) => {
-    const p = mapPoint(area, { x: (item.x + 1) / 2, y: 1 - clamp(item.fitness, 0, 1) });
+    const p = mapPoint(area, { x: (item.x + 1) / 2, y: (item.y + 1) / 2 });
     drawPoint(p, item === best ? palette.amber : palette.teal, item === best ? 8 : 4.5);
   });
-  label("selekcja zagęszcza populację przy lepszych obszarach, mutacja rozrzuca próbki", w / 2, h - 36, palette.muted, 13, "center");
+  if (local.bestPath.length > 1) {
+    ctx.strokeStyle = palette.coral;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    local.bestPath.forEach((item, index) => {
+      const p = mapPoint(area, { x: (item.x + 1) / 2, y: (item.y + 1) / 2 });
+      if (index === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+    ctx.stroke();
+  }
+  label("jasne pola = wysoki fitness; punkty = populacja; linia = historia elity", w / 2, h - 36, palette.muted, 13, "center");
   return [
     { value: String(local.generation), label: "pokolenie" },
     { value: best.fitness.toFixed(2), label: "best fitness" },
-    { value: String(local.population.length), label: "populacja" },
+    { value: "2D", label: "genotyp" },
   ];
 }
 
@@ -1725,11 +2408,11 @@ function renderPipeline() {
   const h = canvas.logicalHeight;
   const stages = [
     ["obraz", palette.muted],
-    ["detekcja", palette.teal],
-    ["OCR", palette.amber],
+    ["OMR", palette.teal],
+    ["OCR tekstu", palette.amber],
     ["Score IR", palette.violet],
-    ["SVS", palette.coral],
-    ["audio", palette.green],
+    ["akustyka", palette.coral],
+    ["wokoder", palette.green],
   ];
   const gap = (w - 160) / (stages.length - 1);
   stages.forEach(([name, color], index) => {
@@ -1741,11 +2424,13 @@ function renderPipeline() {
       drawPoint({ x: lerp(x + 52, x + gap - 52, pulse), y: h * 0.42 }, color, 5);
     }
   });
+  drawScoreImage({ x: w * 0.07, y: h * 0.12, w: w * 0.18, h: h * 0.18 });
+  label("OMR = symbole i pozycje nut, nie tylko tekst", w * 0.31, h * 0.24, palette.teal, 12, "left");
   drawBox({ x: w * 0.12, y: h * 0.65, w: w * 0.76, h: 70 });
-  label("propagacja błędów: maska/box -> tekst/symbole -> Score IR -> mel/F0 -> waveform", w / 2, h * 0.65 + 42, palette.ink, 14, "center");
+  label("propagacja błędów: OMR box/klasa -> OCR tekstu -> Score IR -> mel/F0 -> waveform", w / 2, h * 0.65 + 42, palette.ink, 14, "center");
   return [
     { value: "6", label: "moduły" },
-    { value: "IR", label: "punkt łączenia" },
+    { value: "OMR", label: "symbolika" },
     { value: "conf", label: "decyzje" },
   ];
 }
@@ -1769,27 +2454,44 @@ function renderSegmentation() {
 function renderDetection() {
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  const img = { x: 56, y: 60, w: w * 0.36, h: h * 0.62 };
+  const img = { x: 46, y: 54, w: w * 0.38, h: h * 0.64 };
   drawScoreImage(img);
-  const anchors = [
-    [0.18, 0.24, 0.22, 0.12],
-    [0.48, 0.34, 0.26, 0.14],
-    [0.62, 0.58, 0.18, 0.12],
+  const targets = [
+    { x: 0.17, y: 0.22, w: 0.12, h: 0.1, cls: "notehead", score: 0.94 },
+    { x: 0.43, y: 0.34, w: 0.1, h: 0.28, cls: "stem", score: 0.88 },
+    { x: 0.63, y: 0.55, w: 0.16, h: 0.11, cls: "rest", score: 0.81 },
   ];
-  anchors.forEach((a, index) => {
-    ctx.strokeStyle = index === state.step % 3 ? palette.amber : palette.teal;
-    ctx.lineWidth = index === state.step % 3 ? 3 : 1.5;
-    ctx.strokeRect(img.x + a[0] * img.w, img.y + a[1] * img.h, a[2] * img.w, a[3] * img.h);
+  const phase = state.step % 36;
+  const refine = clamp((phase - 10) / 18, 0, 1);
+  targets.forEach((target, index) => {
+    const anchor = {
+      x: target.x + [-0.08, 0.08, -0.04][index],
+      y: target.y + [0.04, -0.06, 0.07][index],
+      w: target.w * [1.8, 1.45, 1.7][index],
+      h: target.h * [1.6, 1.3, 1.55][index],
+    };
+    const box = {
+      x: lerp(anchor.x, target.x, refine),
+      y: lerp(anchor.y, target.y, refine),
+      w: lerp(anchor.w, target.w, refine),
+      h: lerp(anchor.h, target.h, refine),
+    };
+    ctx.strokeStyle = phase < 10 ? palette.muted : phase < 24 ? palette.amber : palette.teal;
+    ctx.lineWidth = phase < 10 ? 1.5 : 3;
+    ctx.strokeRect(img.x + box.x * img.w, img.y + box.y * img.h, box.w * img.w, box.h * img.h);
+    if (phase >= 24) label(`${target.cls} ${target.score.toFixed(2)}`, img.x + box.x * img.w, img.y + box.y * img.h - 5, palette.teal, 10, "left");
   });
   arrow(img.x + img.w + 34, img.y + img.h * 0.5, w * 0.58, img.y + img.h * 0.5, palette.ink);
-  const blocks = ["backbone", "RPN", "RoIAlign", "klasa + box"];
+  const blocks = ["backbone CNN", "RPN: anchors + objectness", "NMS + RoIAlign", "klasa + bbox delta"];
   blocks.forEach((block, index) => {
-    drawCell(w * 0.62, 82 + index * 74, block, [palette.teal, palette.amber, palette.violet, palette.coral][index]);
+    const active = Math.floor(phase / 9) === index;
+    drawCell(w * 0.66, 82 + index * 74, block, active ? palette.amber : [palette.teal, palette.amber, palette.violet, palette.coral][index]);
     if (index > 0) arrow(w * 0.62, 56 + index * 74, w * 0.62, 70 + index * 74, palette.muted);
   });
-  label("objectness filtruje kandydatów, regresja boxa poprawia pozycję", w / 2, h - 42, palette.muted, 13, "center");
+  const phaseText = phase < 10 ? "1. RPN tworzy dużo propozycji" : phase < 24 ? "2. bbox regression zawęża regiony" : "3. głowa klasyfikuje i zwraca finalne boxy";
+  label(phaseText, w / 2, h - 42, palette.muted, 13, "center");
   return [
-    { value: "IoU", label: "dopasowanie" },
+    { value: `${Math.round(refine * 100)}%`, label: "refinement" },
     { value: "RPN", label: "propozycje" },
     { value: "AP75", label: "precyzja" },
   ];
@@ -1798,23 +2500,41 @@ function renderDetection() {
 function renderOcr() {
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  const cropX = w * 0.07;
-  const cropW = Math.min(w * 0.23, 176);
-  const netX = cropX + cropW + Math.min(w * 0.08, 54);
-  const netW = Math.min(w * 0.24, 180);
-  const tokenStart = Math.min(netX + netW + Math.min(w * 0.08, 54), w - 216);
-  drawTextCrop(cropX, h * 0.2, cropW, 86);
-  arrow(cropX + cropW + 12, h * 0.31, netX - 14, h * 0.31, palette.ink);
-  drawNetwork([5, 6, 6], netX, h * 0.14, netW, h * 0.34, { pulse: state.time, compact: true });
-  arrow(netX + netW + 14, h * 0.31, tokenStart - 18, h * 0.31, palette.ink);
-  ["la", "-", "la", "la"].forEach((token, index) => {
-    drawToken(tokenStart + index * 48, h * 0.25, token, index === state.step % 4);
+  const cropX = w * 0.06;
+  const cropW = Math.min(w * 0.24, 190);
+  drawTextCrop(cropX, h * 0.16, cropW, 76);
+  const featureX = cropX + cropW + 42;
+  const featureY = h * 0.13;
+  const cols = ["blank", "l", "a", "blank", "-", "l", "a", "blank"];
+  const active = state.step % cols.length;
+  const colStep = Math.min(26, w * 0.034);
+  const barW = Math.max(14, colStep - 4);
+  cols.forEach((token, index) => {
+    const x = featureX + index * colStep;
+    const height = 48 + (token === "blank" ? 6 : 30);
+    ctx.fillStyle = index <= active ? blend("#ffffff", token === "blank" ? palette.muted : palette.teal, 0.45) : "#edf3f6";
+    ctx.fillRect(x, featureY + 70 - height, barW, height);
+    label(token === "blank" ? "_" : token, x + barW / 2, featureY + 92, palette.ink, 10, "center");
   });
-  drawBox({ x: w * 0.12, y: h * 0.62, w: w * 0.76, h: 70 });
-  label("CRNN-CTC: monotoniczne wyrównanie; Transformer OCR: decoder z kontekstem", w / 2, h * 0.62 + 42, palette.ink, 14, "center");
+  arrow(cropX + cropW + 14, h * 0.25, featureX - 20, h * 0.25, palette.ink);
+  const raw = cols.slice(0, active + 1);
+  const decoded = ctcDecode(raw);
+  const outW = Math.min(w * 0.24, 190);
+  const featureEnd = featureX + cols.length * colStep;
+  const outX = Math.min(w - outW - 28, featureEnd + 34);
+  if (outX > featureEnd + 28) {
+    arrow(featureEnd + 10, h * 0.25, outX - 18, h * 0.25, palette.ink);
+  }
+  drawBox({ x: outX, y: h * 0.15, w: outW, h: 108 });
+  label("CTC collapse", outX + 18, h * 0.2, palette.muted, 12, "left");
+  label(raw.map((t) => (t === "blank" ? "_" : t)).join(" "), outX + 18, h * 0.27, palette.ink, 13, "left");
+  label(`=> ${decoded || "..."}`, outX + 18, h * 0.35, palette.teal, 18, "left");
+  drawBox({ x: w * 0.12, y: h * 0.62, w: w * 0.76, h: 78 });
+  label("CNN robi kolumny cech, CRNN/Transformer daje tokeny, CTC usuwa blanki i powtórzenia", w / 2, h * 0.62 + 34, palette.ink, 13, "center");
+  label("dla tekstu wokalnego ważne są też myślniki i podział sylab", w / 2, h * 0.62 + 58, palette.muted, 12, "center");
   return [
     { value: "CTC", label: "wariant" },
-    { value: "TrOCR", label: "wariant" },
+    { value: decoded || "_", label: "decode" },
     { value: "CER", label: "metryka" },
   ];
 }
@@ -1822,18 +2542,48 @@ function renderOcr() {
 function renderSvs() {
   const w = canvas.logicalWidth;
   const h = canvas.logicalHeight;
-  const y = h * 0.24;
-  drawPianoRoll(58, y, w * 0.33, h * 0.28);
-  arrow(w * 0.42, h * 0.38, w * 0.49, h * 0.38, palette.ink);
-  drawMel(w * 0.52, h * 0.18, w * 0.22, h * 0.4);
-  arrow(w * 0.76, h * 0.38, w * 0.84, h * 0.38, palette.ink);
-  drawWave(w * 0.84, h * 0.24, w * 0.12, h * 0.24);
-  drawBox({ x: w * 0.12, y: h * 0.68, w: w * 0.76, h: 68 });
-  label("nuty + tekst -> mel/F0 -> wokoder -> waveform", w / 2, h * 0.68 + 40, palette.ink, 15, "center");
+  const y = h * 0.16;
+  drawPianoRoll(44, y, w * 0.28, h * 0.24);
+  const phonemes = [
+    { text: "l", dur: 1 },
+    { text: "aa", dur: 2 },
+    { text: "-", dur: 1 },
+    { text: "l", dur: 1 },
+    { text: "aa", dur: 2 },
+  ];
+  const regX = w * 0.38;
+  label("length regulator: fonemy -> ramki", regX, y - 10, palette.muted, 12, "left");
+  let cursor = regX;
+  phonemes.forEach((item, index) => {
+    drawCell(cursor + item.dur * 18, y + 42, item.text, [palette.teal, palette.amber, palette.violet][index % 3]);
+    for (let i = 0; i < item.dur; i += 1) {
+      ctx.fillStyle = blend("#ffffff", palette.teal, 0.35 + index * 0.08);
+      ctx.fillRect(cursor + i * 22, y + 90, 18, 34);
+    }
+    cursor += item.dur * 24 + 12;
+  });
+  arrow(w * 0.32, y + h * 0.12, regX - 22, y + h * 0.12, palette.ink);
+  arrow(cursor + 10, y + 82, w * 0.72, y + 82, palette.ink);
+  drawMel(w * 0.73, h * 0.15, w * 0.18, h * 0.3);
+  const f0 = { x: w * 0.15, y: h * 0.58, w: w * 0.7, h: h * 0.18 };
+  drawBox(f0);
+  label("F0 z partytury + predykcja modelu", f0.x + 10, f0.y - 10, palette.muted, 12, "left");
+  line(f0.x + 10, f0.y + f0.h * 0.55, f0.x + f0.w - 10, f0.y + f0.h * 0.55, palette.line, 1);
+  ctx.strokeStyle = palette.amber;
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (let i = 0; i <= 100; i += 1) {
+    const x = f0.x + 12 + (i / 100) * (f0.w - 24);
+    const pitch = f0.y + f0.h * (0.55 - 0.24 * Math.sin(i * 0.08) - 0.08 * Math.sin(i * 0.21 + state.time));
+    if (i === 0) ctx.moveTo(x, pitch);
+    else ctx.lineTo(x, pitch);
+  }
+  ctx.stroke();
+  label("tu widać sens SVS: zgodność rytmu, fonemów i wysokości przed wokoderem", w / 2, h - 42, palette.muted, 13, "center");
   return [
-    { value: "mel", label: "cechy" },
+    { value: "dur", label: "ramki" },
+    { value: "mel", label: "akustyka" },
     { value: "F0", label: "pitch" },
-    { value: "MOS", label: "odsłuch" },
   ];
 }
 
@@ -1980,13 +2730,22 @@ function drawFeatureMaps(x, y, count, title) {
   label(title, x + 44, y + 70, palette.muted, 12, "center");
 }
 
-function drawPattern(pattern, x, y, cell, title) {
+function drawPattern(pattern, x, y, cell, title, highlightIndex = -1) {
   label(title, x + cell * 2.5, y - 14, palette.ink, 13, "center");
   pattern.forEach((value, index) => {
     const px = x + (index % 5) * cell;
     const py = y + Math.floor(index / 5) * cell;
-    ctx.fillStyle = value ? palette.ink : "#e4edf2";
+    const active = value > 0;
+    ctx.fillStyle = active ? palette.ink : "#e4edf2";
     ctx.fillRect(px, py, cell - 3, cell - 3);
+    if (index === highlightIndex) {
+      ctx.strokeStyle = palette.amber;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(px + 1, py + 1, cell - 5, cell - 5);
+    }
+    if (state.showValues && cell >= 16) {
+      label(active ? "+1" : "-1", px + cell / 2 - 1, py + cell / 2 + 4, active ? "#ffffff" : palette.muted, Math.max(8, cell * 0.32), "center");
+    }
   });
 }
 
@@ -2149,6 +2908,37 @@ function drawMiniGrid(x, y, size) {
   drawNode(x + cell / 2, y + size - cell / 2, 11, palette.amber, "#ffffff");
 }
 
+function drawHistoryLine(history, area, key, color, width = 2) {
+  if (!history || history.length < 2) return;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.beginPath();
+  history.forEach((item, index) => {
+    const value = clamp((item[key] + 1.4) / 2.8, 0, 1);
+    const x = area.x + (index / (history.length - 1)) * area.w;
+    const y = area.y + area.h - value * area.h;
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+function drawPolicyArrow(x, y, actionIndex, color) {
+  const action = gridActions[actionIndex] || gridActions[0];
+  const len = 13;
+  arrow(x - action.dx * 2, y - action.dy * 2, x + action.dx * len, y + action.dy * len, color);
+}
+
+function ctcDecode(tokens) {
+  const out = [];
+  let prev = "";
+  tokens.forEach((token) => {
+    if (token !== "blank" && token !== prev) out.push(token);
+    prev = token;
+  });
+  return out.join("");
+}
+
 function circularNodes(cx, cy, radius, count) {
   return Array.from({ length: count }, (_, index) => {
     const angle = -Math.PI / 2 + (index / count) * Math.PI * 2;
@@ -2309,6 +3099,14 @@ stepBtn.addEventListener("click", () => {
 
 resetBtn.addEventListener("click", () => {
   selectTopic(state.activeId);
+});
+
+valueToggleBtn.addEventListener("click", () => {
+  state.showValues = !state.showValues;
+  valueToggleBtn.classList.toggle("is-active", state.showValues);
+  valueToggleBtn.setAttribute("aria-pressed", String(state.showValues));
+  valueToggleBtn.querySelector("span").textContent = state.showValues ? "Wartości: on" : "Wartości";
+  draw();
 });
 
 speedRange.addEventListener("input", () => {
