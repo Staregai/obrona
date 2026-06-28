@@ -344,6 +344,67 @@
       gap: 8px;
     }
 
+    .blacklist-lists {
+      display: grid;
+      gap: 12px;
+    }
+
+    .blacklist-section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      padding: 10px;
+    }
+
+    .blacklist-header {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .blacklist-header span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .blacklist-header button,
+    .blacklist-item button {
+      padding: 6px 8px;
+    }
+
+    .blacklist-list {
+      display: grid;
+      gap: 8px;
+      max-height: 220px;
+      overflow: auto;
+    }
+
+    .blacklist-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+    }
+
+    .blacklist-question {
+      min-width: 0;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .blacklist-topic,
+    .blacklist-empty {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
     .study {
       min-height: calc(100vh - 116px);
       display: grid;
@@ -524,6 +585,12 @@
       background: var(--bad-bg);
     }
 
+    .danger-action {
+      border-color: var(--bad-line);
+      color: var(--bad);
+      background: var(--bad-bg);
+    }
+
     .rating button.active {
       box-shadow: inset 0 0 0 2px currentColor;
       font-weight: 800;
@@ -581,6 +648,14 @@
     <main>
       <aside>
         <div class="group">
+          <div class="label">Baza</div>
+          <div class="segmented" role="tablist" aria-label="Baza pytań">
+            <button id="deckMain" class="active" type="button">Główna</button>
+            <button id="deckBank" type="button">Bank 37+</button>
+          </div>
+        </div>
+
+        <div class="group">
           <div class="label">Tryb</div>
           <div class="segmented" role="tablist" aria-label="Tryb nauki">
             <button id="modeFlash" class="active" type="button">Fiszki</button>
@@ -613,8 +688,8 @@
         <div class="group">
           <div class="label">Sesja</div>
           <div class="switches">
-            <label class="switch"><input id="filterThesis" type="checkbox"> Pytania do pracy</label>
-            <label class="switch"><input id="filterMini" type="checkbox"> Pytania ze strony MiNI</label>
+            <label id="mainFilterThesis" class="switch"><input id="filterThesis" type="checkbox"> Pytania do pracy</label>
+            <label id="mainFilterMini" class="switch"><input id="filterMini" type="checkbox"> Pytania ze strony MiNI</label>
             <label class="switch"><input id="filterNew" type="checkbox"> Nowe</label>
             <label class="switch"><input id="filterHard" type="checkbox"> Trudne</label>
             <label class="switch"><input id="filterBad" type="checkbox"> Nie umiem</label>
@@ -637,6 +712,28 @@
             <button id="reset" type="button">Reset</button>
           </div>
         </div>
+
+        <div class="group">
+          <div class="label">Blacklisted</div>
+          <div class="blacklist-lists">
+            <div class="blacklist-section">
+              <div class="blacklist-header">
+                <strong>Główna</strong>
+                <span id="blacklistMainCount">0</span>
+                <button id="restoreMainBlacklist" type="button">Przywróć wszystkie</button>
+              </div>
+              <div id="blacklistMain" class="blacklist-list"></div>
+            </div>
+            <div class="blacklist-section">
+              <div class="blacklist-header">
+                <strong>Bank 37+</strong>
+                <span id="blacklistBankCount">0</span>
+                <button id="restoreBankBlacklist" type="button">Przywróć wszystkie</button>
+              </div>
+              <div id="blacklistBank" class="blacklist-list"></div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       <section class="study" aria-live="polite">
@@ -650,6 +747,7 @@
           </div>
           <div class="toolbar-actions">
             <button id="editAnswer" type="button">Edytuj</button>
+            <button id="blacklistCurrent" class="danger-action" type="button">Ukryj</button>
             <div id="editTools" class="edit-tools" hidden>
               <button id="formatBold" class="format-btn" type="button" title="Pogrub zaznaczenie"><strong>B</strong></button>
               <button id="formatHighlight" class="format-btn" type="button" title="Zaznacz na żółto">HL</button>
@@ -3034,12 +3132,2783 @@
           }
     ];
 
+    const bankCards = [
+      {
+            "id": "bank-037",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 37,
+            "q": "Czym różni się uczenie nadzorowane od nienadzorowanego?",
+            "a": "W uczeniu nadzorowanym próbki mają etykiety i model uczy się mapowania wejścia na cel. W nienadzorowanym model szuka struktury bez jawnych etykiet, np. klastrów lub reprezentacji. Modele w pracy były trenowane głównie nadzorowanie."
+      },
+      {
+            "id": "bank-038",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 38,
+            "q": "Czym różni się klasyfikacja, regresja, detekcja i segmentacja?",
+            "a": "Klasyfikacja przypisuje klasę całej próbce, regresja przewiduje wartości ciągłe, detekcja przewiduje klasy i położenia wielu obiektów, a segmentacja przypisuje etykietę pikselom."
+      },
+      {
+            "id": "bank-039",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 39,
+            "q": "Czym jest funkcja straty?",
+            "a": "To różniczkowalna miara błędu używana do obliczenia gradientu i aktualizacji wag. Nie musi być identyczna z metryką raportowaną użytkownikowi."
+      },
+      {
+            "id": "bank-040",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 40,
+            "q": "Dlaczego strata walidacyjna i końcowa metryka mogą dawać inny ranking modeli?",
+            "a": "Strata jest lokalnym celem optymalizacji, a metryka może obejmować progi, ranking confidence, NMS, klasy, całe strony lub percepcję. Dobra optymalizacja surrogate loss nie gwarantuje najlepszego wyniku zadaniowego."
+      },
+      {
+            "id": "bank-041",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 41,
+            "q": "Co to jest gradient descent?",
+            "a": "Metoda aktualizacji parametrów w kierunku przeciwnym do gradientu funkcji straty. Learning rate określa wielkość kroku."
+      },
+      {
+            "id": "bank-042",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 42,
+            "q": "Czym różni się SGD od Adam?",
+            "a": "SGD korzysta bezpośrednio z gradientu, często z momentum. Adam adaptuje krok dla każdego parametru na podstawie estymat pierwszego i drugiego momentu gradientu, zwykle szybciej osiągając dobre rozwiązanie."
+      },
+      {
+            "id": "bank-043",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 43,
+            "q": "Czym AdamW różni się od Adam z naiwnym L2?",
+            "a": "AdamW rozdziela weight decay od adaptacyjnej aktualizacji gradientu. Dzięki temu regularyzacja ma bardziej przewidywalne działanie."
+      },
+      {
+            "id": "bank-044",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 44,
+            "q": "Co to jest learning rate?",
+            "a": "To współczynnik określający wielkość aktualizacji wag. Zbyt wysoki powoduje niestabilność, a zbyt niski bardzo wolne uczenie lub utknięcie."
+      },
+      {
+            "id": "bank-045",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 45,
+            "q": "Po co stosuje się scheduler learning rate?",
+            "a": "Pozwala zmniejszać krok, gdy trening przestaje się poprawiać. W OMR użyto ReduceLROnPlateau, który reaguje na brak poprawy monitorowanej metryki."
+      },
+      {
+            "id": "bank-046",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 46,
+            "q": "Co to jest epoch, batch i optimizer step?",
+            "a": "Epoch to przejście przez zbiór treningowy, batch to grupa próbek przetwarzanych razem, a optimizer step to pojedyncza aktualizacja wag. Ta sama liczba epok nie gwarantuje tej samej liczby kroków, jeśli zbiory mają różną wielkość."
+      },
+      {
+            "id": "bank-047",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 47,
+            "q": "Co to jest batch size i jak wpływa na trening?",
+            "a": "Określa liczbę próbek używanych do jednego gradientu. Większy batch daje stabilniejszy gradient, ale wymaga więcej pamięci. W OMR batch 1 wynikał z dużych obrazów i wielu obiektów."
+      },
+      {
+            "id": "bank-048",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 48,
+            "q": "Co to jest overfitting?",
+            "a": "Model uczy się szczegółów danych treningowych, które nie generalizują. Objawia się poprawą treningu przy pogarszaniu lub stagnacji walidacji."
+      },
+      {
+            "id": "bank-049",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 49,
+            "q": "Jak ograniczać overfitting?",
+            "a": "Większa liczba danych, augmentacja, weight decay, dropout, early stopping, prostszy model, transfer learning i poprawny podział danych."
+      },
+      {
+            "id": "bank-050",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 50,
+            "q": "Co to jest underfitting?",
+            "a": "Model jest zbyt prosty, za krótko trenowany lub źle optymalizowany i nie osiąga dobrego wyniku nawet na danych treningowych."
+      },
+      {
+            "id": "bank-051",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 51,
+            "q": "Co to jest early stopping?",
+            "a": "Zatrzymanie treningu po określonej liczbie epok bez wystarczającej poprawy walidacji. Ogranicza przeuczenie i koszt, ale zależy od jakości zbioru walidacyjnego."
+      },
+      {
+            "id": "bank-052",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 52,
+            "q": "Co to jest dropout?",
+            "a": "Podczas treningu losowo zeruje część aktywacji. Zmusza model do rozproszenia informacji i działa jak regularyzacja. W inferencji dropout jest wyłączony."
+      },
+      {
+            "id": "bank-053",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 53,
+            "q": "Co to jest weight decay?",
+            "a": "Kara za duże wartości wag, która ogranicza złożoność rozwiązania. W AdamW jest stosowana jako bezpośrednie zmniejszanie parametrów."
+      },
+      {
+            "id": "bank-054",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 54,
+            "q": "Co to jest gradient clipping?",
+            "a": "Ograniczenie normy lub wartości gradientu. Chroni przed eksplozją gradientów, szczególnie w modelach sekwencyjnych i niestabilnych treningach."
+      },
+      {
+            "id": "bank-055",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 55,
+            "q": "Co to jest mixed precision?",
+            "a": "Używanie niższej precyzji, np. FP16, tam gdzie jest bezpieczna, oraz FP32 dla wrażliwych operacji. Zmniejsza pamięć i przyspiesza trening na GPU."
+      },
+      {
+            "id": "bank-056",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 56,
+            "q": "Czym jest seed losowy?",
+            "a": "Wartość inicjalizująca generatory liczb losowych. Pomaga odtwarzać eksperyment, ale jeden seed nie opisuje zmienności metody."
+      },
+      {
+            "id": "bank-057",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 57,
+            "q": "Co to jest hiperparametr?",
+            "a": "Parametr ustalany poza procesem uczenia, np. learning rate, batch size, liczba warstw, próg confidence, rozmiar kafla lub siła augmentacji."
+      },
+      {
+            "id": "bank-058",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 58,
+            "q": "Czym różni się parametr modelu od hiperparametru?",
+            "a": "Parametry, np. wagi sieci, są uczone przez optymalizację. Hiperparametry są wybierane przez badacza lub zewnętrzny algorytm strojenia."
+      },
+      {
+            "id": "bank-059",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 59,
+            "q": "Co to jest transfer learning?",
+            "a": "Wykorzystanie modelu lub encodera wytrenowanego wcześniej na innym zadaniu. Może przyspieszyć uczenie i poprawić generalizację, ale domena źródłowa może być niedopasowana."
+      },
+      {
+            "id": "bank-060",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 60,
+            "q": "Co to jest fine-tuning?",
+            "a": "Dalszy trening wstępnie wyuczonego modelu na nowym zbiorze lub rozkładzie danych, zwykle z mniejszym learning rate."
+      },
+      {
+            "id": "bank-061",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 61,
+            "q": "Co to jest ablation study?",
+            "a": "Kontrolowane usunięcie albo zmiana składnika systemu w celu określenia jego wpływu. W pracy przykładem jest porównanie źródła F: score, blend i predicted. 0"
+      },
+      {
+            "id": "bank-062",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 62,
+            "q": "Co to jest baseline?",
+            "a": "Punkt odniesienia, który powinien być poprawnie zaimplementowany i oceniany na tych samych danych oraz metrykach. Pozwala stwierdzić, czy złożone rozwiązanie rzeczywiście coś poprawia."
+      },
+      {
+            "id": "bank-063",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 63,
+            "q": "Co to jest data leakage?",
+            "a": "Przepływ informacji z walidacji lub testu do treningu albo wyboru modelu. Powoduje optymistyczny wynik, który może nie powtórzyć się na nowych danych."
+      },
+      {
+            "id": "bank-064",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 64,
+            "q": "Co to jest domain shift?",
+            "a": "Różnica rozkładu pomiędzy danymi treningowymi i docelowymi, np. czyste syntetyczne partytury kontra zdjęcia z telefonu."
+      },
+      {
+            "id": "bank-065",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 65,
+            "q": "Co to jest class imbalance?",
+            "a": "Duża różnica liczby przykładów klas. Model może ignorować rzadkie klasy lub faworyzować tło. Rozwiązania obejmują ważenie strat, sampling, focal loss i augmentację."
+      },
+      {
+            "id": "bank-066",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 66,
+            "q": "Dlaczego dokładność nie zawsze jest dobrą metryką?",
+            "a": "Przy niezbalansowanych klasach można osiągnąć wysoką accuracy, ignorując klasę rzadką. W segmentacji tekstu prawie wszystkie piksele są tłem."
+      },
+      {
+            "id": "bank-067",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 67,
+            "q": "Co oznacza istotność statystyczna?",
+            "a": "Ocena, czy obserwowana różnica jest mało prawdopodobna przy założeniu braku realnego efektu. W uczeniu maszynowym należy dodatkowo raportować rozmiar efektu, wariancję i praktyczne znaczenie różnicy."
+      },
+      {
+            "id": "bank-068",
+            "topic": "Bank 37+: uczenie maszynowe",
+            "sourceQuestion": 68,
+            "q": "Dlaczego warto raportować średnią i odchylenie po wielu seedach?",
+            "a": "Pokazują typowy wynik oraz stabilność metody. Pojedynczy najlepszy run może być szczęśliwym przypadkiem. 4. Pytania ogólne: przetwarzanie obrazu i lokalizacja tekstu"
+      },
+      {
+            "id": "bank-069",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 69,
+            "q": "Co to jest obraz rastrowy?",
+            "a": "Macierz pikseli. Każdy piksel przechowuje wartość jasności lub kanały barw. Rozdzielczość określa liczbę pikseli, a nie fizyczny rozmiar dokumentu."
+      },
+      {
+            "id": "bank-070",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 70,
+            "q": "Co to jest binaryzacja obrazu?",
+            "a": "Przekształcenie obrazu do dwóch klas, zwykle atrament i tło. Może być globalna lub adaptacyjna. Jest użyteczna w morfologii i analizie pięciolinii."
+      },
+      {
+            "id": "bank-071",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 71,
+            "q": "Czym różni się progowanie globalne od adaptacyjnego?",
+            "a": "Globalne używa jednego progu dla całego obrazu. Adaptacyjne wyznacza próg lokalnie, więc lepiej radzi sobie z nierównym oświetleniem, ale może wzmacniać lokalny szum."
+      },
+      {
+            "id": "bank-072",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 72,
+            "q": "Co to jest erozja?",
+            "a": "Operacja morfologiczna zmniejszająca jasny obszar maski. Może usuwać drobny szum i rozdzielać połączone elementy, ale może zniszczyć cienkie znaki."
+      },
+      {
+            "id": "bank-073",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 73,
+            "q": "Co to jest dylatacja?",
+            "a": "Powiększa jasny obszar maski. Łączy bliskie fragmenty i wzmacnia cienkie elementy, ale może scalać osobne obiekty."
+      },
+      {
+            "id": "bank-074",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 74,
+            "q": "Czym są opening i closing?",
+            "a": "Opening to erozja, a potem dylatacja: usuwa małe jasne elementy. Closing to dylatacja, a potem erozja: zamyka przerwy i łączy bliskie fragmenty."
+      },
+      {
+            "id": "bank-075",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 75,
+            "q": "Co to jest kontur?",
+            "a": "Granica spójnego obszaru maski. Analiza konturów pozwala obliczyć pole i bounding box regionu."
+      },
+      {
+            "id": "bank-076",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 76,
+            "q": "Co to jest connected component?",
+            "a": "Maksymalny zbiór sąsiadujących pikseli tej samej klasy. Jest alternatywnym sposobem wyznaczania regionów po segmentacji."
+      },
+      {
+            "id": "bank-077",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 77,
+            "q": "Czym różni się segmentacja semantyczna od detekcji?",
+            "a": "Segmentacja przewiduje klasę każdego piksela, a detekcja zwraca prostokąty i klasy obiektów. Segmentacja daje dokładniejszy kształt, detekcja prostsze instancje."
+      },
+      {
+            "id": "bank-078",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 78,
+            "q": "Czym różni się segmentacja semantyczna od instancyjnej?",
+            "a": "Semantyczna łączy wszystkie obiekty tej samej klasy w jedną maskę klasową. Instancyjna rozróżnia osobne obiekty."
+      },
+      {
+            "id": "bank-079",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 79,
+            "q": "Jak działa konwolucja?",
+            "a": "Mały filtr przesuwa się po obrazie i oblicza ważoną sumę lokalnego sąsiedztwa. Uczone filtry wykrywają krawędzie, tekstury i bardziej złożone wzorce."
+      },
+      {
+            "id": "bank-080",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 80,
+            "q": "Co to jest kernel konwolucyjny?",
+            "a": "Macierz uczonych wag stosowana lokalnie do obrazu lub mapy cech. Rozmiar kernela wpływa na lokalny kontekst i koszt."
+      },
+      {
+            "id": "bank-081",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 81,
+            "q": "Co to jest padding?",
+            "a": "Dodanie wartości wokół obrazu przed konwolucją. Pozwala kontrolować rozmiar wyjścia i zachować informacje przy krawędziach."
+      },
+      {
+            "id": "bank-082",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 82,
+            "q": "Co to jest stride konwolucji?",
+            "a": "Krok przesuwania filtra. Stride większy od 1 zmniejsza rozdzielczość mapy cech."
+      },
+      {
+            "id": "bank-083",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 83,
+            "q": "Co to jest pooling?",
+            "a": "Operacja zmniejszająca rozdzielczość, np. max pooling wybiera maksimum w oknie. Zwiększa pole recepcyjne, ale traci szczegóły przestrzenne."
+      },
+      {
+            "id": "bank-084",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 84,
+            "q": "Co to jest pole recepcyjne?",
+            "a": "Obszar obrazu wejściowego, który może wpływać na daną aktywację. Głębsze warstwy mają większe pole recepcyjne i widzą szerszy kontekst."
+      },
+      {
+            "id": "bank-085",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 85,
+            "q": "Jak działa U-Net?",
+            "a": "Encoder kompresuje obraz, decoder odtwarza rozdzielczość, a skip connections przekazują drobne szczegóły z odpowiadających poziomów encodera."
+      },
+      {
+            "id": "bank-086",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 86,
+            "q": "Po co są skip connections w U-Net?",
+            "a": "Downsampling usuwa dokładną informację o położeniu. Skip connections dostarczają decoderowi cechy wysokiej rozdzielczości potrzebne do odtworzenia granic i cienkich liter."
+      },
+      {
+            "id": "bank-087",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 87,
+            "q": "Jak działa Attention U-Net?",
+            "a": "Attention gates obliczają mapę wag dla cech przekazywanych skip connection. Wzmacniają obszary przydatne decoderowi i tłumią część tła."
+      },
+      {
+            "id": "bank-088",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 88,
+            "q": "Czym jest U-Net++?",
+            "a": "Wariant U-Net z zagnieżdżonymi i gęstymi połączeniami pomiędzy encoderem i decoderem, mający zmniejszyć różnicę semantyczną cech."
+      },
+      {
+            "id": "bank-089",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 89,
+            "q": "Jak działa DeepLabV3+?",
+            "a": "Wykorzystuje atrous convolutions do zbierania kontekstu na kilku skalach oraz decoder poprawiający granice segmentacji."
+      },
+      {
+            "id": "bank-090",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 90,
+            "q": "Co to jest atrous/dilated convolution?",
+            "a": "Konwolucja z odstępami pomiędzy elementami kernela. Zwiększa pole recepcyjne bez proporcjonalnego zwiększenia liczby parametrów i bez dodatkowego downsamplingu."
+      },
+      {
+            "id": "bank-091",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 91,
+            "q": "Co to jest FPN?",
+            "a": "Feature Pyramid Network łączy głębokie cechy semantyczne z płytszymi cechami wysokiej rozdzielczości, tworząc reprezentacje dla kilku skal obiektów."
+      },
+      {
+            "id": "bank-092",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 92,
+            "q": "Co to jest BatchNorm?",
+            "a": "Normalizuje aktywacje przy użyciu statystyk batcha, a następnie stosuje uczoną skalę i przesunięcie. Przy bardzo małym batchu statystyki mogą być niestabilne."
+      },
+      {
+            "id": "bank-093",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 93,
+            "q": "Co to jest GroupNorm?",
+            "a": "Dzieli kanały pojedynczej próbki na grupy i normalizuje każdą grupę. Nie zależy od liczby obrazów w batchu, dlatego jest użyteczna przy batch size 1."
+      },
+      {
+            "id": "bank-094",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 94,
+            "q": "Czym jest funkcja ReLU?",
+            "a": "ReLU(x) = max(0, x). Wprowadza nieliniowość i jest tania obliczeniowo, ale neurony mogą pozostać nieaktywne dla stale ujemnych wejść."
+      },
+      {
+            "id": "bank-095",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 95,
+            "q": "Czym jest SiLU?",
+            "a": "SiLU(x) = xσ(x). Jest gładką aktywacją, która zachowuje niewielkie wartości ujemne i była użyta we własnym backbone OMR."
+      },
+      {
+            "id": "bank-096",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 96,
+            "q": "Dlaczego BCE i Dice Loss można łączyć?",
+            "a": "BCE daje stabilny błąd pikselowy, a Dice bezpośrednio optymalizuje nakładanie się masek i ogranicza wpływ dominującego tła."
+      },
+      {
+            "id": "bank-097",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 97,
+            "q": "Co robi parametr pos_weight w BCE?",
+            "a": "Zwiększa koszt błędów klasy pozytywnej. W lokalizacji tekstu pomaga, ponieważ pikseli tekstu jest znacznie mniej niż tła."
+      },
+      {
+            "id": "bank-098",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 98,
+            "q": "Jaka jest różnica między IoU i Dice?",
+            "a": "Obie mierzą nakładanie. IoU dzieli przecięcie przez sumę zbiorów, a Dice podwójne przecięcie przez sumę pól. Dice jest monotonicznie związany z IoU."
+      },
+      {
+            "id": "bank-099",
+            "topic": "Bank 37+: obraz i lokalizacja tekstu",
+            "sourceQuestion": 99,
+            "q": "Jak dobiera się próg maski?",
+            "a": "Na zbiorze walidacyjnym, analizując kompromis precision–recall i wpływ na dalszy pipeline. Zbyt niski próg generuje false positives, zbyt wysoki pomija tekst. 5. Pytania ogólne: OCR"
+      },
+      {
+            "id": "bank-100",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 100,
+            "q": "Czym jest OCR?",
+            "a": "Optical Character Recognition to przekształcanie obrazu tekstu do sekwencji znaków. Może obejmować detekcję tekstu, korekcję regionów i rozpoznawanie."
+      },
+      {
+            "id": "bank-101",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 101,
+            "q": "Jak działa CRNN?",
+            "a": "CNN tworzy mapę cech obrazu, wymiar poziomy jest traktowany jako sekwencja, BiLSTM modeluje kontekst, a głowica CTC przewiduje znaki bez jawnego dopasowania ich do pikseli."
+      },
+      {
+            "id": "bank-102",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 102,
+            "q": "Dlaczego wysokość obrazu jest kompresowana, a szerokość zachowywana?",
+            "a": "Tekst jest czytany od lewej do prawej. Wysokość zawiera kształt znaków, który można skompresować do cech, natomiast szerokość reprezentuje kolejność znaków."
+      },
+      {
+            "id": "bank-103",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 103,
+            "q": "Co to jest RNN?",
+            "a": "Sieć przetwarzająca sekwencję z ukrytym stanem przenoszącym informację pomiędzy krokami. Klasyczne RNN mają problem z długimi zależnościami i zanikaniem gradientu."
+      },
+      {
+            "id": "bank-104",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 104,
+            "q": "Jak działa LSTM?",
+            "a": "Używa stanu komórki oraz bramek wejścia, zapominania i wyjścia, aby kontrolować przepływ informacji. Ułatwia modelowanie dłuższych zależności."
+      },
+      {
+            "id": "bank-105",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 105,
+            "q": "Co oznacza BiLSTM?",
+            "a": "Dwa LSTM przetwarzają sekwencję w przeciwnych kierunkach. Ich reprezentacje są łączone, dzięki czemu znak korzysta z kontekstu po obu stronach."
+      },
+      {
+            "id": "bank-106",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 106,
+            "q": "Co to jest residual block w ResNet?",
+            "a": "Blok uczący poprawkę F (x), którą dodaje się do wejścia. Skrót pomaga propagacji gradientu i uczeniu głębszych modeli."
+      },
+      {
+            "id": "bank-107",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 107,
+            "q": "Jak działa CTC?",
+            "a": "Model przewiduje dłuższą sekwencję etykiet i blanków. CTC sumuje prawdopodobieństwa monotonicznych ścieżek, które po usunięciu blanków i scaleniu powtórzeń dają tekst docelowy."
+      },
+      {
+            "id": "bank-108",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 108,
+            "q": "Po co CTC używa blank tokenu?",
+            "a": "Oznacza brak znaku w danym kroku i pozwala rozdzielać powtarzające się litery, które inaczej zostałyby scalone."
+      },
+      {
+            "id": "bank-109",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 109,
+            "q": "Jakie założenie ma CTC?",
+            "a": "Kolejność etykiet jest monotoniczna względem wejścia. CTC nie modeluje swobodnych przestawień znaków."
+      },
+      {
+            "id": "bank-110",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 110,
+            "q": "Czym różni się greedy decoding od beam search?",
+            "a": "Greedy wybiera najlepszą klasę w każdym kroku. Beam search utrzymuje kilka hipotez pełnej sekwencji i może łączyć wynik z modelem językowym."
+      },
+      {
+            "id": "bank-111",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 111,
+            "q": "Dlaczego beam search może być lepszy?",
+            "a": "Najbardziej prawdopodobna lokalna decyzja nie musi tworzyć najbardziej prawdopodobnego pełnego napisu. Beam search uwzględnia alternatywne ścieżki."
+      },
+      {
+            "id": "bank-112",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 112,
+            "q": "Co to jest charset?",
+            "a": "Zbiór znaków rozpoznawanych przez model. Liczba klas CTC to liczba znaków plus blank. Zmiana charsetu bez zgodnego checkpointu powoduje niezgodność głowicy modelu."
+      },
+      {
+            "id": "bank-113",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 113,
+            "q": "Dlaczego myślnik jest ważny w OCR partytury?",
+            "a": "Może oznaczać podział słowa na sylaby przypisane kolejnym nutom. Jego utrata zmienia synchronizację tekstu i melodii."
+      },
+      {
+            "id": "bank-114",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 114,
+            "q": "Co to jest edit distance?",
+            "a": "Minimalna liczba podstawień, usunięć i wstawień potrzebnych do zmiany jednego napisu w drugi. Jest podstawą CER i WER."
+      },
+      {
+            "id": "bank-115",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 115,
+            "q": "Jak oblicza się CER?",
+            "a": "S + D + I CER =, N gdzie S, D, I to podstawienia, usunięcia i wstawienia, a N długość referencji."
+      },
+      {
+            "id": "bank-116",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 116,
+            "q": "Czym różni się CER od WER?",
+            "a": "CER liczy operacje na znakach, a WER na słowach. CER jest dokładniejszy dla krótkich cropów i sylab, WER lepiej opisuje pełne wypowiedzi."
+      },
+      {
+            "id": "bank-117",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 117,
+            "q": "Co to jest exact match accuracy?",
+            "a": "Odsetek próbek, dla których cały napis jest identyczny z referencją. Jeden błędny znak powoduje błąd całej próbki."
+      },
+      {
+            "id": "bank-118",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 118,
+            "q": "Dlaczego CER może być niski, a exact match znacznie niższy?",
+            "a": "Wiele napisów może mieć tylko jeden drobny błąd. CER uzna go za małą różnicę, ale exact match odrzuci całą próbkę."
+      },
+      {
+            "id": "bank-119",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 119,
+            "q": "Czy CER może przekroczyć 100%?",
+            "a": "Tak, jeżeli model wygeneruje dużo dodatkowych znaków i liczba wstawień przekroczy długość referencji."
+      },
+      {
+            "id": "bank-120",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 120,
+            "q": "Jak działa Transformer w OCR?",
+            "a": "Self-attention modeluje zależności pomiędzy wszystkimi pozycjami cech obrazu. Kodowanie pozycyjne informuje o kolejności, a głowica może być CTC lub autoregresyjna."
+      },
+      {
+            "id": "bank-121",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 121,
+            "q": "Dlaczego Transformer potrzebuje kodowania pozycyjnego?",
+            "a": "Self-attention bez dodatkowej informacji jest niezmienniczy na permutację pozycji i nie zna naturalnej kolejności sekwencji."
+      },
+      {
+            "id": "bank-122",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 122,
+            "q": "Jak działa TrOCR?",
+            "a": "Encoder obrazu tworzy reprezentację wizualną, a autoregresyjny Transformer decoder generuje tekst token po tokenie, warunkując kolejny token na poprzednich."
+      },
+      {
+            "id": "bank-123",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 123,
+            "q": "Czym TrOCR różni się od modelu Transformer-CTC?",
+            "a": "TrOCR używa autoregresyjnego dekodera i jawnie modeluje zależności między wygenerowanymi tokenami. Transformer-CTC przewiduje etykiety równolegle nad osią cech i używa redukcji CTC."
+      },
+      {
+            "id": "bank-124",
+            "topic": "Bank 37+: OCR",
+            "sourceQuestion": 124,
+            "q": "Jak poprawić OCR tekstu wokalnego?",
+            "a": "Fine-tuning na partyturach, lepsze cropy, zachowanie pełnych wierszy, beam search, model językowy, słownik i metryki oceniające sylabizację oraz zgodność z liczbą nut. 6. Pytania ogólne: OMR i detekcja obiektów"
+      },
+      {
+            "id": "bank-125",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 125,
+            "q": "Czym OMR różni się od OCR?",
+            "a": "OMR odtwarza strukturę muzyczną, w której znaczenie symbolu zależy od położenia i relacji. OCR zwykle odczytuje liniową sekwencję znaków."
+      },
+      {
+            "id": "bank-126",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 126,
+            "q": "Dlaczego samo wykrycie notehead nie daje jeszcze nuty?",
+            "a": "Do ustalenia wysokości potrzebne są pięciolinia, klucz i znaki chromatyczne, a do czasu trwania stem, beam, flag, kropka i kontekst rytmiczny."
+      },
+      {
+            "id": "bank-127",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 127,
+            "q": "Czym jest DeepScoresV2?",
+            "a": "Duży syntetyczny zbiór drukowanych partytur do detekcji obiektów muzycznych, zawierający 136 klas, axis-aligned i oriented bounding boxes oraz bardzo wiele małych obiektów."
+      },
+      {
+            "id": "bank-128",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 128,
+            "q": "Jakie są zalety syntetycznych danych OMR?",
+            "a": "Duża skala, precyzyjne i tanie adnotacje, kontrola klas i możliwość automatycznego generowania wielu wariantów."
+      },
+      {
+            "id": "bank-129",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 129,
+            "q": "Jakie są wady syntetycznych danych?",
+            "a": "Brak części cech rzeczywistych zdjęć i skanów, inny rozkład fontów, szumu, układów stron i artefaktów. Model może nauczyć się cech generatora."
+      },
+      {
+            "id": "bank-130",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 130,
+            "q": "Czym różni się wariant dense od complete?",
+            "a": "Dense koncentruje się na gęsto anotowanych symbolach i był używany w głównych eksperymentach. Complete obejmuje szerszy wariant danych. Dokładne porównanie wymaga zachowania tego samego protokołu i budżetu."
+      },
+      {
+            "id": "bank-131",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 131,
+            "q": "Jak działa Faster R-CNN?",
+            "a": "Backbone tworzy mapę cech. RPN generuje proposals. RoIAlign pobiera cechy każdego regionu, a drugi etap klasyfikuje obiekt i doprecyzowuje bounding box."
+      },
+      {
+            "id": "bank-132",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 132,
+            "q": "Co to jest backbone detektora?",
+            "a": "Sieć przekształcająca obraz w mapy cech. Jej rozdzielczość, pole recepcyjne i jakość cech wpływają na zdolność wykrywania obiektów."
+      },
+      {
+            "id": "bank-133",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 133,
+            "q": "Co to jest RPN?",
+            "a": "Region Proposal Network przewiduje dla anchors prawdopodobieństwo obiektu i poprawkę boxa, tworząc listę regionów kandydackich dla drugiego etapu."
+      },
+      {
+            "id": "bank-134",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 134,
+            "q": "Co to jest anchor?",
+            "a": "Wstępny prostokąt o określonym rozmiarze i proporcji umieszczany w pozycji mapy cech. Model przewiduje, czy odpowiada obiektowi oraz jak go przesunąć i przeskalować."
+      },
+      {
+            "id": "bank-135",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 135,
+            "q": "Dlaczego w OMR potrzebne są mikro-kotwice?",
+            "a": "Wiele symboli ma tylko kilka pikseli po przeskalowaniu. Standardowe anchors z detekcji obrazów naturalnych byłyby zbyt duże."
+      },
+      {
+            "id": "bank-136",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 136,
+            "q": "Dlaczego potrzebne są ekstremalne aspect ratios?",
+            "a": "Stem i barline są cienkie i pionowe, beam oraz staff są długie i poziome, a zwykłe proporcje 0,5–2 nie opisują dobrze ich geometrii."
+      },
+      {
+            "id": "bank-137",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 137,
+            "q": "Jak anchors są przypisywane do ground truth podczas treningu?",
+            "a": "Na podstawie IoU. Kotwice o wysokim IoU stają się pozytywne, o niskim negatywne, a część pośrednich może być ignorowana."
+      },
+      {
+            "id": "bank-138",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 138,
+            "q": "Co to jest objectness?",
+            "a": "Prawdopodobieństwo, że region zawiera dowolny obiekt pierwszoplanowy, niezależnie od jego konkretnej klasy."
+      },
+      {
+            "id": "bank-139",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 139,
+            "q": "Co to jest bounding-box regression?",
+            "a": "Przewidywanie korekty położenia i rozmiaru wstępnego boxa, zwykle jako przesunięcia środka i logarytmiczne zmiany szerokości oraz wysokości."
+      },
+      {
+            "id": "bank-140",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 140,
+            "q": "Co to jest RoIAlign?",
+            "a": "Operacja pobierająca mapę cech o stałym rozmiarze z regionu o dowolnym rozmiarze, używając interpolacji bez brutalnego zaokrąglania współrzędnych."
+      },
+      {
+            "id": "bank-141",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 141,
+            "q": "Czym RoIAlign różni się od RoIPool?",
+            "a": "RoIPool kwantyzuje granice regionu, co powoduje błędy położenia. RoIAlign zachowuje współrzędne zmiennoprzecinkowe i interpoluje cechy."
+      },
+      {
+            "id": "bank-142",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 142,
+            "q": "Co to jest NMS?",
+            "a": "Non-Maximum Suppression usuwa nachodzące detekcje tej samej klasy, pozostawiając najwyżej ocenione boxy."
+      },
+      {
+            "id": "bank-143",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 143,
+            "q": "Jak próg NMS wpływa na wynik?",
+            "a": "Niski próg agresywnie usuwa boxy i może skasować bliskie prawdziwe obiekty. Wysoki próg pozostawia więcej duplikatów."
+      },
+      {
+            "id": "bank-144",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 144,
+            "q": "Co to jest confidence score?",
+            "a": "Ocena pewności predykcji. Nie musi być dobrze skalibrowanym prawdopodobieństwem. Próg confidence steruje kompromisem precision–recall."
+      },
+      {
+            "id": "bank-145",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 145,
+            "q": "Co to jest IoU?",
+            "a": "pole przecięcia IoU =. pole sumy Mierzy nakładanie przewidzianego i referencyjnego boxa."
+      },
+      {
+            "id": "bank-146",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 146,
+            "q": "Dlaczego IoU jest surowe dla małych obiektów?",
+            "a": "Przesunięcie o kilka pikseli jest dużą częścią małego boxa i może gwałtownie obniżyć IoU."
+      },
+      {
+            "id": "bank-147",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 147,
+            "q": "Co to jest precision w detekcji?",
+            "a": "Odsetek predykcji uznanych za prawdziwe: T P /(T P + F P )."
+      },
+      {
+            "id": "bank-148",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 148,
+            "q": "Co to jest recall w detekcji?",
+            "a": "Odsetek obiektów referencyjnych, które wykryto: T P /(T P + F N )."
+      },
+      {
+            "id": "bank-149",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 149,
+            "q": "Co to jest F1?",
+            "a": "Średnia harmoniczna precision i recall. Jest wysoka tylko wtedy, gdy oba wyniki są wysokie."
+      },
+      {
+            "id": "bank-150",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 150,
+            "q": "Co to jest krzywa precision–recall?",
+            "a": "Wykres precision względem recall przy zmianie progu confidence. Pokazuje kompromis pomiędzy fałszywymi predykcjami i pominięciami."
+      },
+      {
+            "id": "bank-151",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 151,
+            "q": "Co to jest AP?",
+            "a": "Average Precision to pole pod krzywą precision–recall dla jednej klasy i określonego progu IoU."
+      },
+      {
+            "id": "bank-152",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 152,
+            "q": "Czym różni się AP50 od AP75?",
+            "a": "AP50 wymaga IoU co najmniej 0,5, a AP75 co najmniej 0,75. AP75 silniej ocenia dokładność lokalizacji."
+      },
+      {
+            "id": "bank-153",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 153,
+            "q": "Co oznacza mAP w tej pracy?",
+            "a": "Średnią AP po klasach i progach IoU od 0,50 do 0,95 ze skokiem 0,05."
+      },
+      {
+            "id": "bank-154",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 154,
+            "q": "Dlaczego mAP może nie odpowiadać jakości muzycznej?",
+            "a": "Traktuje klasy według protokołu detekcyjnego, ale błędy różnych symboli mają różny wpływ. Pominięty clef lub notehead może być ważniejszy niż błąd nieużywanej artykulacji."
+      },
+      {
+            "id": "bank-155",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 155,
+            "q": "Co to jest macro-average?",
+            "a": "Średnia, w której każda klasa ma podobną wagę niezależnie od liczby instancji. Podkreśla wyniki klas rzadkich."
+      },
+      {
+            "id": "bank-156",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 156,
+            "q": "Co to jest micro-average?",
+            "a": "Agregacja wszystkich instancji przed liczeniem metryki. Jest zdominowana przez klasy częste."
+      },
+      {
+            "id": "bank-157",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 157,
+            "q": "Co to jest support klasy?",
+            "a": "Liczba referencyjnych instancji klasy. Wynik klasy z supportem 1 jest znacznie mniej stabilny niż wynik klasy z tysiącami obiektów."
+      },
+      {
+            "id": "bank-158",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 158,
+            "q": "Co to jest output stride backbone’u?",
+            "a": "Stosunek przesunięcia na obrazie do przesunięcia o jedną komórkę mapy cech. Stride 8 oznacza mapę dwukrotnie gęstszą w każdym wymiarze niż stride 16."
+      },
+      {
+            "id": "bank-159",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 159,
+            "q": "Dlaczego mniejszy stride pomaga małym obiektom?",
+            "a": "Zachowuje więcej szczegółów przestrzennych i daje więcej pozycji cech dla małego symbolu. Kosztem jest większa pamięć i liczba obliczeń."
+      },
+      {
+            "id": "bank-160",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 160,
+            "q": "Dlaczego mniejszy stride może obniżyć recall po degradacji?",
+            "a": "Wyższa rozdzielczość może być bardziej wrażliwa na lokalny szum, a zmiana cech i confidence może prowadzić do bardziej konserwatywnych predykcji. Efekt nie zależy wyłącznie od detalu."
+      },
+      {
+            "id": "bank-161",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 161,
+            "q": "Dlaczego stosuje się kafelkowanie stron?",
+            "a": "Pozwala zachować wysoką rozdzielczość symboli bez przetwarzania całej ogromnej strony naraz."
+      },
+      {
+            "id": "bank-162",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 162,
+            "q": "Co się dzieje z symbolem przeciętym granicą kafla?",
+            "a": "Może być częściowo widoczny lub wygenerować słabą predykcję. Overlap daje szansę, że w sąsiednim kaflu będzie widoczny w całości."
+      },
+      {
+            "id": "bank-163",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 163,
+            "q": "Dlaczego za duży kafel może pogorszyć wynik?",
+            "a": "Po dopasowaniu do rozmiaru wejściowego symbole zajmują mniej pikseli, więc model traci szczegóły. Zysk kontekstu nie zawsze to rekompensuje."
+      },
+      {
+            "id": "bank-164",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 164,
+            "q": "Dlaczego za mały kafel może pogorszyć wynik?",
+            "a": "Traci szerszy kontekst i częściej przecina długie symbole lub całe systemy."
+      },
+      {
+            "id": "bank-165",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 165,
+            "q": "Co to jest oriented bounding box?",
+            "a": "Ramka lub wielokąt dopasowany do orientacji obiektu, a nie osi obrazu. Lepszy dla ukośnych, cienkich i wydłużonych symboli."
+      },
+      {
+            "id": "bank-166",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 166,
+            "q": "Dlaczego oriented box jest przydatny dla slur i beam?",
+            "a": "Axis-aligned box zawiera dużo tła i sąsiednich symboli. Zorientowany wielokąt lepiej opisuje rzeczywistą geometrię."
+      },
+      {
+            "id": "bank-167",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 167,
+            "q": "Co to jest Smooth L1 Loss?",
+            "a": "Strata zachowująca się kwadratowo dla małych błędów i liniowo dla dużych. Jest mniej wrażliwa na outliery niż MSE i często używana w regresji boxów."
+      },
+      {
+            "id": "bank-168",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 168,
+            "q": "Jak działają augmentacje geometryczne?",
+            "a": "Zmieniają położenie lub kształt obrazu, np. przez skalę, obrót i perspektywę. Te same transformacje muszą zostać zastosowane do adnotacji."
+      },
+      {
+            "id": "bank-169",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 169,
+            "q": "Jak działają augmentacje fotometryczne?",
+            "a": "Zmieniają wygląd bez zmiany geometrii, np. jasność, kontrast, gamma, szum, blur, JPEG i nierówne oświetlenie."
+      },
+      {
+            "id": "bank-170",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 170,
+            "q": "Co symulują ink spread i ink thinning?",
+            "a": "Rozlewanie i zanikanie atramentu, grubość druku oraz artefakty skanu. Są realizowane operacjami podobnymi do filtrów minimum i maksimum."
+      },
+      {
+            "id": "bank-171",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 171,
+            "q": "Dlaczego augmentacje mogą pogorszyć clean accuracy?",
+            "a": "Model przeznacza część pojemności na szerszy rozkład i widzi trudniejsze próbki. Zyskuje odporność kosztem idealnego dopasowania do czystej domeny."
+      },
+      {
+            "id": "bank-172",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 172,
+            "q": "Czym Faster R-CNN różni się od YOLO?",
+            "a": "Faster R-CNN jest dwustopniowy i zwykle dokładniejszy kosztem szybkości. YOLO jest jednostopniowy, szybki i prostszy w inferencji."
+      },
+      {
+            "id": "bank-173",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 173,
+            "q": "Czym jest RetinaNet?",
+            "a": "Jednostopniowy detektor wykorzystujący focal loss do ograniczenia dominacji łatwych negatywnych przykładów."
+      },
+      {
+            "id": "bank-174",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 174,
+            "q": "Czym jest FCOS?",
+            "a": "Anchor-free detector, który przewiduje klasę i odległości do granic boxa dla pozycji mapy cech."
+      },
+      {
+            "id": "bank-175",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 175,
+            "q": "Czym jest DETR?",
+            "a": "Detektor oparty na Transformerze i set prediction. Używa stałego zbioru zapytań obiektowych i dopasowania bipartite, ograniczając potrzebę anchors i NMS."
+      },
+      {
+            "id": "bank-176",
+            "topic": "Bank 37+: OMR i detekcja",
+            "sourceQuestion": 176,
+            "q": "Dlaczego klasyczny DETR może mieć problem z małymi obiektami?",
+            "a": "Ma wolną zbieżność i ograniczoną rozdzielczość attention nad mapą cech. Deformable DETR próbkuje wieloskalowe punkty i jest lepszym wariantem dla małych obiektów. 7. Pytania ogólne: Score IR i teoria muzyki"
+      },
+      {
+            "id": "bank-177",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 177,
+            "q": "Co to jest pięciolinia?",
+            "a": "Zespół pięciu poziomych linii i czterech pól określających pozycję wysokości dźwięków. Znaczenie pozycji zależy od klucza."
+      },
+      {
+            "id": "bank-178",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 178,
+            "q": "Co to jest klucz muzyczny?",
+            "a": "Symbol przypisujący konkretną wysokość do linii pięciolinii. Klucz wiolinowy, basowy i C zmieniają mapowanie pozycji na nuty."
+      },
+      {
+            "id": "bank-179",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 179,
+            "q": "Co to jest linia dodana?",
+            "a": "Krótka linia rozszerzająca pięciolinię dla dźwięków powyżej lub poniżej jej podstawowego zakresu."
+      },
+      {
+            "id": "bank-180",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 180,
+            "q": "Jak pozycja nuty jest zamieniana na wysokość?",
+            "a": "Szacuje się krok względem linii i pól, uwzględnia klucz, linie dodane, znaki przykluczowe i lokalne znaki chromatyczne, a następnie wyznacza nazwę nuty, oktawę i MIDI."
+      },
+      {
+            "id": "bank-181",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 181,
+            "q": "Co to jest numer MIDI nuty?",
+            "a": "Liczba całkowita reprezentująca wysokość w stroju równomiernie temperowanym. A4 ma numer 69 i częstotliwość 440 Hz."
+      },
+      {
+            "id": "bank-182",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 182,
+            "q": "Jak przeliczyć MIDI na częstotliwość?",
+            "a": "f = 440 · 2(m−69)/12. Każde zwiększenie MIDI o 12 podwaja częstotliwość."
+      },
+      {
+            "id": "bank-183",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 183,
+            "q": "Co to jest znak chromatyczny?",
+            "a": "Krzyżyk, bemol lub kasownik zmieniający wysokość nuty. Może działać lokalnie w takcie lub być częścią znaku przykluczowego."
+      },
+      {
+            "id": "bank-184",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 184,
+            "q": "Co to jest znak przykluczowy?",
+            "a": "Zestaw krzyżyków lub bemoli przy kluczu określający domyślne modyfikacje stopni w danej tonacji."
+      },
+      {
+            "id": "bank-185",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 185,
+            "q": "Co to jest metrum?",
+            "a": "Organizacja pulsu w takty. Licznik określa liczbę jednostek, a mianownik wartość jednostki, np. 4/4 oznacza cztery ćwierćnuty."
+      },
+      {
+            "id": "bank-186",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 186,
+            "q": "Co to jest tempo BPM?",
+            "a": "Liczba uderzeń na minutę. Przy 120 BPM ćwierćnuta, jeżeli jest jednostką pulsu, trwa 0,5 sekundy."
+      },
+      {
+            "id": "bank-187",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 187,
+            "q": "Jak przeliczyć beat na sekundy?",
+            "a": "Dla ćwierćnutowego pulsu czas jednego beatu wynosi 60 / BPM sekund. Czas zdarzenia to liczba beatów pomnożona przez czas jednego beatu."
+      },
+      {
+            "id": "bank-188",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 188,
+            "q": "Od czego zależy długość nuty?",
+            "a": "Od typu notehead, obecności stem, flag i beams, augmentation dot, tupletu, tie oraz kontekstu metrum."
+      },
+      {
+            "id": "bank-189",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 189,
+            "q": "Jak działa augmentation dot?",
+            "a": "Dodaje połowę wartości podstawowej. Ćwierćnuta z kropką trwa 1 + 0, 5 = 1, 5 ćwierćnuty."
+      },
+      {
+            "id": "bank-190",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 190,
+            "q": "Jak belki określają rytm?",
+            "a": "Jedna belka zwykle odpowiada ósemkom, dwie szesnastkom itd. Trzeba poprawnie przypisać belkę do laseczek i główek nut."
+      },
+      {
+            "id": "bank-191",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 191,
+            "q": "Czym tie różni się od slur?",
+            "a": "Tie łączy nuty tej samej wysokości i sumuje ich czas. Slur oznacza frazowanie lub legato i może łączyć różne wysokości."
+      },
+      {
+            "id": "bank-192",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 192,
+            "q": "Co to jest melisma?",
+            "a": "Śpiewanie jednej sylaby na kilku nutach. W danych SVS kolejne nuty mogą kontynuować ten sam tekst lub fonem samogłoskowy."
+      },
+      {
+            "id": "bank-193",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 193,
+            "q": "Co to jest takt przedtaktowy?",
+            "a": "Niepełny takt na początku utworu, którego czas często uzupełnia ostatni takt. Nie powinien być automatycznie dopełniany do pełnego metrum bez rozpoznania kontekstu."
+      },
+      {
+            "id": "bank-194",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 194,
+            "q": "Co to jest polifonia?",
+            "a": "Jednoczesne prowadzenie kilku niezależnych głosów. Utrudnia przypisanie nut do osi czasu, tekstu i poszczególnych partii."
+      },
+      {
+            "id": "bank-195",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 195,
+            "q": "Co to jest akord?",
+            "a": "Kilka wysokości rozpoczynających się w przybliżeniu jednocześnie. W wokalnym SVS trzeba wybrać pojedynczy głos lub generować kilka ścieżek."
+      },
+      {
+            "id": "bank-196",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 196,
+            "q": "Po co są kreski taktowe?",
+            "a": "Wyznaczają granice taktów i pomagają grupować zdarzenia zgodnie z metrum. Mogą być mylone z laseczkami."
+      },
+      {
+            "id": "bank-197",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 197,
+            "q": "Co to jest synthetic rest?",
+            "a": "Pauza dodana przez warstwę naprawczą, aby uzupełnić brakujący czas w takcie. Musi być jawnie oznaczona jako inferencja, a nie detekcja z obrazu."
+      },
+      {
+            "id": "bank-198",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 198,
+            "q": "Dlaczego nadmiarowego czasu w takcie nie należy dowolnie usuwać?",
+            "a": "Nie wiadomo, która nuta jest błędna. Automatyczne usunięcie może zniszczyć poprawną muzykę. Bezpieczniej zapisać ostrzeżenie lub zaproponować ręczną korektę."
+      },
+      {
+            "id": "bank-199",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 199,
+            "q": "Co to jest dynamic programming w dopasowaniu tekstu?",
+            "a": "Metoda znajdująca globalnie najtańszą sekwencję przypisań tokenów do nut, uwzględniając koszty dopasowań, pominięć, pauz i melism."
+      },
+      {
+            "id": "bank-200",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 200,
+            "q": "Dlaczego proste przypisanie najbliższego tekstu do nuty może zawieść?",
+            "a": "Tekst może być przesunięty, jedna sylaba może obejmować wiele nut, występują pauzy, kilka zwrotek i błędy OCR. Lokalnie najbliższe przypisanie nie musi być globalnie spójne."
+      },
+      {
+            "id": "bank-201",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 201,
+            "q": "Co to jest MusicXML?",
+            "a": "Strukturalny format wymiany zapisu muzycznego opisujący nuty, rytm, takty, głosy, tekst i oznaczenia wykonawcze. Jest bogatszy semantycznie niż MIDI."
+      },
+      {
+            "id": "bank-202",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 202,
+            "q": "Co to jest MIDI?",
+            "a": "Format zdarzeń sterujących: wysokość, początek, koniec, velocity i instrument. Nie przechowuje pełnego wyglądu partytury ani naturalnego audio."
+      },
+      {
+            "id": "bank-203",
+            "topic": "Bank 37+: Score IR i teoria muzyki",
+            "sourceQuestion": 203,
+            "q": "Czym MusicXML różni się od MIDI?",
+            "a": "MusicXML reprezentuje notację i strukturę partytury. MIDI reprezentuje wykonanie czasowe i komunikaty sterujące. Konwersja pomiędzy nimi może być stratna. 8. Pytania ogólne: audio i SVS"
+      },
+      {
+            "id": "bank-204",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 204,
+            "q": "Czym SVS różni się od TTS?",
+            "a": "SVS oprócz tekstu musi realizować jawnie zadaną wysokość, rytm i sposób prowadzenia głosu. Śpiew ma dłuższe samogłoski, szerszy zakres F0, vibrato i inne zależności prozodyczne."
+      },
+      {
+            "id": "bank-205",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 205,
+            "q": "Co zawiera wejście SVS?",
+            "a": "Fonemy lub sylaby, początek i koniec zdarzenia, wysokość nuty, pauzy, voiced, głos, styl, tempo oraz opcjonalne cechy wykonawcze."
+      },
+      {
+            "id": "bank-206",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 206,
+            "q": "Dlaczego stosuje się fonemy zamiast słów?",
+            "a": "Fonemy pozwalają generować nowe słowa, dokładniej sterować wymową i czasem poszczególnych głosek oraz lepiej dopasować tekst do nut."
+      },
+      {
+            "id": "bank-207",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 207,
+            "q": "Co to jest grafem?",
+            "a": "Jednostka zapisu, np. litera lub znak. Relacja grafem–fonem nie jest jednoznaczna, szczególnie w języku angielskim."
+      },
+      {
+            "id": "bank-208",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 208,
+            "q": "Co to jest fonem?",
+            "a": "Najmniejsza jednostka dźwiękowa rozróżniająca znaczenie. Model SVS wykorzystuje tokeny fonemowe jako reprezentację wymowy."
+      },
+      {
+            "id": "bank-209",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 209,
+            "q": "Co to jest G2P?",
+            "a": "Grapheme-to-phoneme: algorytm lub model zamieniający zapis słowa na sekwencję fonemów."
+      },
+      {
+            "id": "bank-210",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 210,
+            "q": "Co to jest ARPAbet?",
+            "a": "ASCII-owa reprezentacja angielskich fonemów używana m.in. w CMU Pronouncing Dictionary. Samogłoski mogą zawierać oznaczenie akcentu."
+      },
+      {
+            "id": "bank-211",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 211,
+            "q": "Co to jest CMUdict?",
+            "a": "Słownik wymowy angielskich słów zapisanych w ARPAbet. Pomaga uzyskać poprawniejsze fonemy niż proste reguły literowe."
+      },
+      {
+            "id": "bank-212",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 212,
+            "q": "Dlaczego samogłoski otrzymują więcej czasu niż spółgłoski?",
+            "a": "W śpiewie samogłoska niesie podtrzymywaną wysokość i energię, natomiast większość spółgłosek tworzy krótki atak lub zakończenie."
+      },
+      {
+            "id": "bank-213",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 213,
+            "q": "Co to jest waveform?",
+            "a": "Sekwencja próbek amplitudy sygnału audio w czasie. Jest końcowym formatem generowanym przez wokoder."
+      },
+      {
+            "id": "bank-214",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 214,
+            "q": "Co oznacza sample rate 22050 Hz?",
+            "a": "Audio zawiera 22050 próbek na sekundę. Maksymalna reprezentowalna częstotliwość wynosi w przybliżeniu 11025 Hz."
+      },
+      {
+            "id": "bank-215",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 215,
+            "q": "Co to jest częstotliwość Nyquista?",
+            "a": "Połowa częstotliwości próbkowania. Składowe powyżej niej powodują aliasing, jeżeli nie zostaną odfiltrowane."
+      },
+      {
+            "id": "bank-216",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 216,
+            "q": "Co to jest aliasing?",
+            "a": "Zniekształcenie, w którym częstotliwości powyżej Nyquista pojawiają się jako fałszywe niższe częstotliwości."
+      },
+      {
+            "id": "bank-217",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 217,
+            "q": "Co to jest transformata Fouriera?",
+            "a": "Rozkłada sygnał na składowe częstotliwościowe, opisując amplitudę i fazę sinusoid."
+      },
+      {
+            "id": "bank-218",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 218,
+            "q": "Co to jest STFT?",
+            "a": "Short-Time Fourier Transform liczy transformatę Fouriera w kolejnych nakładających się oknach, tworząc reprezentację czas–częstotliwość."
+      },
+      {
+            "id": "bank-219",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 219,
+            "q": "Co oznacza FFT size 1024?",
+            "a": "Liczbę punktów transformacji. Wpływa na siatkę częstotliwości i koszt obliczeń. Nie jest tożsama z liczbą pasm mel."
+      },
+      {
+            "id": "bank-220",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 220,
+            "q": "Co to jest window length?",
+            "a": "Liczba próbek analizowanych w jednej ramce STFT. Dłuższe okno daje lepszą rozdzielczość częstotliwości kosztem czasu."
+      },
+      {
+            "id": "bank-221",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 221,
+            "q": "Co to jest hop length?",
+            "a": "Przesunięcie pomiędzy kolejnymi oknami. Hop 256 przy 22050 Hz daje krok około 11,6 ms."
+      },
+      {
+            "id": "bank-222",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 222,
+            "q": "Co to jest spektrogram?",
+            "a": "Macierz energii lub amplitudy częstotliwości w kolejnych chwilach czasu."
+      },
+      {
+            "id": "bank-223",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 223,
+            "q": "Co to jest skala mel?",
+            "a": "Nieliniowa skala częstotliwości przybliżająca percepcję człowieka: większa dokładność dla niższych częstotliwości i silniejsze grupowanie wysokich."
+      },
+      {
+            "id": "bank-224",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 224,
+            "q": "Co to jest mel-spektrogram?",
+            "a": "Spektrogram, którego częstotliwości są rzutowane na bank filtrów mel. Jest standardową reprezentacją pośrednią w TTS i SVS."
+      },
+      {
+            "id": "bank-225",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 225,
+            "q": "Dlaczego stosuje się log-mel?",
+            "a": "Logarytm kompresuje duży zakres energii i lepiej odpowiada percepcji głośności. Ułatwia również uczenie modelu."
+      },
+      {
+            "id": "bank-226",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 226,
+            "q": "Czego mel-spektrogram nie przechowuje?",
+            "a": "Nie przechowuje pełnej informacji fazowej i redukuje szczegóły widma. Dlatego rekonstrukcja waveformu nie jest jednoznaczna."
+      },
+      {
+            "id": "bank-227",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 227,
+            "q": "Co to jest F0?",
+            "a": "Częstotliwość podstawowa sygnału okresowego, związana z postrzeganą wysokością głosu."
+      },
+      {
+            "id": "bank-228",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 228,
+            "q": "Czym F0 różni się od formantu?",
+            "a": "F0 wynika z okresowości źródła głosu i określa postrzeganą wysokość. Formanty to rezonanse traktu głosowego, które kształtują samogłoskę i barwę."
+      },
+      {
+            "id": "bank-229",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 229,
+            "q": "Co to jest cent?",
+            "a": "Logarytmiczna jednostka interwału. 100 centów to półton, 1200 centów oktawa."
+      },
+      {
+            "id": "bank-230",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 230,
+            "q": "Jak liczy się błąd wysokości w centach?",
+            "a": "Błąd wysokości liczy się jako 1200 * log2(F0_pred / F0_ref). MAE wykorzystuje wartość bezwzględną tego błędu, zwykle tylko na ramkach voiced."
+      },
+      {
+            "id": "bank-231",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 231,
+            "q": "Dlaczego błąd w hercach byłby mniej muzyczny?",
+            "a": "Ta sama różnica Hz oznacza inny interwał przy niskiej i wysokiej częstotliwości. Centy mierzą względną zmianę wysokości."
+      },
+      {
+            "id": "bank-232",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 232,
+            "q": "Co to jest voiced/unvoiced?",
+            "a": "Informacja, czy ramka ma regularną strukturę okresową i zdefiniowane F0. Samogłoski są zwykle voiced, a cisza i spółgłoski bezdźwięczne są unvoiced."
+      },
+      {
+            "id": "bank-233",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 233,
+            "q": "Dlaczego F0 mierzy się tylko na ramkach voiced?",
+            "a": "Dla ciszy i szumu bezdźwięcznego częstotliwość podstawowa nie jest zdefiniowana. Wymuszenie wartości prowadziłoby do sztucznych błędów."
+      },
+      {
+            "id": "bank-234",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 234,
+            "q": "Co to jest pYIN?",
+            "a": "Probabilistyczny algorytm estymacji F0, rozszerzający YIN o model probabilistyczny i śledzenie wysokości w czasie."
+      },
+      {
+            "id": "bank-235",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 235,
+            "q": "Jakie błędy może popełniać estymator F0?",
+            "a": "Błędy oktawowe, utrata detekcji, błędna klasyfikacja voiced/unvoiced oraz śledzenie harmonicznej zamiast częstotliwości podstawowej."
+      },
+      {
+            "id": "bank-236",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 236,
+            "q": "Co to jest energia ramki?",
+            "a": "Miara amplitudy lub mocy sygnału w krótkim oknie. W SVS steruje obwiednią głośności i dynamiką."
+      },
+      {
+            "id": "bank-237",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 237,
+            "q": "Co to jest prosodia?",
+            "a": "Czas, akcent, intonacja, energia, rytm, vibrato, frazowanie i inne cechy wykonania ponad samą sekwencją fonemów."
+      },
+      {
+            "id": "bank-238",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 238,
+            "q": "Co to jest embedding?",
+            "a": "Uczony wektor reprezentujący dyskretny token, głos, styl lub język. Podobne elementy mogą otrzymać podobne reprezentacje."
+      },
+      {
+            "id": "bank-239",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 239,
+            "q": "Jak działa self-attention?",
+            "a": "Każda pozycja tworzy query, key i value. Iloczyny query–key wyznaczają wagi, którymi agregowane są values innych pozycji."
+      },
+      {
+            "id": "bank-240",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 240,
+            "q": "Co to jest multi-head attention?",
+            "a": "Kilka niezależnych mechanizmów attention analizujących różne podprzestrzenie cech i typy zależności. Wyniki głów są łączone."
+      },
+      {
+            "id": "bank-241",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 241,
+            "q": "Dlaczego Transformer potrzebuje maski paddingu?",
+            "a": "Sekwencje w batchu mają różne długości. Maska uniemożliwia attention korzystanie z dopełnionych, sztucznych pozycji."
+      },
+      {
+            "id": "bank-242",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 242,
+            "q": "Co to jest sinusoidalne kodowanie pozycyjne?",
+            "a": "Deterministyczne wektory sinusów i cosinusów o różnych częstotliwościach dodawane do cech, aby model znał kolejność i względne odległości."
+      },
+      {
+            "id": "bank-243",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 243,
+            "q": "Co to jest length regulator?",
+            "a": "Mechanizm rozszerzający reprezentację zdarzenia do liczby ramek wynikającej z duration. Powtarza wektor fonemu lub nuty zgodnie z czasem."
+      },
+      {
+            "id": "bank-244",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 244,
+            "q": "Czym model autoregresyjny różni się od nieautoregresyjnego?",
+            "a": "Autoregresyjny generuje kolejne elementy zależnie od poprzednich i jest wolniejszy. Nieautoregresyjny generuje wiele pozycji równolegle, zwykle potrzebując jawnych czasów."
+      },
+      {
+            "id": "bank-245",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 245,
+            "q": "Co to jest Conformer?",
+            "a": "Architektura łącząca self-attention dla globalnego kontekstu z modułem konwolucyjnym dla lokalnych zależności czasowych."
+      },
+      {
+            "id": "bank-246",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 246,
+            "q": "Co to jest depthwise convolution?",
+            "a": "Osobna konwolucja dla każdego kanału. Jest tańsza od pełnej konwolucji i w Conformerze modeluje lokalny kontekst czasowy."
+      },
+      {
+            "id": "bank-247",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 247,
+            "q": "Co to jest GLU?",
+            "a": "Gated Linear Unit dzieli kanały na część treści i bramkę sigmoid, która kontroluje przepływ informacji."
+      },
+      {
+            "id": "bank-248",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 248,
+            "q": "Co to jest score F0?",
+            "a": "Krzywa częstotliwości podstawowej wynikająca bezpośrednio z wysokości nut i ich czasu, po uwzględnieniu transpozycji i przejść."
+      },
+      {
+            "id": "bank-249",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 249,
+            "q": "Co to jest predicted F0?",
+            "a": "Krzywa przewidziana przez model akustyczny, zwykle jako odchylenie względem partytury. Może zawierać mikroprozodię, ale też błędy wysokości."
+      },
+      {
+            "id": "bank-250",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 250,
+            "q": "Co to jest blend F0?",
+            "a": "Mieszanka score F0 i predicted F0. Ma łączyć kontrolę melodii z naturalnością, lecz w eksperymencie dawała większy błąd niż score F0."
+      },
+      {
+            "id": "bank-251",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 251,
+            "q": "Co to jest score-relative F0?",
+            "a": "Model przewiduje odchylenie w centach względem wysokości partytury, zamiast częstotliwości bezwzględnej."
+      },
+      {
+            "id": "bank-252",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 252,
+            "q": "Dlaczego ogranicza się maksymalne odchylenie F0?",
+            "a": "Chroni melodię przed dużymi błędami i stabilizuje trening. Model nadal może przewidywać vibrato i łagodne przejścia."
+      },
+      {
+            "id": "bank-253",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 253,
+            "q": "Co to jest teacher forcing?",
+            "a": "Podawanie wartości referencyjnej zamiast własnej predykcji modelu jako wejścia kolejnego etapu podczas treningu."
+      },
+      {
+            "id": "bank-254",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 254,
+            "q": "Co to jest exposure bias?",
+            "a": "Różnica pomiędzy treningiem z idealnymi wejściami a inferencją z własnymi błędnymi predykcjami. Może powodować kumulowanie błędów."
+      },
+      {
+            "id": "bank-255",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 255,
+            "q": "Co to jest postnet?",
+            "a": "Sieć konwolucyjna przewidująca residualną poprawkę do bazowego mel-spektrogramu."
+      },
+      {
+            "id": "bank-256",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 256,
+            "q": "Co to jest residualny mel refiner?",
+            "a": "Dodatkowa sieć korygująca mel po głównym modelu i postnecie. Uczy się poprawki, a nie całej reprezentacji od zera."
+      },
+      {
+            "id": "bank-257",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 257,
+            "q": "Dlaczego residualne wyjście inicjalizuje się zerami?",
+            "a": "Na początku refiner nie zmienia istniejącej predykcji. Trening może stopniowo nauczyć bezpieczną poprawkę bez natychmiastowego pogorszenia bazowego modelu."
+      },
+      {
+            "id": "bank-258",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 258,
+            "q": "Co to jest wokoder?",
+            "a": "Model lub algorytm zamieniający reprezentację akustyczną, np. mel-spektrogram, na waveform."
+      },
+      {
+            "id": "bank-259",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 259,
+            "q": "Jak działa HiFi-GAN?",
+            "a": "Generator zwiększa rozdzielczość czasową mel do waveformu, a dyskryminatory wielookresowe i wieloskalowe uczą go realistycznej periodyczności i szczegółów sygnału."
+      },
+      {
+            "id": "bank-260",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 260,
+            "q": "Co to jest GAN?",
+            "a": "Układ generatora i dyskryminatora. Generator tworzy próbki, a dyskryminator odróżnia je od prawdziwych. Oba modele uczą się w konkurencyjnym procesie."
+      },
+      {
+            "id": "bank-261",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 261,
+            "q": "Co to jest generator adversarial loss?",
+            "a": "Kara dla generatora, gdy dyskryminator rozpoznaje wygenerowany sygnał jako fałszywy."
+      },
+      {
+            "id": "bank-262",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 262,
+            "q": "Co to jest discriminator loss?",
+            "a": "Kara, gdy dyskryminator źle klasyfikuje prawdziwe lub wygenerowane próbki."
+      },
+      {
+            "id": "bank-263",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 263,
+            "q": "Co to jest feature matching loss?",
+            "a": "Różnica pomiędzy pośrednimi aktywacjami dyskryminatora dla realnego i generowanego audio. Stabilizuje GAN i promuje zgodność strukturalną."
+      },
+      {
+            "id": "bank-264",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 264,
+            "q": "Co to jest Multi-Period Discriminator?",
+            "a": "Zestaw dyskryminatorów analizujących waveform po ułożeniu go według różnych okresów. Jest wrażliwy na strukturę harmoniczną i periodyczność głosu."
+      },
+      {
+            "id": "bank-265",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 265,
+            "q": "Co to jest Multi-Scale Discriminator?",
+            "a": "Analizuje sygnał przy kilku rozdzielczościach czasowych, dzięki czemu widzi lokalne detale i szerszą obwiednię."
+      },
+      {
+            "id": "bank-266",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 266,
+            "q": "Co to jest mel sub-band discriminator?",
+            "a": "Dyskryminator analizujący oddzielne zakresy pasm mel. Może zwiększyć nacisk na wysokie częstotliwości i lokalny detal widma."
+      },
+      {
+            "id": "bank-267",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 267,
+            "q": "Co to jest multi-resolution STFT loss?",
+            "a": "Porównanie spektrogramów przy kilku rozmiarach FFT, oknach i hopach. Łączy ocenę lokalnego i szerszego kontekstu czasowo-częstotliwościowego."
+      },
+      {
+            "id": "bank-268",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 268,
+            "q": "Co to jest source-filter model głosu?",
+            "a": "Model, w którym źródło pobudzenia krtaniowego jest filtrowane przez trakt głosowy. Źródło kontroluje pitch, a filtr głównie barwę i formanty."
+      },
+      {
+            "id": "bank-269",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 269,
+            "q": "Jak działa harmoniczne źródło w wokoderze?",
+            "a": "Z F obliczana jest faza sinusoidy i jej harmoniczne. Są one maskowane dla ramek unvoiced i 0 dodawane jako warunek na etapach generatora."
+      },
+      {
+            "id": "bank-270",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 270,
+            "q": "Dlaczego ogranicza się harmoniczne względem Nyquista?",
+            "a": "Harmoniczne powyżej Nyquista powodowałyby aliasing i fałszywe składowe."
+      },
+      {
+            "id": "bank-271",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 271,
+            "q": "Co to jest pitch-shift sensitivity loss?",
+            "a": "Strata wymagająca, aby celowa zmiana warunku F0 powodowała mierzalną zmianę wyniku. Zapobiega ignorowaniu pitch przez wokoder."
+      },
+      {
+            "id": "bank-272",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 272,
+            "q": "Co to jest acoustic–vocoder mismatch?",
+            "a": "Wokoder trenuje się na prawdziwych melach, ale w inferencji dostaje niedoskonałe mele przewidywane. Różnica rozkładu może pogarszać audio."
+      },
+      {
+            "id": "bank-273",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 273,
+            "q": "Jak zmniejszono acoustic–vocoder mismatch w pracy?",
+            "a": "Wokoder dostrojono na mel-spektrogramach generowanych przez finalny model akustyczny, a nie wyłącznie na reprezentacjach referencyjnych."
+      },
+      {
+            "id": "bank-274",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 274,
+            "q": "Co to jest audio-proxy validation?",
+            "a": "Model akustyczny generuje mel, wokoder generuje audio, a z audio ponownie liczy się mel i porównuje z referencją. Metryka obejmuje oba modele."
+      },
+      {
+            "id": "bank-275",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 275,
+            "q": "Dlaczego audio-proxy nadal nie zastępuje odsłuchu?",
+            "a": "Dwa sygnały o podobnym mel mogą różnić się fazą, artefaktami, zrozumiałością, naturalnością i barwą. Metryka numeryczna jest tylko przybliżeniem percepcji."
+      },
+      {
+            "id": "bank-276",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 276,
+            "q": "Co to jest vibrato?",
+            "a": "Okresowa modulacja F0, opisywana szybkością w Hz i głębokością w centach. Zbyt duże vibrato brzmi niestabilnie, zbyt małe może być niesłyszalne."
+      },
+      {
+            "id": "bank-277",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 277,
+            "q": "Co to jest pitch drift?",
+            "a": "Powolne odchylenie wysokości w czasie. Niewielkie może zwiększać naturalność, duże brzmi jak fałszowanie."
+      },
+      {
+            "id": "bank-278",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 278,
+            "q": "Co to jest onset pitch scoop?",
+            "a": "Krótkie rozpoczęcie nuty poniżej lub powyżej wysokości docelowej i dojście do niej. Jest cechą wykonawczą, ale wymaga ostrożnej kontroli."
+      },
+      {
+            "id": "bank-279",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 279,
+            "q": "Dlaczego transpozycja może być potrzebna?",
+            "a": "Melodia może wychodzić poza zakres wysokości widziany dla danego głosu podczas treningu. Transpozycja przenosi ją do stabilniejszego zakresu."
+      },
+      {
+            "id": "bank-280",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 280,
+            "q": "Jaka jest wada transpozycji?",
+            "a": "Zmienia tonację i może być muzycznie niepożądana. Przy bezpośrednim pitch-shifcie audio może też zmieniać formanty i barwę."
+      },
+      {
+            "id": "bank-281",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 281,
+            "q": "Co to jest MOS?",
+            "a": "Mean Opinion Score: średnia subiektywna ocena, zwykle w skali 1–5, np. naturalności audio."
+      },
+      {
+            "id": "bank-282",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 282,
+            "q": "Co to jest CMOS?",
+            "a": "Comparative MOS: ocena preferencji lub różnicy pomiędzy dwiema próbkami, np. od -3 do +3."
+      },
+      {
+            "id": "bank-283",
+            "topic": "Bank 37+: audio i SVS",
+            "sourceQuestion": 283,
+            "q": "Jak poprawnie wykonać test percepcyjny?",
+            "a": "Zaślepić i zrandomizować próbki, użyć wielu utworów i słuchaczy, rozdzielić kryteria oceny, zebrać metadane o słuchaczach oraz raportować średnie, wariancję i przedziały ufności. 9. Pytania o integrację, testowanie i rozwój systemu"
+      },
+      {
+            "id": "bank-284",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 284,
+            "q": "Po co zapisuje się konfigurację razem z checkpointem?",
+            "a": "Wagi mają sens tylko w połączeniu z architekturą, vocabem, normalizacją, listą głosów, stylów i parametrami cech. Bez tego inferencja może być niezgodna."
+      },
+      {
+            "id": "bank-285",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 285,
+            "q": "Dlaczego vocab.json musi pasować do checkpointu?",
+            "a": "Indeksy embeddingów odpowiadają konkretnym tokenom. Inny vocab przypisałby tym samym indeksom inne fonemy."
+      },
+      {
+            "id": "bank-286",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 286,
+            "q": "Dlaczego stats.json musi pasować do modelu?",
+            "a": "Model był uczony na cechach znormalizowanych konkretną średnią i odchyleniem. Inne statystyki zmieniają skalę wejścia i wyjścia."
+      },
+      {
+            "id": "bank-287",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 287,
+            "q": "Co to jest checkpoint compatibility?",
+            "a": "Zgodność wag z architekturą, wymiarami, słownikiem, normalizacją i wersją przygotowania danych."
+      },
+      {
+            "id": "bank-288",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 288,
+            "q": "Co to jest test jednostkowy?",
+            "a": "Test małego fragmentu logiki w izolacji, np. konwersji osi czasu, kodowania tokenów lub naprawy taktu."
+      },
+      {
+            "id": "bank-289",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 289,
+            "q": "Co to jest test integracyjny?",
+            "a": "Sprawdza współpracę kilku modułów i zgodność ich kontraktów, np. OMR–Score IR–SVS CSV."
+      },
+      {
+            "id": "bank-290",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 290,
+            "q": "Co to jest test end-to-end?",
+            "a": "Uruchamia pełny przepływ od wejścia użytkownika do końcowego wyniku."
+      },
+      {
+            "id": "bank-291",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 291,
+            "q": "Co to jest test regresji?",
+            "a": "Sprawdza, czy wcześniej działający przypadek nadal daje oczekiwany wynik po zmianach kodu lub modelu. Golden set jest naturalną podstawą takich testów."
+      },
+      {
+            "id": "bank-292",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 292,
+            "q": "Dlaczego oracle jest przydatne w testach?",
+            "a": "Pozwala zastąpić wynik jednego modułu poprawną referencją i sprawdzić, czy problem pozostaje w dalszej części pipeline’u."
+      },
+      {
+            "id": "bank-293",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 293,
+            "q": "Jak mierzyć propagację błędów?",
+            "a": "Porównywać warianty z kolejno zastępowanymi modułami oracle i mierzyć zmianę jakości Score IR, MIDI i audio."
+      },
+      {
+            "id": "bank-294",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 294,
+            "q": "Jak przekazywać niepewność pomiędzy modułami?",
+            "a": "Zachowywać confidence, alternatywne hipotezy i źródła decyzji zamiast tylko twardej etykiety. Warstwa interpretacji może wykorzystywać reguły i kontekst do wyboru hipotezy."
+      },
+      {
+            "id": "bank-295",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 295,
+            "q": "Co to jest kalibracja modelu?",
+            "a": "Zgodność confidence z rzeczywistą częstością poprawnych predykcji. Model z confidence 0,8 powinien mieć około 80% poprawnych przypadków w tej grupie."
+      },
+      {
+            "id": "bank-296",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 296,
+            "q": "Jak można umożliwić ręczną korektę?",
+            "a": "Interfejs może pozwalać przesuwać boxy, zmieniać klasy, wysokości, czasy i tekst, a następnie ponownie generować tylko Score IR i audio bez uruchamiania modeli obrazu."
+      },
+      {
+            "id": "bank-297",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 297,
+            "q": "Jak poprawić odporność na nowe wydawnictwa nutowe?",
+            "a": "Zebrać dane z różnych źródeł, zastosować fine-tuning, style augmentation, normalizację odstępu pięciolinii, aktywne uczenie i analizę błędów per domena."
+      },
+      {
+            "id": "bank-298",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 298,
+            "q": "Jak poprawić wydajność pipeline’u?",
+            "a": "Batchowanie kafli i cropów, mniejsze lub skompresowane modele, cache, mixed precision, równoległość etapów niezależnych, ONNX/TensorRT oraz adaptacyjne pomijanie zbędnych modułów."
+      },
+      {
+            "id": "bank-299",
+            "topic": "Bank 37+: integracja i rozwój",
+            "sourceQuestion": 299,
+            "q": "Jakie byłyby następne trzy najważniejsze eksperymenty?",
+            "a": "Real-world test set partytur wokalnych; uczciwy wieloseedowy protokół OMR z osobnym validation/test; zaślepiona ewaluacja percepcyjna SVS z baseline’ami."
+      },
+      {
+            "id": "zagadnienia-001",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-001",
+            "q": "Gdzie w systemie znajduje się najważniejsza luka reprezentacyjna?",
+            "a": "Obraz partytury jest strukturą dwuwymiarową i relacyjną, natomiast SVS oczekuje uporządkowanej osi czasu: fonemów, wysokości, czasów trwania, pauz i cech prozodycznych. Najważniejszym zadaniem nie jest więc sama detekcja obiektów, lecz przejście od geometrii strony do semantyki muzycznej i sekwencji czasowej. Rolę pomostu pełni Score IR."
+      },
+      {
+            "id": "zagadnienia-002",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-002",
+            "q": "Dlaczego Score IR jest czymś więcej niż formatem technicznym?",
+            "a": "Score IR pełni jednocześnie rolę kontraktu między modułami i narzędzia badawczego. Zachowuje surowe źródła, confidence, symbole, relacje, ostrzeżenia i naprawy, dzięki czemu można odróżnić błąd percepcji obrazu od błędu interpretacji muzycznej. Minimalny CSV dla SVS usuwałby większość tej informacji i utrudniał diagnozę."
+      },
+      {
+            "id": "zagadnienia-003",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-003",
+            "q": "Dlaczego ewaluacja SVS nie pozwala jeszcze mówić o jakości użytkowej?",
+            "a": "Golden set ma tylko dziesięć próbek, a główna metryka ocenia zgodność F0, nie pełną naturalność. Nie wykonano szerokiego testu MOS lub CMOS z grupą słuchaczy, nie rozdzielono systematycznie ocen naturalności, zrozumiałości tekstu, barwy, podobieństwa głosu i jakości frazowania. Wynik dowodzi działania i kontroli melodii w prototypie, ale nie równoważności z gotowym produktem."
+      },
+      {
+            "id": "zagadnienia-004",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-004",
+            "q": "Czy zrealizowany system jest produktem?",
+            "a": "Nie. Jest kompletnym prototypem badawczo-inżynierskim: działa od obrazu lub PDF-u do artefaktów muzycznych i audio, pozwala trenować, porównywać i diagnozować moduły. Produkt wymagałby znacznie większej odporności domenowej, stabilności, ergonomicznej korekty błędów, testów użytkowników, kontroli jakości, wydajności oraz szerszej ewaluacji percepcyjnej."
+      },
+      {
+            "id": "zagadnienia-005",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-005",
+            "q": "Czy lepiej byłoby ograniczyć pracę do jednego modułu?",
+            "a": "Węższa praca pozwoliłaby pogłębić jeden komponent i wykonać więcej powtórzeń eksperymentów. Jednak celem tej pracy było zbadanie pełnego przejścia od obrazu do śpiewu i obserwowalności modułowego systemu. Szeroki zakres był więc zgodny z celem, choć jego ceną jest nierówna dojrzałość modułów, zwłaszcza ograniczona ewaluacja SVS."
+      },
+      {
+            "id": "zagadnienia-006",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-006",
+            "q": "Jaki był wkład Michała Bobera?",
+            "a": "Przetwarzanie obrazu i tekstu: lokalizacja tekstu, OCR, OMR, przygotowanie DeepScoresV2, konfiguracja i eksperymenty Faster R-CNN, obrazy i PDF-y, kafelkowanie, augmentacje, ewaluacja detekcji oraz integracja wyników obrazu w aplikacji."
+      },
+      {
+            "id": "zagadnienia-007",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-007",
+            "q": "Jaki był wkład Igora Staręgi?",
+            "a": "Interpretacja muzyczna, Score IR, przejście od symboli do melodii i rytmu, synchronizacja tekstu z nutami, przygotowanie formatu dla SVS, model akustyczny, wokoder, ewaluacja muzyczna i wokalna oraz diagnostyka toru syntezy."
+      },
+      {
+            "id": "zagadnienia-008",
+            "topic": "Bank 37+: PDF - wspólne i zakres",
+            "sourceQuestion": "PDF-008",
+            "q": "Dlaczego nie zastosowano jednego modelu end-to-end?",
+            "a": "Wymagałby dużego zbioru par obraz partytury-docelowy wokal oraz nauczenia w jednym modelu percepcji dokumentu, semantyki muzycznej, wymowy i generacji audio. Taki zbiór jest trudny do pozyskania, a model byłby słabo obserwowalny. Podejście modułowe lepiej odpowiadało dostępnym danym i celowi badawczemu."
+      },
+      {
+            "id": "zagadnienia-009",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-009",
+            "q": "Dlaczego segmentacja zamiast samych bounding boxów?",
+            "a": "Tekst wokalny składa się z cienkich i nieregularnych struktur. Maska lepiej odwzorowuje kształt niż prostokąt, ogranicza ilość tła w cropie i może służyć do maskowania tekstu przed OMR. Bounding box jest prostszy, ale obejmuje puste przestrzenie, pięciolinie i symbole."
+      },
+      {
+            "id": "zagadnienia-010",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-010",
+            "q": "Po co skip connections?",
+            "a": "Podczas downsamplingu mogą zniknąć cienkie kreski liter i dokładne położenie granic. Skip connections dostarczają decoderowi cechy o wyższej rozdzielczości, dzięki czemu może odtworzyć drobne elementy maski."
+      },
+      {
+            "id": "zagadnienia-011",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-011",
+            "q": "Co rzeczywiście robi attention gate?",
+            "a": "Uczy się przestrzennie wzmacniać cechy istotne dla segmentowanego tekstu i tłumić tło. Nie \"czyta\" tekstu i nie jest modelem językowym. Jest mechanizmem selekcji cech."
+      },
+      {
+            "id": "zagadnienia-012",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-012",
+            "q": "Dlaczego nie użyć zwykłego accuracy?",
+            "a": "Większość strony jest tłem. Model przewidujący wszędzie tło mógłby osiągnąć wysokie accuracy, ale nie znaleźć żadnego tekstu. Precision, recall, F1, IoU i Dice lepiej oceniają klasę mniejszościową."
+      },
+      {
+            "id": "zagadnienia-013",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-013",
+            "q": "Czy jest to system czysto neuronowy?",
+            "a": "Nie. Predykcja maski jest neuronowa, ale jej wykorzystanie jest wspierane heurystykami opartymi na geometrii pięciolinii i typowym położeniu tekstu wokalnego. Jest to system hybrydowy. Pułapka: Heurystyka \"tekst znajduje się pod pięciolinią\" nie jest uniwersalna. Może zawieść dla wielu zwrotek, nietypowego układu, tekstu pomiędzy głosami, partytur chóralnych i opisów umieszczonych w podobnej strefie."
+      },
+      {
+            "id": "zagadnienia-014",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-014",
+            "q": "Jak poprawić generalizację lokalizacji tekstu?",
+            "a": "Przygotować anotowany zbiór partytur wokalnych, generować syntetyczne partytury z maskami, zastosować fine-tuning lub domain adaptation, użyć pretrenowanego encodera, dodać bardziej realistyczne degradacje i mierzyć wynik bezpośrednio na pełnych stronach nutowych."
+      },
+      {
+            "id": "zagadnienia-015",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-015",
+            "q": "Jaka jest różnica między segmentacją semantyczną i instancyjną?",
+            "a": "Segmentacja semantyczna przypisuje klasę każdemu pikselowi, ale nie rozdziela osobnych obiektów tej samej klasy. Segmentacja instancyjna dodatkowo identyfikuje oddzielne wystąpienia, np. osobne słowa lub wiersze."
+      },
+      {
+            "id": "zagadnienia-016",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-016",
+            "q": "Co się stanie przy zbyt niskim progu maski?",
+            "a": "Wzrośnie recall, ale pojawi się więcej fałszywych pikseli i regionów, które mogą zawierać symbole muzyczne. Zbyt wysoki próg zwiększy precision kosztem przerwanych lub pominiętych liter."
+      },
+      {
+            "id": "zagadnienia-017",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-017",
+            "q": "Czy wysoki recall zawsze jest pożądany?",
+            "a": "Nie. Jeżeli uzyskano go przez oznaczenie dużej części tła jako tekstu, OCR dostanie zaszumione cropy, a maskowanie przed OMR może usunąć symbole muzyczne."
+      },
+      {
+            "id": "zagadnienia-018",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-018",
+            "q": "Dlaczego usuwanie pięciolinii może być ryzykowne?",
+            "a": "Operacja może usunąć fragmenty liter przecinające się z wykrytymi liniami albo uszkodzić znaki, jeśli geometria pięciolinii została oszacowana błędnie."
+      },
+      {
+            "id": "zagadnienia-019",
+            "topic": "Bank 37+: PDF - lokalizacja tekstu",
+            "sourceQuestion": "PDF-019",
+            "q": "Jak ocenić cały moduł, a nie sam segmenter?",
+            "a": "Należy mierzyć nie tylko IoU maski, ale także wykrycie kompletnych wierszy, kompletność cropów, kolejność odczytu i wpływ na CER, sylabizację oraz końcowe dopasowanie tekstu do nut."
+      },
+      {
+            "id": "zagadnienia-020",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-020",
+            "q": "Dlaczego oś pozioma obrazu jest osią czasu?",
+            "a": "W tekstach poziomych kolejność znaków odpowiada przesuwaniu się od lewej do prawej. CNN kompresuje wysokość obrazu, pozostawiając kolejne kolumny cech jako uporządkowaną sekwencję obserwacji."
+      },
+      {
+            "id": "zagadnienia-021",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-021",
+            "q": "Co daje BiLSTM?",
+            "a": "Każda pozycja korzysta zarówno z kontekstu po lewej, jak i po prawej. W OCR cały obraz jest dostępny, więc nie ma wymogu przetwarzania przyczynowego."
+      },
+      {
+            "id": "zagadnienia-022",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-022",
+            "q": "Dlaczego Transformer nie wygrał?",
+            "a": "Większa złożoność nie gwarantuje poprawy. Model był trenowany od zera, zadanie miało stosunkowo krótkie sekwencje i silną lokalną strukturę, a dane oraz jakość cropów mogły być ważniejszym ograniczeniem niż pojemność modelu. BiLSTM ma korzystny inductive bias dla monotonicznego tekstu."
+      },
+      {
+            "id": "zagadnienia-023",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-023",
+            "q": "Po co blank?",
+            "a": "Pozwala reprezentować brak znaku i rozdzielić powtarzające się litery. Bez blanku sekwencja dwóch identycznych liter mogłaby zostać zredukowana do jednej."
+      },
+      {
+            "id": "zagadnienia-024",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-024",
+            "q": "Jakie główne założenie ma CTC?",
+            "a": "Kolejność etykiet jest monotoniczna względem sekwencji wejściowej. CTC nie jest odpowiednie do swobodnej zmiany kolejności znaków."
+      },
+      {
+            "id": "zagadnienia-025",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-025",
+            "q": "Czy CER może być większy od 1?",
+            "a": "Tak. Jeżeli model generuje bardzo dużo dodatkowych znaków, liczba wstawień może przekroczyć długość referencji."
+      },
+      {
+            "id": "zagadnienia-026",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-026",
+            "q": "Dlaczego exact match jest ważny dla tej pracy?",
+            "a": "Pojedynczy błąd w spacji, myślniku lub sylabie może zmienić późniejsze dopasowanie tekstu do nut, mimo że globalny CER pozostaje niski."
+      },
+      {
+            "id": "zagadnienia-027",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-027",
+            "q": "Czy użycie PaddleOCR w aplikacji podważa sens trenowania własnego OCR?",
+            "a": "Nie. Własne modele pozwoliły przeprowadzić kontrolowane badanie architektur i CTC, natomiast aplikacja została zaprojektowana modułowo i może korzystać z praktycznie najlepszego dostępnego backendu. Badanie naukowe i wybór produkcyjny nie muszą wskazywać tego samego modelu."
+      },
+      {
+            "id": "zagadnienia-028",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-028",
+            "q": "Dlaczego zachowuje się proporcje obrazu?",
+            "a": "Rozciągnięcie słowa zmienia geometrię znaków i odstępy. Skalowanie do stałej wysokości z dopełnieniem szerokości zachowuje kształt, a jednocześnie daje stały rozmiar tensora."
+      },
+      {
+            "id": "zagadnienia-029",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-029",
+            "q": "Co oznacza CER równy 0,1318?",
+            "a": "Średnia liczba operacji edycyjnych odpowiada około 13,18% liczby znaków referencyjnych. Nie oznacza to jednak, że dokładnie 13,18% znaków w każdej próbce jest błędne."
+      },
+      {
+            "id": "zagadnienia-030",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-030",
+            "q": "Czy można mieć niski CER i bezużyteczny wynik dla SVS?",
+            "a": "Tak. Błędy mogą koncentrować się w myślnikach, spacjach i granicach sylab, które mają większy wpływ muzyczny niż przypadkowa literówka."
+      },
+      {
+            "id": "zagadnienia-031",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-031",
+            "q": "Jak uczciwie ocenić sam OCR?",
+            "a": "Na referencyjnych cropach, aby wyłączyć błędy lokalizacji. Osobno należy ocenić pełny tor lokalizacja+OCR na całych stronach."
+      },
+      {
+            "id": "zagadnienia-032",
+            "topic": "Bank 37+: PDF - OCR",
+            "sourceQuestion": "PDF-032",
+            "q": "Dlaczego WER nie był główną metryką?",
+            "a": "Próbki są często krótkie i zawierają fragmenty lub sylaby. CER daje bardziej szczegółową informację znakową. WER byłby wartościową metryką dodatkową dla pełnych wierszy tekstu."
+      },
+      {
+            "id": "zagadnienia-033",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-033",
+            "q": "Dlaczego wybrano DeepScoresV2?",
+            "a": "Jest jednym z największych zbiorów do detekcji drukowanych symboli muzycznych, zawiera 136 klas oraz informacje o ramkach zorientowanych. Dobrze odpowiada zadaniu detekcji obiektowej, choć wymaga augmentacji i testów domenowych."
+      },
+      {
+            "id": "zagadnienia-034",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-034",
+            "q": "Dlaczego detektor dwustopniowy?",
+            "a": "Zapewnia dobrą jakość lokalizacji i oddziela generowanie regionów od dokładnej klasyfikacji. Jest odpowiedni dla gęstych, małych symboli, choć jest wolniejszy i kosztowniejszy od detektorów one-stage."
+      },
+      {
+            "id": "zagadnienia-035",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-035",
+            "q": "Dlaczego GroupNorm zamiast BatchNorm?",
+            "a": "Trening używa batch size 1. BatchNorm miałby bardzo niestabilne statystyki batcha. GroupNorm normalizuje grupy kanałów wewnątrz próbki i nie zależy od liczby obrazów w batchu."
+      },
+      {
+            "id": "zagadnienia-036",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-036",
+            "q": "Dlaczego trenowanie od zera mogło mieć sens?",
+            "a": "Partytury są geometrycznymi, prawie binarnymi dokumentami odmiennymi od ImageNet. Własny backbone dawał pełną kontrolę nad stride’em i małymi obiektami."
+      },
+      {
+            "id": "zagadnienia-037",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-037",
+            "q": "Jaka jest wada braku pretreningu?",
+            "a": "Model nie korzysta z wcześniej nauczonych filtrów, potrzebuje więcej danych i czasu, a przy ograniczonym zbiorze może generalizować gorzej. Sensownym baseline’em byłby pretrenowany ResNet z FPN."
+      },
+      {
+            "id": "zagadnienia-038",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-038",
+            "q": "Co się stanie, gdy anchors są źle dobrane?",
+            "a": "Ich IoU z ground truth będzie niskie, RPN otrzyma mniej dobrych pozytywnych przykładów, a małe lub ekstremalnie wydłużone obiekty mogą nie generować dobrych proposals."
+      },
+      {
+            "id": "zagadnienia-039",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-039",
+            "q": "Jak może jednocześnie wzrosnąć precision i spaść recall?",
+            "a": "Model generuje mniej fałszywych predykcji, ale pomija więcej prawdziwych obiektów. Może to wynikać ze zmiany rozkładu confidence i jakości proposal, a nie tylko z samej zdolności widzenia szczegółów."
+      },
+      {
+            "id": "zagadnienia-040",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-040",
+            "q": "Dlaczego mniejszy kafel może pomóc?",
+            "a": "Po przeskalowaniu do wejścia sieci symbol zajmuje względnie więcej pikseli, więc drobne detale są łatwiejsze do rozpoznania. Ceną jest mniejszy kontekst."
+      },
+      {
+            "id": "zagadnienia-041",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-041",
+            "q": "Dlaczego duży kafel nie zawsze pomaga długim obiektom?",
+            "a": "Większy kontekst zmniejsza względny rozmiar lokalnych cech. Dla beam, tie i slur rozdzielczość detalu mogła być ważniejsza niż pełna długość symbolu. Staff było wyjątkiem i korzystało z szerokiego kontekstu."
+      },
+      {
+            "id": "zagadnienia-042",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-042",
+            "q": "Czy jest to pełny rotated Faster R-CNN?",
+            "a": "Nie. Podstawowy detector nadal generuje axis-aligned proposals i boxy. Wielokąt zorientowany jest dodatkową regresją dla wykrytego regionu."
+      },
+      {
+            "id": "zagadnienia-043",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-043",
+            "q": "Dlaczego IoU jest problematyczne dla małych obiektów?",
+            "a": "Przesunięcie ramki o kilka pikseli może stanowić dużą część jej rozmiaru i gwałtownie obniżyć IoU, mimo że lokalizacja nadal jest użyteczna dla interpretacji."
+      },
+      {
+            "id": "zagadnienia-044",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-044",
+            "q": "Co oznacza wysokie AP50 i niższe AP75?",
+            "a": "Model zazwyczaj znajduje obiekt, ale jego ramka nie jest wystarczająco dokładna przy bardziej rygorystycznym wymaganiu lokalizacji."
+      },
+      {
+            "id": "zagadnienia-045",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-045",
+            "q": "Dlaczego mean IoU i oriented L1 nie wystarczą?",
+            "a": "Są liczone tylko dla dopasowanych predykcji. Model może mieć dobre ramki dla niewielkiej liczby wykrytych obiektów, a jednocześnie niski recall."
+      },
+      {
+            "id": "zagadnienia-046",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-046",
+            "q": "Czy augmentacje dowodzą odporności na zdjęcia?",
+            "a": "Nie. Dowodzą odporności na zdefiniowany rozkład syntetycznych degradacji. Prawdziwe zdjęcia mogą zawierać inne kombinacje cieni, perspektywy, zagięć, ostrości, papieru i fontów."
+      },
+      {
+            "id": "zagadnienia-047",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-047",
+            "q": "Dlaczego support nie wyjaśnia całego wyniku?",
+            "a": "Rzadkie klasy mają mało danych, lecz częste klasy także mogą być trudne ze względu na geometrię, podobieństwo do innych symboli, zależność od kontekstu lub przecięcie granicą kafla. Przykładem są stem i ledgerLine."
+      },
+      {
+            "id": "zagadnienia-048",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-048",
+            "q": "Dlaczego stem może być mylony z barline?",
+            "a": "Oba są cienkimi, pionowymi strukturami. Rozróżnienie wymaga kontekstu: stem łączy się z notehead i beam/flag, a barline przecina wysokość jednej lub kilku pięciolinii."
+      },
+      {
+            "id": "zagadnienia-049",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-049",
+            "q": "Jak powinien wyglądać poprawiony podział train/validation/test w OMR?",
+            "a": "Train do uczenia, osobny validation do wyboru checkpointu i hiperparametrów oraz nietykany test użyty dopiero do końcowej oceny."
+      },
+      {
+            "id": "zagadnienia-050",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-050",
+            "q": "Jak uczciwiej porównać rozmiary kafli?",
+            "a": "Utrzymać stałą liczbę optimizer steps, liczbę obejrzanych obiektów lub równoważny koszt obliczeniowy, a następnie wykonać wiele seedów."
+      },
+      {
+            "id": "zagadnienia-051",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-051",
+            "q": "Dlaczego val loss nie odpowiadał rankingowi mAP?",
+            "a": "Strata treningowa jest sumą lokalnych strat RPN, klasyfikacji i regresji, a mAP zależy od rankingów confidence, NMS, progów IoU i wyników wszystkich klas. Niższa strata nie musi oznaczać lepszej metryki końcowej."
+      },
+      {
+            "id": "zagadnienia-052",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-052",
+            "q": "Dlaczego próg confidence wynosił tylko 0,05?",
+            "a": "W gęstej detekcji małych symboli niski próg zwiększa recall i pozwala krzywej precision-recall ocenić szeroki zakres confidence. Późniejsze filtrowanie i NMS usuwają część słabych predykcji."
+      },
+      {
+            "id": "zagadnienia-053",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-053",
+            "q": "Czy najwyższy mAP gwarantuje najlepszy Score IR?",
+            "a": "Nie. mAP waży klasy i progi detekcyjne, ale błędy nie mają równego znaczenia muzycznego. Pominięty notehead, clef lub accidental może być ważniejszy niż błąd symbolu niewykorzystywanego przez obecny SVS."
+      },
+      {
+            "id": "zagadnienia-054",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-054",
+            "q": "Jak zbudować metrykę OMR zorientowaną na wynik muzyczny?",
+            "a": "Można mierzyć pitch error, duration error, note precision/recall, poprawność taktów, edit distance sekwencji nut, zgodność MusicXML albo wpływ na MIDI i SVS."
+      },
+      {
+            "id": "zagadnienia-055",
+            "topic": "Bank 37+: PDF - OMR",
+            "sourceQuestion": "PDF-055",
+            "q": "Co byłoby ważniejsze w kolejnym badaniu: wyższy mAP czy mniej błędów melodii?",
+            "a": "Dla celu systemu ważniejsza jest semantyczna poprawność melodii i rytmu. mAP pozostaje niezbędną metryką detektora, ale warto zoptymalizować klasy i błędy według ich wpływu na kolejne etapy."
+      },
+      {
+            "id": "zagadnienia-056",
+            "topic": "Bank 37+: PDF - Score IR",
+            "sourceQuestion": "PDF-056",
+            "q": "Dlaczego sama współrzędna y nie wystarcza do wysokości?",
+            "a": "Ta sama pozycja graficzna oznacza inną wysokość w różnych kluczach. Potrzebna jest także geometria pięciolinii, informacja o liniach dodanych i znakach chromatycznych."
+      },
+      {
+            "id": "zagadnienia-057",
+            "topic": "Bank 37+: PDF - Score IR",
+            "sourceQuestion": "PDF-057",
+            "q": "Czy synthetic rest jest fałszowaniem wyniku?",
+            "a": "Nie, jeżeli jest jawnie oznaczony jako naprawa i służy zachowaniu osi czasu. Nie może być przedstawiany jako symbol wykryty na obrazie. Użytkownik powinien móc odróżnić percepcję od rekonstrukcji."
+      },
+      {
+            "id": "zagadnienia-058",
+            "topic": "Bank 37+: PDF - Score IR",
+            "sourceQuestion": "PDF-058",
+            "q": "Dlaczego potrzebny jest dynamic programming?",
+            "a": "Proste dopasowanie jeden-do-jednego zawodzi przy pauzach, melismach, brakujących tokenach i nierównych odstępach. DP może minimalizować globalny koszt przypisań, pominięć i kontynuacji."
+      },
+      {
+            "id": "zagadnienia-059",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-059",
+            "q": "Dlaczego sam tekst nie wystarcza?",
+            "a": "Tekst nie określa, kiedy fonem ma się rozpocząć, jak długo trwać ani z jaką wysokością zabrzmieć. Te informacje pochodzą z partytury i Score IR."
+      },
+      {
+            "id": "zagadnienia-060",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-060",
+            "q": "Dlaczego użyto oracle golden setu?",
+            "a": "Oracle pomija błędy OCR, OMR i dopasowania tekstu, dzięki czemu można ocenić sam tor SVS. Bez oracle nie wiadomo, czy zły wokal wynika z syntezy, czy z błędnych nut i fonemów."
+      },
+      {
+            "id": "zagadnienia-061",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-061",
+            "q": "Dlaczego równy podział czasu może brzmieć mechanicznie?",
+            "a": "Przeznacza zbyt dużo czasu na zwarte lub szczelinowe spółgłoski, a za mało na samogłoskę. W naturalnym śpiewie to samogłoska jest zwykle podtrzymywana na wysokości nuty."
+      },
+      {
+            "id": "zagadnienia-062",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-062",
+            "q": "Dlaczego potrzebny jest wokoder?",
+            "a": "Mel-spektrogram nie jest gotową falą audio i nie przechowuje kompletnej fazy. Wokoder uczy się rekonstruować realistyczny waveform zgodny z mel, F0 i energią."
+      },
+      {
+            "id": "zagadnienia-063",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-063",
+            "q": "Dlaczego centy zamiast herców?",
+            "a": "Percepcja interwałów jest logarytmiczna. Różnica 10 Hz ma inne znaczenie przy 100 Hz i 1000 Hz, natomiast cent opisuje względny interwał muzyczny."
+      },
+      {
+            "id": "zagadnienia-064",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-064",
+            "q": "Po co szeroki kontekst w śpiewie?",
+            "a": "Sposób wykonania sylaby zależy od frazy, kierunku melodii, sąsiednich dźwięków, granic słów, powtórzeń oraz miejsca oddechu, a nie tylko od pojedynczej nuty."
+      },
+      {
+            "id": "zagadnienia-065",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-065",
+            "q": "Czym Conformer różni się od Transformera?",
+            "a": "Dodaje silny moduł konwolucyjny modelujący lokalne wzorce, zachowując attention dla zależności globalnych. Jest to korzystne w audio, gdzie lokalna ciągłość ma duże znaczenie."
+      },
+      {
+            "id": "zagadnienia-066",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-066",
+            "q": "Dlaczego score-relative F0 jest korzystne?",
+            "a": "Partytura zawiera silną informację o pożądanej melodii. Model może skupić się na mikroprozodii, vibrato i przejściach, a ograniczenie odchylenia zmniejsza ryzyko utraty kontroli wysokości."
+      },
+      {
+            "id": "zagadnienia-067",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-067",
+            "q": "Jaka jest wada teacher forcingu?",
+            "a": "Jeżeli jest stosowany zbyt często, model przyzwyczaja się do idealnych danych, których nie ma w inferencji. Powstaje exposure bias. Dlatego użyto niewielkiego udziału teacher forcingu."
+      },
+      {
+            "id": "zagadnienia-068",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-068",
+            "q": "Dlaczego mel L1 nie wystarcza?",
+            "a": "Średni błąd promuje wygładzanie. Model może mieć niski L1, ale utracić ostre przejścia, wysokie pasma i lokalne struktury odpowiedzialne za wyrazistość oraz naturalność."
+      },
+      {
+            "id": "zagadnienia-069",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-069",
+            "q": "Po co feature matching?",
+            "a": "Stabilizuje trening GAN i daje generatorowi bogatszy sygnał niż sama końcowa decyzja dyskryminatora. Promuje zgodność struktury na wielu poziomach."
+      },
+      {
+            "id": "zagadnienia-070",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-070",
+            "q": "Dlaczego samo przekazanie F0 jako dodatkowego kanału może nie wystarczyć?",
+            "a": "Generator może nauczyć się ignorować warunek, jeżeli mel i inne cechy wystarczają do minimalizacji strat. Jawne źródło harmoniczne silniej wiąże strukturę okresową audio z F0."
+      },
+      {
+            "id": "zagadnienia-071",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-071",
+            "q": "Dlaczego dostrojenie wokodera na przewidywanych melach jest ważne?",
+            "a": "Wokoder uczy się rozkładu wejścia, który rzeczywiście otrzyma podczas inferencji. Zmniejsza to różnicę między idealnym mel treningowym a niedoskonałym mel generowanym."
+      },
+      {
+            "id": "zagadnienia-072",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-072",
+            "q": "Co mierzy audio-proxy?",
+            "a": "Łączny błąd modelu akustycznego i wokodera. Jest bliższy końcowemu zastosowaniu niż L1 bezpośredniego mel, ale nadal nie zastępuje oceny percepcyjnej."
+      },
+      {
+            "id": "zagadnienia-073",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-073",
+            "q": "Dlaczego wynik 8,87 centa nie dowodzi naturalności?",
+            "a": "Mierzy zgodność wysokości wykrytej w waveformie z melodią score. Nie mierzy bezpośrednio barwy, zrozumiałości, artykulacji, emocji, podobieństwa głosu ani płynności frazy."
+      },
+      {
+            "id": "zagadnienia-074",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-074",
+            "q": "Czy użycie score F0 czyni wynik trywialnym?",
+            "a": "Nie całkowicie. Mierzone jest F0 rzeczywiście obecne w wygenerowanym waveformie, więc test sprawdza, czy model akustyczny i wokoder realizują warunek. Nie jest to jednak test samodzielnego przewidywania melodii przez model."
+      },
+      {
+            "id": "zagadnienia-075",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-075",
+            "q": "Dlaczego humanized ma wyższy MAE?",
+            "a": "Naturalizacja celowo odchyla F0 od idealnej linii score. MAE rośnie, ale ważne jest, czy ogon błędów i odsetek przekroczeń półtonu pozostają bezpieczne oraz czy odsłuch się poprawia."
+      },
+      {
+            "id": "zagadnienia-076",
+            "topic": "Bank 37+: PDF - audio i SVS",
+            "sourceQuestion": "PDF-076",
+            "q": "Czy transpozycja jest rozwiązaniem generalizacji?",
+            "a": "Nie. Jest kontrolą eksperymentalną. Docelowo system powinien dobierać głos, ostrzegać o zakresie, stosować pitch augmentation albo trenować na szerszym zakresie."
+      },
+      {
+            "id": "zagadnienia-077",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-077",
+            "q": "Które ograniczenie jest najpoważniejsze?",
+            "a": "Zależy od pytania badawczego. Dla wiarygodności porównań OMR najważniejszy jest brak niezależnego validation/test i wielu seedów. Dla praktycznego systemu największym problemem jest domain shift. Dla twierdzeń o jakości SVS najważniejszy jest brak pełnego testu percepcyjnego."
+      },
+      {
+            "id": "zagadnienia-078",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-078",
+            "q": "Jaki jest najważniejszy wkład pracy?",
+            "a": "Kompletna, obserwowalna infrastruktura od obrazu/PDF-u do reprezentacji muzyczno-tekstowej i audio, wraz z kontrolowanymi eksperymentami OMR oraz diagnostyką połączenia modelu akustycznego z wokoderem. Nie jest nim pojedynczy rekord jednej metryki."
+      },
+      {
+            "id": "zagadnienia-079",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-079",
+            "q": "Czy system jest end-to-end?",
+            "a": "Jest end-to-end z perspektywy użytkownika, ponieważ przyjmuje obraz i generuje audio. Nie jest jednym modelem trenowanym end-to-end; jest modułowym pipeline’em."
+      },
+      {
+            "id": "zagadnienia-080",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-080",
+            "q": "Jak propagują się błędy?",
+            "a": "Błąd maski zmienia crop OCR i może usunąć symbole przed OMR. Błąd OCR zmienia sylaby i fonemy. Błąd OMR zmienia wysokość lub czas nut. Błąd Score IR zmienia oś czasu. Nawet poprawny CSV może zostać zniekształcony przez model akustyczny lub wokoder."
+      },
+      {
+            "id": "zagadnienia-081",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-081",
+            "q": "Jak odróżnić błąd percepcji od interpretacji?",
+            "a": "Porównać overlay OMR z obrazem, a następnie Score IR i SVG z surowymi detekcjami. Jeżeli symbol jest błędny lub go brakuje, to błąd percepcji. Jeżeli symbol jest poprawny, ale otrzymał złą wysokość, relację lub czas, to błąd interpretacji."
+      },
+      {
+            "id": "zagadnienia-082",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-082",
+            "q": "Czym golden set różni się od test setu?",
+            "a": "Test set służy do bezstronnej ilościowej oceny modelu. Golden set jest małym, ręcznie kontrolowanym zestawem przypadków do regresji i diagnostyki całego systemu. Nie powinien być wielokrotnie używany do strojenia, bo przestałby być niezależnym punktem odniesienia."
+      },
+      {
+            "id": "zagadnienia-083",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-083",
+            "q": "Co to jest data leakage?",
+            "a": "Przepływ informacji z validation lub testu do treningu albo wyboru modelu, który prowadzi do zbyt optymistycznej oceny. Przykładem jest wielokrotne dobieranie checkpointu i konfiguracji na podstawie wyników tego samego testu."
+      },
+      {
+            "id": "zagadnienia-084",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-084",
+            "q": "Co oznacza uczciwy baseline?",
+            "a": "Model porównawczy oceniany na tych samych danych, podziałach, metrykach i możliwie podobnym budżecie treningowym. Powinien być wystarczająco silny i poprawnie dostrojony."
+      },
+      {
+            "id": "zagadnienia-085",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-085",
+            "q": "Czy większy model zawsze jest lepszy?",
+            "a": "Nie. Może wymagać więcej danych, przeuczać się, być trudniejszy w optymalizacji i wolniejszy. W pracy większy OCR Transformer nie uzyskał przewagi, a bardziej złożone segmentery nie przewyższyły prostego U-Net."
+      },
+      {
+            "id": "zagadnienia-086",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-086",
+            "q": "Jak ilościowo mierzyć obserwowalność?",
+            "a": "Można mierzyć czas lokalizacji źródła błędu, odsetek awarii poprawnie przypisanych do modułu, pokrycie klas błędów przez warningi, liczbę potrzebnych ręcznych inspekcji lub skuteczność naprawy po zastąpieniu jednego modułu oracle."
+      },
+      {
+            "id": "zagadnienia-087",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-087",
+            "q": "Jak ocenić pełny system?",
+            "a": "Potrzebny jest zbiór pełnych stron z referencyjnym tekstem, nutami, osią czasu i audio. Należy raportować metryki modułów, zgodność Score IR/MusicXML, jakość MIDI, pitch i rhythm error oraz percepcyjną ocenę końcowego wokalu."
+      },
+      {
+            "id": "zagadnienia-088",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-088",
+            "q": "Dlaczego raportujecie wynik na zbiorze używanym do wyboru checkpointu?",
+            "a": "To ograniczenie dostępnego protokołu DeepScoresV2 w przeprowadzonych eksperymentach. Wyniki należy interpretować głównie jako względne porównania konfiguracji. W kolejnym badaniu wydzielilibyśmy osobny validation i nietykany test."
+      },
+      {
+            "id": "zagadnienia-089",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-089",
+            "q": "Czy augmentacje dowodzą generalizacji na zdjęcia?",
+            "a": "Nie. Dowodzą odporności na zastosowane kontrolowane degradacje. Potrzebny jest osobny real-world test set."
+      },
+      {
+            "id": "zagadnienia-090",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-090",
+            "q": "Dlaczego wynik SVS nie jest dowodem wysokiej jakości śpiewu?",
+            "a": "Główna metryka mierzy pitch accuracy na małym oracle golden secie. Brakuje szerokiej, zaślepionej oceny naturalności, zrozumiałości, barwy i frazowania."
+      },
+      {
+            "id": "zagadnienia-091",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-091",
+            "q": "Czy score F0 nie \"podaje odpowiedzi\" modelowi?",
+            "a": "Podaje pożądaną melodię, ponieważ celem jest kontrolowana synteza z partytury. Eksperyment sprawdza, czy cały tor realizuje ten warunek w waveformie. Ablacja predicted F0 pokazuje, że sam model akustyczny jest mniej dokładny."
+      },
+      {
+            "id": "zagadnienia-092",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-092",
+            "q": "Dlaczego Attention U-Net jest najlepszy, skoro różnica jest minimalna?",
+            "a": "W konkretnym uruchomieniu osiągnął najwyższe F1 i IoU. Różnica jest jednak niewielka i bez wielu seedów nie stanowi dowodu statystycznie istotnej przewagi."
+      },
+      {
+            "id": "zagadnienia-093",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-093",
+            "q": "Dlaczego kafle 768 wygrały, mimo że mają mniej kontekstu?",
+            "a": "Zwiększają względny rozmiar symboli na wejściu. Dla większości klas zysk rozdzielczości przeważył nad utratą kontekstu. Staff było przykładem klasy korzystającej z większego kafla."
+      },
+      {
+            "id": "zagadnienia-094",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-094",
+            "q": "Czy tytuł z \"agentem AI\" nie jest mylący?",
+            "a": "Pojęcie jest użyte w szerszym znaczeniu zespołu wyspecjalizowanych agentów zadaniowych i warstwy orkiestracji, nie w znaczeniu autonomicznego LLM. W pracy zakres tego pojęcia został jawnie zdefiniowany."
+      },
+      {
+            "id": "zagadnienia-095",
+            "topic": "Bank 37+: PDF - pytania krytyczne",
+            "sourceQuestion": "PDF-095",
+            "q": "Czy zakres pracy nie był zbyt szeroki?",
+            "a": "Był szeroki i to spowodowało nierówną głębokość modułów. Jednocześnie szerokość była niezbędna do zbadania przejścia od obrazu do audio i obserwowalności całego systemu."
+      },
+      {
+            "id": "zagadnienia-096",
+            "topic": "Bank 37+: PDF - pytania końcowe",
+            "sourceQuestion": "PDF-096",
+            "q": "Dlaczego w OMR wybrano Faster R-CNN, a nie YOLO?",
+            "a": "Priorytetem była dokładność gęstej detekcji wielu małych symboli, nie maksymalna szybkość. Dwustopniowy RPN i dokładna głowica RoI są dobrym punktem odniesienia dla DeepScoresV2. YOLO byłby wartościowym baseline’em wydajnościowym, ale wymagałby starannego dostrojenia małych obiektów i ekstremalnych proporcji."
+      },
+      {
+            "id": "zagadnienia-097",
+            "topic": "Bank 37+: PDF - pytania końcowe",
+            "sourceQuestion": "PDF-097",
+            "q": "Czy wynik kafli 768 jest w pełni wiarygodny?",
+            "a": "Wskazuje przewagę tej rodziny w przeprowadzonym protokole, ale nie oddziela czysto wpływu geometrii od liczby kroków treningowych. Potrzebne byłyby stałe optimizer steps i wiele seedów."
+      },
+      {
+            "id": "zagadnienia-098",
+            "topic": "Bank 37+: PDF - pytania końcowe",
+            "sourceQuestion": "PDF-098",
+            "q": "Jak poprawiłby Pan lokalizację tekstu?",
+            "a": "Zbudowałbym anotowany zbiór partytur, zastosował fine-tuning pretrenowanego encodera, ocenę end-to-end cropów i sylab oraz porównał segmentację z DBNet/CRAFT i multi-task wykrywaniem pięciolinii."
+      },
+      {
+            "id": "zagadnienia-099",
+            "topic": "Bank 37+: PDF - pytania końcowe",
+            "sourceQuestion": "PDF-099",
+            "q": "Dlaczego model akustyczny i wokoder są osobne?",
+            "a": "Rozdzielają zadanie symboliczny-input-mel od mel-waveform, pozwalają używać różnych danych, strat i metryk oraz diagnozować, czy problem powstaje przed czy po mel-spektrogramie."
+      },
+      {
+            "id": "zagadnienia-100",
+            "topic": "Bank 37+: PDF - pytania końcowe",
+            "sourceQuestion": "PDF-100",
+            "q": "Dlaczego predicted F0 jest potrzebne, skoro score daje lepszy wynik?",
+            "a": "Predicted F0 może dostarczać naturalną mikroprozodię i odchylenia wykonawcze. Wyniki pokazują jednak, że dla ścisłej kontroli melodii powinno być ograniczane lub mieszane ze score, dopóki model nie przewiduje go stabilniej."
+      },
+      {
+            "id": "zagadnienia-101",
+            "topic": "Bank 37+: PDF - pytania końcowe",
+            "sourceQuestion": "PDF-101",
+            "q": "Jak udowodniłby Pan poprawę naturalności?",
+            "a": "Zaślepionym testem słuchowym MOS lub porównaniami parowymi, na większym zestawie utworów, z osobnymi pytaniami o naturalność, intelligibility, pitch i barwę, wraz z przedziałami ufności i odpowiednią liczbą słuchaczy."
+      },
+      {
+            "id": "quick-pdf-michal-01",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-01",
+            "q": "Jak działają erozja, dylatacja, opening i closing?",
+            "a": "Erozja zmniejsza białe lub aktywne obszary i usuwa drobne elementy, dylatacja je rozszerza. Opening to erozja połączona z dylatacją, przydatna do usuwania małych zakłóceń. Closing to dylatacja połączona z erozją, przydatna do domykania przerw w kreskach i maskach."
+      },
+      {
+            "id": "quick-pdf-michal-02",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-02",
+            "q": "Dlaczego operacje morfologiczne są przydatne dla pięciolinii?",
+            "a": "Linie pięciolinii są długie, cienkie i prawie poziome, więc dobrze reagują na elementy strukturalne dopasowane do takiej geometrii. Morfologia pomaga wykrywać, wzmacniać, usuwać albo grupować linie, zanim wynik trafi do OCR, OMR lub postprocessingu."
+      },
+      {
+            "id": "quick-pdf-michal-03",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-03",
+            "q": "Jak zachować bboxy po transformacji perspektywicznej?",
+            "a": "Trzeba zastosować tę samą macierz homografii do narożników bboxa lub maski co do obrazu. Po transformacji wyznacza się nowy prostokąt obejmujący przetransformowane punkty albo przechowuje czworokąt, jeśli model obsługuje orientowane adnotacje."
+      },
+      {
+            "id": "quick-pdf-michal-04",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-04",
+            "q": "Jak dropout, weight decay i augmentacja ograniczają overfitting?",
+            "a": "Dropout utrudnia współadaptację neuronów, weight decay karze zbyt duże wagi, a augmentacja zwiększa różnorodność danych bez ręcznego zbierania nowych przykładów. Wszystkie trzy metody zmniejszają ryzyko zapamiętania zbioru treningowego, ale nie zastępują poprawnego podziału train/validation/test."
+      },
+      {
+            "id": "quick-pdf-michal-05",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-05",
+            "q": "Jak działa ReduceLROnPlateau?",
+            "a": "Scheduler obserwuje wybraną metrykę, najczęściej validation loss. Jeśli przez ustaloną liczbę epok nie ma poprawy, zmniejsza learning rate, aby model mógł wykonywać mniejsze kroki i doprecyzować minimum."
+      },
+      {
+            "id": "quick-pdf-michal-06",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-06",
+            "q": "Co robi early stopping i jakie ma ryzyko?",
+            "a": "Early stopping kończy trening, gdy metryka walidacyjna przestaje się poprawiać. Chroni przed overfittingiem i oszczędza czas, ale przy małej lub zaszumionej walidacji może zatrzymać trening za wcześnie albo wybrać przypadkowo dobry checkpoint."
+      },
+      {
+            "id": "quick-pdf-michal-07",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-07",
+            "q": "Dlaczego mixed precision przyspiesza trening?",
+            "a": "Mixed precision używa obliczeń FP16 lub BF16 tam, gdzie nie trzeba pełnej precyzji FP32. Zmniejsza zużycie pamięci i przyspiesza operacje na GPU z Tensor Cores, ale wymaga kontroli stabilności numerycznej, np. przez loss scaling."
+      },
+      {
+            "id": "quick-pdf-michal-08",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-08",
+            "q": "Dlaczego macro-mAP traktuje rzadką i częstą klasę podobnie?",
+            "a": "Macro-mAP liczy wynik osobno dla klas, a potem je uśrednia, więc każda klasa ma podobną wagę niezależnie od liczby przykładów. Dzięki temu widać problemy klas rzadkich, ale wynik może być niestabilny, gdy klasa ma bardzo mały support."
+      },
+      {
+            "id": "quick-pdf-michal-09",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-09",
+            "q": "Jak kalibrować confidence detektora?",
+            "a": "Można dobrać progi na zbiorze walidacyjnym, użyć reliability diagrams, temperatury, Platt scalingu lub isotonic regression. Celem jest, aby confidence odpowiadało realnemu prawdopodobieństwu poprawnej detekcji, a nie tylko rankingowi predykcji."
+      },
+      {
+            "id": "quick-pdf-michal-10",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-10",
+            "q": "Dlaczego AP dla klas z jedną instancją jest niestabilne?",
+            "a": "Przy bardzo małym supporcie pojedyncza trafiona lub pominięta predykcja silnie zmienia precision, recall i kształt krzywej PR. Taki AP bardziej pokazuje losowość konkretnego przykładu niż stabilną jakość klasy."
+      },
+      {
+            "id": "quick-pdf-michal-11",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-11",
+            "q": "Jak zbadać wpływ maskowania tekstu na OMR?",
+            "a": "Należy porównać OMR na tych samych stronach z maskowaniem i bez maskowania tekstu, najlepiej przy tych samych checkpointach, progach i seedach. Warto mierzyć mAP, błędy klas sąsiadujących z tekstem oraz końcowy wpływ na Score IR."
+      },
+      {
+            "id": "quick-pdf-michal-12",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-12",
+            "q": "Jak zmierzyć czas i pamięć inferencji dla różnych kafli?",
+            "a": "Dla każdej konfiguracji kafla trzeba mierzyć liczbę kafli na stronę, czas preprocessingu, czas modelu, czas scalania NMS oraz szczytowe zużycie pamięci GPU. Porównanie powinno używać tych samych stron, batch size i sprzętu."
+      },
+      {
+            "id": "quick-pdf-michal-13",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-13",
+            "q": "Jak zaprojektować active learning dla trudnych klas?",
+            "a": "Model wskazuje przykłady o wysokiej niepewności, częstych konfliktach klas lub dużym wpływie na Score IR. Człowiek anotuje tylko wybrane przypadki, po czym model jest douczany. W OMR sensowne są szczególnie rzadkie symbole, małe obiekty i pomyłki typu stem/barline."
+      },
+      {
+            "id": "quick-pdf-michal-14",
+            "topic": "Bank 37+: szybki bank Michał",
+            "sourceQuestion": "SM-14",
+            "q": "Czy syntetyczne dane są wadą, czy zaletą?",
+            "a": "Są zaletą, bo dają dużo tanich, precyzyjnie anotowanych przykładów i kontrolę klas. Są wadą, jeśli różnią się od prawdziwych skanów lub zdjęć. Najlepszy protokół łączy syntetykę z realnym testem i analizą przesunięcia domenowego."
+      },
+      {
+            "id": "quick-pdf-igor-01",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-01",
+            "q": "Jak rozróżnić pauzę od braku detekcji?",
+            "a": "Pauza jest jawnie wykrytym lub wywnioskowanym symbolem z czasem trwania, a brak detekcji oznacza niepewność albo lukę w obserwacji. W Score IR warto przechowywać źródło decyzji: detected rest, synthetic rest lub warning, zamiast udawać, że wszystkie przypadki są równie pewne."
+      },
+      {
+            "id": "quick-pdf-igor-02",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-02",
+            "q": "Jak działa znak przykluczowy i jego zasięg?",
+            "a": "Znak przykluczowy ustala domyślne podwyższenia lub obniżenia dla określonych klas wysokości w całym fragmencie, zwykle do zmiany tonacji. Wpływa na nuty danej nazwy niezależnie od oktawy, chyba że lokalny znak chromatyczny w takcie zmienia interpretację."
+      },
+      {
+            "id": "quick-pdf-igor-03",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-03",
+            "q": "Jak rozpoznać takt przedtaktowy?",
+            "a": "Takt przedtaktowy ma mniejszą sumę wartości rytmicznych niż metrum i pojawia się na początku utworu. Często uzupełnia się z ostatnim taktem do pełnego metrum, więc interpretacja wymaga kontekstu całej frazy lub zapisu."
+      },
+      {
+            "id": "quick-pdf-igor-04",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-04",
+            "q": "Jak obsłużyć polifonię i wiele głosów?",
+            "a": "Trzeba rozdzielić zdarzenia na głosy lub warstwy czasowe, zachować współbrzmienia i osobne rytmy, a następnie zdecydować, która linia jest wokalna. W SVS pojedynczego głosu polifonia wymaga redukcji, wyboru melodii albo osobnych ścieżek dla różnych głosów."
+      },
+      {
+            "id": "quick-pdf-igor-05",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-05",
+            "q": "Jak reprezentować akord w SVS?",
+            "a": "Dla pojedynczego śpiewaka akord zwykle nie jest jednym zdarzeniem do zaśpiewania, więc trzeba wybrać linię melodyczną albo rozdzielić akord na głosy. Jeśli system wspiera wiele głosów, akord można reprezentować jako równoczesne nuty z tym samym onsetem i osobnymi wysokościami."
+      },
+      {
+            "id": "quick-pdf-igor-06",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-06",
+            "q": "Jak działa CMUdict?",
+            "a": "CMUdict mapuje angielskie słowa na sekwencje fonemów ARPAbet, często z oznaczeniem akcentu. System najpierw normalizuje słowo, szuka wpisu w słowniku, a dla brakujących słów używa fallbacku, np. modelu grapheme-to-phoneme."
+      },
+      {
+            "id": "quick-pdf-igor-07",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-07",
+            "q": "Co oznaczają akcenty w ARPAbet?",
+            "a": "Cyfry przy samogłoskach oznaczają akcent: 0 brak akcentu, 1 akcent główny, 2 akcent poboczny. W śpiewie pomagają planować rytm, energię i naturalność wymowy, choć partytura nadal narzuca wysokość i czas."
+      },
+      {
+            "id": "quick-pdf-igor-08",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-08",
+            "q": "Czym różni się voiced/unvoiced od rest?",
+            "a": "Voiced/unvoiced opisuje, czy ramka mowy lub śpiewu ma okresową strukturę i F0. Rest oznacza muzyczną pauzę, czyli brak śpiewanego dźwięku w partyturze. Spółgłoska bezdźwięczna może być unvoiced, ale nie musi być pauzą."
+      },
+      {
+            "id": "quick-pdf-igor-09",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-09",
+            "q": "Co to jest formant i dlaczego wpływa na barwę?",
+            "a": "Formant to rezonans traktu głosowego wzmacniający określone pasma częstotliwości. Formanty decydują o samogłoskach i barwie głosu, dlatego sama kontrola F0 nie wystarcza do zachowania naturalnej tożsamości głosu."
+      },
+      {
+            "id": "quick-pdf-igor-10",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-10",
+            "q": "Dlaczego transpozycja bez korekty formantów może zmieniać barwę?",
+            "a": "Zmiana wysokości przez proste przesunięcie widma może przesunąć także rezonanse traktu głosowego. Wtedy głos brzmi nienaturalnie albo jak inny śpiewak. Dlatego w wysokiej jakości syntezie oddziela się pitch od obwiedni/formantów."
+      },
+      {
+            "id": "quick-pdf-igor-11",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-11",
+            "q": "Dlaczego GAN może być niestabilny?",
+            "a": "Generator i dyskryminator uczą się jednocześnie w grze minimaksowej. Jeśli jeden z nich dominuje, gradienty mogą zanikać, oscylować albo prowadzić do mode collapse. Stabilizacji pomagają m.in. feature matching, dobrane learning rate i odpowiednia architektura dyskryminatorów."
+      },
+      {
+            "id": "quick-pdf-igor-12",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-12",
+            "q": "Co to jest mode collapse?",
+            "a": "Mode collapse oznacza, że generator produkuje mało zróżnicowane wyniki mimo różnych wejść. W audio może to oznaczać podobne artefakty, ubogą barwę lub ignorowanie części warunków wejściowych."
+      },
+      {
+            "id": "quick-pdf-igor-13",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-13",
+            "q": "Jak odróżnić błąd octave F0 od realnego fałszu modelu?",
+            "a": "Trzeba porównać estymację F0 z partyturą, odsłuchem i ciągłością konturu. Błąd oktawowy estymatora często jest dokładnie około 1200 centów i może nie być słyszalnym fałszem modelu, tylko błędem narzędzia pomiarowego."
+      },
+      {
+            "id": "quick-pdf-igor-14",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-14",
+            "q": "Jak mierzyć intelligibility śpiewu?",
+            "a": "Najlepiej testem słuchowym, w którym słuchacze zapisują lub wybierają rozpoznany tekst, albo automatycznie przez ASR/phoneme recognizer jako wskaźnik pomocniczy. Należy oddzielić zrozumiałość tekstu od naturalności i poprawności wysokości."
+      },
+      {
+            "id": "quick-pdf-igor-15",
+            "topic": "Bank 37+: szybki bank Igor",
+            "sourceQuestion": "SI-15",
+            "q": "Jakie informacje ze Score IR nie są jeszcze wykorzystywane przez SVS?",
+            "a": "Potencjalnie niewykorzystane mogą być confidence, ostrzeżenia, alternatywne hipotezy, pełna artykulacja, dynamika, frazowanie, łuki, relacje głosów i informacja o pochodzeniu napraw. SVS może używać ich do kontroli ekspresji i niepewności zamiast tylko nut, tekstu i F0."
+      }
+];
+
     const STORAGE_KEY = "obronaQuizProgress.v1";
     const SESSION_KEY = "obronaQuizSession.v1";
+    const BLACKLIST_KEY = "obronaQuizBlacklist.v1";
     const VALID_MODES = ["flash", "oral"];
     const VALID_THEMES = ["light", "dark"];
-    const cardById = new Map(cards.map(card => [card.id, card]));
-    const allTopics = [...new Set(cards.map(card => card.topic))];
+    const VALID_DECKS = ["main", "bank"];
+    const deckData = {
+      main: {
+        label: "Główna",
+        cards,
+        cardById: new Map(cards.map(card => [card.id, card])),
+        topics: [...new Set(cards.map(card => card.topic))],
+        exportFilename: "obrona_anki.csv"
+      },
+      bank: {
+        label: "Bank 37+",
+        cards: bankCards,
+        cardById: new Map(bankCards.map(card => [card.id, card])),
+        topics: [...new Set(bankCards.map(card => card.topic))],
+        exportFilename: "bank_pytan_37_plus_anki.csv"
+      }
+    };
+    const allCardById = new Map([...cards, ...bankCards].map(card => [card.id, card]));
     const THESIS_TOPICS = new Set([
       "OMR/SVS: wyniki i metodologia",
       "Lokalizacja tekstu i CV",
@@ -3053,25 +5922,33 @@
     const requestedSeed = getSeedFromUrl();
     const savedSession = loadSession();
     const savedSeed = normalizeSeed(savedSession.seed);
+    const savedDeck = VALID_DECKS.includes(savedSession.deck) ? savedSession.deck : "main";
+    const savedBlacklist = loadBlacklist();
     const shouldRestoreOrder = !requestedSeed && savedSeed && Array.isArray(savedSession.order);
 
     const state = {
+      deck: savedDeck,
       mode: VALID_MODES.includes(savedSession.mode) ? savedSession.mode : "flash",
       theme: VALID_THEMES.includes(savedSession.theme) ? savedSession.theme : "light",
       index: shouldRestoreOrder && Number.isInteger(savedSession.index) ? savedSession.index : 0,
-      order: shouldRestoreOrder ? savedSession.order.filter(id => cardById.has(id)) : [],
-      topics: new Set(normalizeSavedTopics(savedSession.topics)),
+      order: shouldRestoreOrder ? savedSession.order.filter(id => deckData[savedDeck].cardById.has(id) && !savedBlacklist[savedDeck].has(id)) : [],
+      topics: new Set(normalizeSavedTopics(savedSession.topics, savedDeck)),
       seed: requestedSeed || savedSeed || generateSeed(),
       progress: loadProgress(),
+      blacklist: savedBlacklist,
       answerVisible: shouldRestoreOrder && Boolean(savedSession.answerVisible),
       editing: false
     };
 
     const els = {
+      deckMain: document.getElementById("deckMain"),
+      deckBank: document.getElementById("deckBank"),
       topics: document.getElementById("topics"),
       selectAllTopics: document.getElementById("selectAllTopics"),
       clearAllTopics: document.getElementById("clearAllTopics"),
       search: document.getElementById("search"),
+      mainFilterThesis: document.getElementById("mainFilterThesis"),
+      mainFilterMini: document.getElementById("mainFilterMini"),
       filterThesis: document.getElementById("filterThesis"),
       filterMini: document.getElementById("filterMini"),
       filterNew: document.getElementById("filterNew"),
@@ -3098,6 +5975,13 @@
       prev: document.getElementById("prev"),
       reset: document.getElementById("reset"),
       exportAnki: document.getElementById("exportAnki"),
+      blacklistCurrent: document.getElementById("blacklistCurrent"),
+      blacklistMain: document.getElementById("blacklistMain"),
+      blacklistBank: document.getElementById("blacklistBank"),
+      blacklistMainCount: document.getElementById("blacklistMainCount"),
+      blacklistBankCount: document.getElementById("blacklistBankCount"),
+      restoreMainBlacklist: document.getElementById("restoreMainBlacklist"),
+      restoreBankBlacklist: document.getElementById("restoreBankBlacklist"),
       modeFlash: document.getElementById("modeFlash"),
       modeOral: document.getElementById("modeOral"),
       themeLight: document.getElementById("themeLight"),
@@ -3123,6 +6007,8 @@
     }
 
     function bind() {
+      els.deckMain.addEventListener("click", () => setDeck("main"));
+      els.deckBank.addEventListener("click", () => setDeck("bank"));
       els.search.addEventListener("input", () => {
         persistEditingIfNeeded();
         state.index = 0;
@@ -3164,6 +6050,9 @@
       els.prev.addEventListener("click", prev);
       els.reset.addEventListener("click", resetProgress);
       els.exportAnki.addEventListener("click", exportAnki);
+      els.blacklistCurrent.addEventListener("click", blacklistCurrentCard);
+      els.restoreMainBlacklist.addEventListener("click", () => restoreAllBlacklisted("main"));
+      els.restoreBankBlacklist.addEventListener("click", () => restoreAllBlacklisted("bank"));
       els.modeFlash.addEventListener("click", () => setMode("flash"));
       els.modeOral.addEventListener("click", () => setMode("oral"));
       els.themeLight.addEventListener("click", () => setTheme("light"));
@@ -3183,10 +6072,74 @@
       });
     }
 
+    function activeDeck() {
+      return deckData[state.deck] || deckData.main;
+    }
+
+    function activeCards() {
+      return activeDeck().cards;
+    }
+
+    function activeTopics() {
+      return activeDeck().topics;
+    }
+
+    function activeCardById() {
+      return activeDeck().cardById;
+    }
+
+    function blacklistedIds(deck = state.deck) {
+      return state.blacklist[deck] || new Set();
+    }
+
+    function isCardBlacklisted(id, deck = state.deck) {
+      return blacklistedIds(deck).has(id);
+    }
+
+    function visibleCards(deck = state.deck) {
+      const data = deckData[deck] || deckData.main;
+      return data.cards.filter(card => !isCardBlacklisted(card.id, deck));
+    }
+
+    function setDeck(deck) {
+      if (!VALID_DECKS.includes(deck) || state.deck === deck) return;
+      persistEditingIfNeeded();
+      state.deck = deck;
+      state.index = 0;
+      state.order = [];
+      state.answerVisible = false;
+      state.editing = false;
+      state.topics = new Set(activeTopics());
+      els.search.value = "";
+      syncDeckControls();
+      renderTopics();
+      rebuildOrder();
+      render();
+    }
+
+    function syncDeckControls() {
+      const isMain = state.deck === "main";
+      els.deckMain.classList.toggle("active", isMain);
+      els.deckBank.classList.toggle("active", !isMain);
+      els.deckMain.setAttribute("aria-selected", String(isMain));
+      els.deckBank.setAttribute("aria-selected", String(!isMain));
+      els.mainFilterThesis.hidden = !isMain;
+      els.mainFilterMini.hidden = !isMain;
+      if (!isMain) {
+        els.filterThesis.checked = false;
+        els.filterMini.checked = false;
+      }
+    }
+
     function renderTopics() {
-      const counts = countBy(cards, card => card.topic);
+      const counts = countBy(visibleCards(), card => card.topic);
       els.topics.innerHTML = "";
-      Object.keys(counts).sort().forEach(topic => {
+      const topics = Object.keys(counts).sort();
+      if (!topics.length) {
+        els.topics.innerHTML = `<div class="blacklist-empty">Wszystkie pytania w tej bazie są ukryte.</div>`;
+        return;
+      }
+      topics.forEach(topic => {
         const id = "topic-" + slug(topic);
         const row = document.createElement("label");
         row.className = "topic-row";
@@ -3210,7 +6163,7 @@
 
     function setAllTopics(selected) {
       persistEditingIfNeeded();
-      state.topics = selected ? new Set(allTopics) : new Set();
+      state.topics = selected ? new Set(activeTopics()) : new Set();
       state.index = 0;
       state.answerVisible = false;
       renderTopics();
@@ -3235,10 +6188,11 @@
     function rebuildOrder(preserveOrder = false) {
       const query = normalize(els.search.value);
       const statusFilters = getSelectedStatusFilters();
-      let pool = cards.filter(card => {
+      let pool = activeCards().filter(card => {
+        if (isCardBlacklisted(card.id)) return false;
         if (!state.topics.has(card.topic)) return false;
-        if (els.filterThesis.checked && !isThesisCard(card)) return false;
-        if (els.filterMini.checked && !isMiniCard(card)) return false;
+        if (state.deck === "main" && els.filterThesis.checked && !isThesisCard(card)) return false;
+        if (state.deck === "main" && els.filterMini.checked && !isMiniCard(card)) return false;
         if (statusFilters.size && !matchesStatusFilter(card.id, statusFilters)) return false;
         if (!query) return true;
         return normalize(card.q + " " + getSearchableAnswer(card) + " " + card.topic).includes(query);
@@ -3260,6 +6214,7 @@
     function render() {
       renderStats();
       renderSeed();
+      renderBlacklistLists();
       const card = currentCard();
       if (!card) {
         state.editing = false;
@@ -3294,6 +6249,7 @@
         <div class="meta-row">
           <span class="pill">${escapeHtml(card.topic)}</span>
           ${isMiniCard(card) ? `<span class="pill note">MiNI</span>` : ""}
+          ${card.sourceQuestion ? `<span class="pill note">pytanie ${card.sourceQuestion}</span>` : ""}
           ${statusPill(status)}
           ${hasCustomAnswer(card.id) ? `<span class="pill note">notatki</span>` : ""}
         </div>
@@ -3344,6 +6300,72 @@
       updateRatingButtons(value);
     }
 
+    function blacklistCurrentCard() {
+      const card = currentCard();
+      if (!card || isCardBlacklisted(card.id)) return;
+      const ok = window.confirm(`Ukryć to pytanie w bazie "${activeDeck().label}"?\n\n${card.q}\n\nPytanie zniknie z losowania, ale będzie można je przywrócić z listy Blacklisted.`);
+      if (!ok) return;
+      persistEditingIfNeeded();
+      state.blacklist[state.deck].add(card.id);
+      saveBlacklist();
+      state.editing = false;
+      state.answerVisible = false;
+      rebuildOrder();
+      renderTopics();
+      render();
+    }
+
+    function renderBlacklistLists() {
+      renderBlacklistList("main", els.blacklistMain, els.blacklistMainCount, els.restoreMainBlacklist);
+      renderBlacklistList("bank", els.blacklistBank, els.blacklistBankCount, els.restoreBankBlacklist);
+    }
+
+    function renderBlacklistList(deck, container, countEl, restoreAllButton) {
+      const ids = [...blacklistedIds(deck)].filter(id => deckData[deck].cardById.has(id));
+      countEl.textContent = String(ids.length);
+      restoreAllButton.disabled = ids.length === 0;
+      container.innerHTML = "";
+      if (!ids.length) {
+        container.innerHTML = `<div class="blacklist-empty">Brak ukrytych pytań.</div>`;
+        return;
+      }
+      ids
+        .map(id => deckData[deck].cardById.get(id))
+        .filter(Boolean)
+        .sort((a, b) => a.topic.localeCompare(b.topic, "pl") || a.q.localeCompare(b.q, "pl"))
+        .forEach(card => {
+          const item = document.createElement("div");
+          item.className = "blacklist-item";
+          item.innerHTML = `
+            <div class="blacklist-question">
+              <strong>${escapeHtml(truncateText(card.q, 92))}</strong>
+              <div class="blacklist-topic">${escapeHtml(card.topic)}</div>
+            </div>
+            <button type="button">Przywróć</button>
+          `;
+          item.querySelector("button").addEventListener("click", () => restoreBlacklisted(deck, card.id));
+          container.appendChild(item);
+        });
+    }
+
+    function restoreBlacklisted(deck, id) {
+      if (!state.blacklist[deck]?.has(id)) return;
+      state.blacklist[deck].delete(id);
+      saveBlacklist();
+      renderTopics();
+      rebuildOrder(true);
+      render();
+    }
+
+    function restoreAllBlacklisted(deck) {
+      if (!state.blacklist[deck]?.size) return;
+      state.blacklist[deck].clear();
+      saveBlacklist();
+      renderTopics();
+      rebuildOrder(true);
+      render();
+    }
+
     function next() {
       if (!state.order.length) return;
       persistEditingIfNeeded();
@@ -3362,7 +6384,7 @@
 
     function currentCard() {
       const id = state.order[state.index];
-      return cardById.get(id);
+      return activeCardById().get(id);
     }
 
     function getStatus(id) {
@@ -3370,8 +6392,9 @@
     }
 
     function renderStats() {
-      const pool = state.order.length ? state.order : cards.map(card => card.id);
-      const statuses = cards.map(card => getStatus(card.id));
+      const deckCards = visibleCards();
+      const pool = state.order.length ? state.order : deckCards.map(card => card.id);
+      const statuses = deckCards.map(card => getStatus(card.id));
       els.statDone.textContent = statuses.filter(status => status === "good").length;
       els.statHard.textContent = statuses.filter(status => status === "hard" || status === "bad").length;
       els.statTotal.textContent = pool.length;
@@ -3391,9 +6414,10 @@
 
     function exportAnki() {
       const rows = [["Front", "Back", "Tags"]];
-      cards.forEach(card => {
+      activeCards().forEach(card => {
         const tags = [card.topic.replaceAll(" ", "_")];
         if (isMiniCard(card)) tags.push("Pytania_ze_strony_MiNI");
+        if (card.sourceQuestion) tags.push("Bank_37_plus");
         rows.push([card.q, card.a, tags.join(" ")]);
       });
       const csv = rows.map(row => row.map(csvCell).join(",")).join("\n");
@@ -3401,7 +6425,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "obrona_anki.csv";
+      a.download = activeDeck().exportFilename;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -3414,6 +6438,7 @@
       els.rateHard.style.display = show ? "" : "none";
       els.rateBad.style.display = show ? "" : "none";
       els.editAnswer.style.display = show ? "" : "none";
+      els.blacklistCurrent.style.display = show ? "" : "none";
       if (!show) els.editTools.hidden = true;
     }
 
@@ -3442,7 +6467,7 @@
 
     function normalizeProgress(raw) {
       return Object.entries(raw || {}).reduce((acc, [id, item]) => {
-        if (!cardById.has(id)) return acc;
+        if (!allCardById.has(id)) return acc;
         const status = typeof item === "string" ? item : item?.status;
         const answerHtml = typeof item?.answerHtml === "string" ? sanitizeRichText(item.answerHtml) : "";
         if (!["good", "hard", "bad"].includes(status) && !answerHtml) return acc;
@@ -3463,6 +6488,37 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
     }
 
+    function loadBlacklist() {
+      try {
+        const normalized = normalizeBlacklist(JSON.parse(localStorage.getItem(BLACKLIST_KEY)) || {});
+        localStorage.setItem(BLACKLIST_KEY, JSON.stringify(serializeBlacklist(normalized)));
+        return normalized;
+      } catch {
+        return normalizeBlacklist({});
+      }
+    }
+
+    function normalizeBlacklist(raw) {
+      return VALID_DECKS.reduce((acc, deck) => {
+        const known = deckData[deck].cardById;
+        const ids = Array.isArray(raw?.[deck]) ? raw[deck] : [];
+        acc[deck] = new Set(ids.filter(id => known.has(id)));
+        return acc;
+      }, {});
+    }
+
+    function serializeBlacklist(blacklist) {
+      return VALID_DECKS.reduce((acc, deck) => {
+        const known = deckData[deck].cardById;
+        acc[deck] = [...(blacklist[deck] || [])].filter(id => known.has(id));
+        return acc;
+      }, {});
+    }
+
+    function saveBlacklist() {
+      localStorage.setItem(BLACKLIST_KEY, JSON.stringify(serializeBlacklist(state.blacklist)));
+    }
+
     function loadSession() {
       try {
         return JSON.parse(localStorage.getItem(SESSION_KEY)) || {};
@@ -3473,6 +6529,7 @@
 
     function saveSession() {
       const session = {
+        deck: state.deck,
         mode: state.mode,
         theme: state.theme,
         index: state.index,
@@ -3499,13 +6556,15 @@
       els.filterNew.checked = filters.has("new");
       els.filterHard.checked = filters.has("hard");
       els.filterBad.checked = filters.has("bad");
+      syncDeckControls();
       syncModeButtons();
       syncThemeButtons();
     }
 
-    function normalizeSavedTopics(topics) {
-      if (!Array.isArray(topics)) return allTopics;
-      const known = new Set(allTopics);
+    function normalizeSavedTopics(topics, deck = "main") {
+      const knownTopics = deckData[deck]?.topics || deckData.main.topics;
+      if (!Array.isArray(topics)) return knownTopics;
+      const known = new Set(knownTopics);
       return topics.filter(topic => known.has(topic));
     }
 
@@ -3605,6 +6664,7 @@
     function syncEditControls(card) {
       const hasCard = Boolean(card);
       els.editAnswer.disabled = !hasCard;
+      els.blacklistCurrent.disabled = !hasCard;
       els.editAnswer.classList.toggle("active", state.editing);
       els.editAnswer.textContent = state.editing ? "Edycja" : "Edytuj";
       els.editTools.hidden = !state.editing;
@@ -3795,6 +6855,12 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function truncateText(value, maxLength) {
+      const text = String(value || "");
+      if (text.length <= maxLength) return text;
+      return text.slice(0, Math.max(0, maxLength - 1)).trimEnd() + "…";
     }
 
     function formatAnswer(value) {
