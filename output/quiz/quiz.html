@@ -832,32 +832,123 @@
           {
                 "id": "resolution-1",
                 "topic": "Reprezentacja wiedzy",
-                "q": "Na czym polega dowód rezolucyjny przez sprzeczność?",
-                "a": "Do teorii T dodaje się negację tezy beta i przekształca wszystko do klauzul. Jeśli da się wyprowadzić klauzulę pustą, to T implikuje beta."
+                "mini": true,
+                "q": "Na czym polega metoda rezolucji w rachunku predykatów?",
+                "a": "Rezolucja to metoda automatycznego dowodzenia przez sprzeczność. Aby pokazać, że z teorii T wynika teza beta, dodaje się do T negację beta, przekształca wszystkie formuły do postaci klauzulowej, a następnie stosuje regułę rezolucji do par klauzul z literałami komplementarnymi. W rachunku predykatów literały dopasowuje się unifikacją. Jeżeli uda się wyprowadzić klauzulę pustą, to zbiór T razem z negacją beta jest niespełnialny, więc T implikuje beta."
+          },
+          {
+                "id": "resolution-atp",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest automatyczne dowodzenie twierdzeń w ujęciu z wykładu o rezolucji?",
+                "a": "Mamy zbiór zdań T oraz zdanie beta i chcemy algorytmicznie ustalić, czy T dowodzi beta, czyli T ⊢ beta. Formalny dowód to sekwencja formuł, w której każdy krok jest aksjomatem, przesłanką z T albo wynikiem zastosowania reguły wnioskowania do wcześniejszych kroków. Sama definicja dowodu nie mówi jednak, jak go znaleźć. Rezolucja daje procedurę poszukiwania dowodu, szczególnie wygodną po sprowadzeniu formuł do klauzul."
+          },
+          {
+                "id": "resolution-kb-query",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Jak rozumieć podejście knowledge base/query w metodzie rezolucji?",
+                "a": "Zbiór formuł T można traktować jako bazę wiedzy, a zdanie beta jako zapytanie. Jeśli T ⊢ beta, baza odpowiada YES; jeśli nie da się tego dowieść w danym systemie, odpowiadamy NO lub nie znajdujemy dowodu. W rezolucji zapytanie sprawdza się refutacyjnie: dodaje się negację beta do bazy i próbuje wykazać niespełnialność przez wyprowadzenie klauzuli pustej."
+          },
+          {
+                "id": "resolution-soundness-limits",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Jakie są najważniejsze własności i ograniczenia metody rezolucji?",
+                "a": "Reguła rezolucji jest poprawna: rezolwenta wynika logicznie z klauzul wejściowych. Dla rachunku predykatów metoda rezolucji jest też zupełna w sensie refutacyjnym: jeśli T implikuje beta, to istnieje dowód rezolucyjny z T oraz ¬beta. Ograniczenie praktyczne polega na tym, że można wygenerować bardzo dużo klauzul, a proces przeszukiwania ogólnie nie musi się zakończyć. Dlatego stosuje się strategie wyboru klauzul, np. liniową rezolucję."
           },
           {
                 "id": "resolution-2",
                 "topic": "Reprezentacja wiedzy",
-                "q": "Po co w rezolucji pierwszego rzędu jest unifikacja?",
-                "a": "Literały nie muszą być identyczne syntaktycznie. Unifikacja znajduje podstawienie, które dopasowuje termy, np. Student(x) i Student(Piotr)."
+                "q": "Czym są atom, literal, literały komplementarne i klauzula?",
+                "a": "Atom to elementarna formuła logiczna, np. P(x) albo Student(Piotr). Literal to atom albo jego negacja. Dwa literały są komplementarne, gdy jeden jest negacją drugiego, np. P(a) i ¬P(a). Klauzula to alternatywa literałów, np. P(x) ∨ ¬Q(x). Klauzulę można traktować jak zbiór literałów. Klauzula pusta oznacza fałsz i jest celem dowodu rezolucyjnego przez sprzeczność."
           },
           {
                 "id": "resolution-3",
                 "topic": "Reprezentacja wiedzy",
-                "q": "Czym jest skolemizacja?",
-                "a": "To usuwanie kwantyfikatorów egzystencjalnych przez stałe lub funkcje Skolema, z zachowaniem spełnialności potrzebnej w dowodzie refutacyjnym."
+                "q": "Czym jest koniunkcyjna postać normalna CNF?",
+                "a": "Formuła jest w CNF, gdy jest koniunkcją klauzul, czyli koniunkcją alternatyw literałów. Przykład: (P ∨ Q) ∧ (¬P ∨ R). W rezolucji CNF jest wygodna, bo cały zbiór przesłanek można traktować jako zbiór klauzul, na których działa jedna reguła wnioskowania. Każdą formułę rachunku zdań można przekształcić do równoważnej formuły w CNF, używając m.in. eliminacji implikacji, przesuwania negacji do atomów i rozdzielności alternatywy względem koniunkcji."
           },
           {
-                "id": "actions-1",
+                "id": "resolution-4",
                 "topic": "Reprezentacja wiedzy",
-                "q": "Co oznacza frame problem?",
-                "a": "To problem reprezentowania tego, co nie zmienia się po wykonaniu akcji. Rozwiązaniem jest zwykle zasada inercji: fluenty zachowują wartości, jeśli akcja ich nie zmienia."
+                "q": "Jaka jest reguła rezolucji w rachunku zdań?",
+                "a": "Reguła rezolucji usuwa parę literałów komplementarnych z dwóch klauzul i łączy pozostałe literały. Z klauzul λ ∨ α oraz ¬λ ∨ β można wywnioskować rezolwentę α ∨ β. Reguła jest poprawna semantycznie: jeśli obie przesłanki są prawdziwe, to rezolwenta też musi być prawdziwa. W dowodzie refutacyjnym wielokrotne stosowanie tej reguły ma doprowadzić do klauzuli pustej."
           },
           {
-                "id": "actions-2",
+                "id": "resolution-5",
                 "topic": "Reprezentacja wiedzy",
-                "q": "Czym różni się ramification problem od qualification problem?",
-                "a": "Ramification problem dotyczy skutków pośrednich akcji. Qualification problem dotyczy ogromnej liczby warunków i wyjątków potrzebnych, aby akcja była wykonalna i skuteczna."
+                "q": "Czym jest dowód rezolucyjny i drzewo rezolucji?",
+                "a": "Dowód rezolucyjny to sekwencja klauzul, w której każda klauzula jest albo klauzulą wejściową z przekształconego zbioru T ∪ {¬beta}, albo rezolwentą wcześniejszych klauzul. Dowód kończy się sukcesem, gdy pojawi się klauzula pusta. Drzewo rezolucji pokazuje tę samą strukturę graficznie: liście są klauzulami wejściowymi, węzły wewnętrzne są rezolwentami, a korzeń to klauzula pusta."
+          },
+          {
+                "id": "resolution-6",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest liniowa rezolucja?",
+                "a": "Liniowa rezolucja ogranicza kształt dowodu: jedna gałąź, nazywana ciągiem klauzul głównych, jest rozwijana krok po kroku przez rezolucję z klauzulami bocznymi. Zwykle zaczyna się od klauzuli związanej z zanegowaną tezą. Ograniczenie to porządkuje przeszukiwanie przestrzeni dowodów i jest ważne praktycznie, bo pełna rezolucja może generować bardzo wiele możliwych par klauzul."
+          },
+          {
+                "id": "resolution-7",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest preneksowa koniunkcyjna postać normalna PCNF?",
+                "a": "PCNF to postać formuły pierwszego rzędu, w której wszystkie kwantyfikatory stoją na początku, a za nimi znajduje się macierz w CNF. Ogólny schemat to Q1 x1 ... Qn xn . phi, gdzie phi jest koniunkcją klauzul. Taka postać jest krokiem przygotowawczym do rezolucji w rachunku predykatów, bo pozwala uporządkować kwantyfikatory, potem usunąć egzystencjalne przez skolemizację i otrzymać zbiór klauzul z domyślnymi kwantyfikatorami ogólnymi."
+          },
+          {
+                "id": "resolution-8",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Jak przekształca się formułę pierwszego rzędu do PCNF przed rezolucją?",
+                "a": "Najpierw usuwa się implikacje i równoważności, potem przesuwa negacje do poziomu atomów, zmieniając przy tym kwantyfikatory według praw De Morgana. Następnie standaryzuje się zmienne, aby różne kwantyfikatory nie używały tej samej nazwy przypadkowo, przenosi się kwantyfikatory na początek formuły i przekształca macierz do CNF. Celem nie jest elegancka postać formuły, tylko uzyskanie zbioru klauzul nadających się do rezolucji."
+          },
+          {
+                "id": "resolution-9",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest skolemizacja i czym różni się stała Skolema od funkcji Skolema?",
+                "a": "Skolemizacja usuwa kwantyfikatory egzystencjalne z formuły w PCNF, zachowując spełnialność potrzebną w dowodzie refutacyjnym. Jeżeli zmienna egzystencjalna nie zależy od wcześniejszych kwantyfikatorów ogólnych, zastępuje się ją nową stałą Skolema. Jeżeli występuje po kwantyfikatorach ogólnych, zastępuje się ją funkcją Skolema zależną od tych zmiennych ogólnych. Przykład: ∃x P(x) daje P(a), a ∀x ∃y Likes(x,y) daje ∀x Likes(x,f(x))."
+          },
+          {
+                "id": "resolution-10",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest podstawienie w rachunku predykatów?",
+                "a": "Podstawienie to skończony zbiór przypisań zmiennych do termów, np. {x ← a, y ← f(z)}, gdzie zmienne po lewej są różne, a term nie powinien zawierać podstawianej zmiennej. Zastosowanie podstawienia do formuły lub termu polega na jednoczesnej zamianie wszystkich wystąpień wskazanych zmiennych. Podstawienia są potrzebne, bo w rezolucji pierwszego rzędu literały rzadko są identyczne od razu; trzeba je dopasować."
+          },
+          {
+                "id": "resolution-11",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym są unifikator i najogólniejszy unifikator MGU?",
+                "a": "Zbiór wyrażeń jest unifikowalny, gdy istnieje podstawienie, które czyni je identycznymi. Takie podstawienie nazywa się unifikatorem. Najogólniejszy unifikator, MGU, to unifikator, z którego każdy inny unifikator można otrzymać przez dodatkowe podstawienie. Przykładowo P(x) i P(a) mają MGU {x ← a}. W rezolucji używa się MGU, aby nie robić zbyt szczegółowych założeń i zachować ogólność dowodu."
+          },
+          {
+                "id": "resolution-12",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest disagreement set i jaka jest idea algorytmu unifikacji?",
+                "a": "Disagreement set to zbiór fragmentów wyrażeń w pierwszym miejscu, w którym te wyrażenia różnią się składniowo. Algorytm unifikacji zaczyna od pustego podstawienia, znajduje disagreement set, a jeśli zawiera zmienną i term niezawierający tej zmiennej, dodaje odpowiednie podstawienie i stosuje je do całego zbioru wyrażeń. Proces kończy się sukcesem, gdy wszystkie wyrażenia staną się identyczne, albo porażką, gdy różnicy nie da się usunąć poprawnym podstawieniem."
+          },
+          {
+                "id": "resolution-13",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Po co w rezolucji pierwszego rzędu jest unifikacja?",
+                "a": "W rachunku zdań literały komplementarne muszą być takie same poza negacją. W rachunku predykatów mogą różnić się zmiennymi i termami, np. Student(x) oraz Student(Piotr). Unifikacja znajduje podstawienie, które dopasowuje takie literały, a potem reguła rezolucji działa już na ich wspólnej instancji. Bez unifikacji rezolucja pierwszego rzędu byłaby zbyt słaba i nie mogłaby wykorzystać ogólnych reguł z kwantyfikatorami."
+          },
+          {
+                "id": "resolution-14",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest binarna rezolwenta w rachunku predykatów?",
+                "a": "Binarna rezolwenta powstaje z dwóch klauzul po wcześniejszym rozdzieleniu ich zmiennych, znalezieniu literałów komplementarnych i obliczeniu MGU dla odpowiadających im atomów. Po zastosowaniu podstawienia usuwa się parę dopasowanych literałów, a pozostałe literały z obu klauzul tworzą nową klauzulę. To uogólnienie reguły rezolucji z rachunku zdań na formuły z predykatami, zmiennymi i funkcjami."
+          },
+          {
+                "id": "resolution-15",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Czym jest faktoryzacja klauzuli i po co jest potrzebna?",
+                "a": "Faktoryzacja upraszcza klauzulę przez zunifikowanie części jej literałów i usunięcie powtórzeń. Jest potrzebna, bo w rachunku predykatów sama binarna rezolucja bez faktoryzacji może nie wystarczyć do wyprowadzenia sprzeczności z niespójnych klauzul. Intuicyjnie faktoryzacja pozwala potraktować kilka podobnych literałów w jednej klauzuli jako jedną bardziej konkretną instancję."
+          },
+          {
+                "id": "resolution-16",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Jak wygląda ogólny algorytm metody rezolucji dla rachunku predykatów?",
+                "a": "Dla teorii T i tezy beta najpierw dodaje się ¬beta. Każdą formułę sprowadza się do PCNF, wykonuje skolemizację i zamienia na zbiór klauzul. Jeśli klauzula pusta jest już w zbiorze, dowód jest zakończony. W przeciwnym razie wybiera się pary klauzul z unifikowalnymi literałami komplementarnymi, liczy rezolwentę, dodaje ją do zbioru i powtarza proces. Jeśli pojawi się klauzula pusta, teza została dowiedziona; jeśli nie ma już możliwych rezolwent, dowodu tą metodą nie znaleziono. Proces ogólnie nie musi się zakończyć."
+          },
+          {
+                "id": "resolution-17",
+                "topic": "Reprezentacja wiedzy",
+                "q": "Na czym polega answer extraction w rezolucji?",
+                "a": "Answer extraction dotyczy zapytań egzystencjalnych typu: kto spełnia własność phi(x). Zamiast szukać tylko sprzeczności, dodaje się pomocniczy predykat Answer(x), którego nie ma w bazie wiedzy. W trakcie rezolucji nie tyle czeka się na klauzulę pustą, ile na klauzulę zawierającą sam predykat Answer z konkretnym termem. Ten term jest odpowiedzią, np. Answer(tweety) oznacza, że znaleziono obiekt spełniający zapytanie."
           },
           {
                 "id": "evolution-1",
@@ -1224,54 +1315,6 @@
                 "topic": "Zarządzanie",
                 "q": "Co daje CI/CD w projekcie informatycznym?",
                 "a": "CI automatyzuje integrację, testy i szybkie wykrywanie błędów. CD automatyzuje przygotowanie lub wykonanie wdrożeń, skracając drogę od zmiany do działającego systemu."
-          },
-          {
-                "id": "knowledge-extra-1",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Czym są klauzule Horna?",
-                "a": "To klauzule z co najwyżej jednym literałem pozytywnym. Są ważne w logice programowania, bo umożliwiają efektywne wnioskowanie regułowe, np. w stylu Prologu."
-          },
-          {
-                "id": "knowledge-extra-2",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Czym różni się wnioskowanie w przód od wnioskowania wstecz?",
-                "a": "Wnioskowanie w przód startuje od faktów i odpala pasujące reguły, aż znajdzie nowe fakty. Wstecz startuje od celu i sprawdza, jakie reguły i fakty mogą go uzasadnić."
-          },
-          {
-                "id": "knowledge-extra-3",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Czym różni się założenie świata zamkniętego od otwartego?",
-                "a": "W świecie zamkniętym brak faktu traktuje się jak fałsz. W świecie otwartym brak faktu oznacza nieznane, więc nie wolno automatycznie wnioskować fałszu."
-          },
-          {
-                "id": "knowledge-extra-4",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Co oznacza monotoniczność wnioskowania?",
-                "a": "Jeśli dodanie nowych faktów nie unieważnia wcześniejszych wniosków, logika jest monotoniczna. Wnioskowanie niemonotoniczne dopuszcza wycofanie wniosków po dopływie nowych informacji."
-          },
-          {
-                "id": "knowledge-extra-5",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Z czego składa się operator akcji w reprezentacji STRIPS?",
-                "a": "Typowo z warunków wstępnych oraz list dodawania i usuwania faktów. Planowanie polega na znajdowaniu sekwencji akcji prowadzącej ze stanu początkowego do celu."
-          },
-          {
-                "id": "knowledge-extra-6",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Czym jest ontologia w informatyce?",
-                "a": "To formalny opis pojęć w dziedzinie, ich relacji, własności i ograniczeń. Ontologie pomagają współdzielić znaczenie danych i umożliwiają wnioskowanie semantyczne."
-          },
-          {
-                "id": "knowledge-extra-7",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Do czego służą logiki opisowe?",
-                "a": "Są formalnym fundamentem wielu ontologii. Pozwalają opisywać klasy, role i relacje oraz automatycznie sprawdzać spójność i klasyfikację pojęć."
-          },
-          {
-                "id": "knowledge-extra-8",
-                "topic": "Reprezentacja wiedzy",
-                "q": "Czym jest sieć semantyczna?",
-                "a": "To grafowa reprezentacja wiedzy, w której węzły oznaczają pojęcia lub obiekty, a krawędzie relacje między nimi. Ułatwia pokazywanie dziedziczenia i powiązań znaczeniowych."
           },
           {
                 "id": "ai-extra-1",
@@ -1757,20 +1800,6 @@
                 "mini": true,
                 "q": "Jakie metodyki zarządzania projektami znasz? Czym się różnią i co mają wspólnego?",
                 "a": "Podejścia kaskadowe planują zakres i etapy z góry, dlatego pasują do stabilnych wymagań. Agile, np. Scrum i Kanban, rozwija produkt iteracyjnie, często zbiera feedback i łatwiej reaguje na zmiany. PRINCE2 mocno akcentuje uzasadnienie biznesowe, role i kontrolę etapów. Wspólne elementy to cel, role, planowanie, komunikacja, zarządzanie ryzykiem, monitorowanie postępu i kontrola jakości. Różnice dotyczą głównie stopnia formalizacji, elastyczności i sposobu pracy z wymaganiami."
-          },
-          {
-                "id": "mini-resolution-predicate",
-                "topic": "Reprezentacja wiedzy",
-                "mini": true,
-                "q": "Na czym polega metoda rezolucji w rachunku predykatów?",
-                "a": "Rezolucja to reguła wnioskowania używana do dowodzenia przez sprzeczność. Formuły sprowadza się do postaci klauzulowej, neguje tezę i dodaje ją do bazy wiedzy. Następnie szuka się par klauzul z literałami komplementarnymi, które można dopasować unifikacją. Jeśli da się wyprowadzić klauzulę pustą, otrzymujemy sprzeczność, a więc pierwotna teza wynika z bazy wiedzy. W rachunku predykatów kluczowa jest unifikacja zmiennych i termów."
-          },
-          {
-                "id": "mini-reasoning-actions",
-                "topic": "Reprezentacja wiedzy",
-                "mini": true,
-                "q": "Jakie są główne problemy w zagadnieniach wnioskowania o działaniach?",
-                "a": "Najbardziej znany jest frame problem: jak opisać, co pozostaje bez zmian po wykonaniu akcji, bez wypisywania ogromnej liczby oczywistości. Qualification problem dotyczy wszystkich warunków, które muszą zajść, aby akcja się udała. Ramification problem opisuje skutki pośrednie akcji. Dochodzą też działania współbieżne, czas, niepełna wiedza, efekty niedeterministyczne i potrzeba wnioskowania niemonotonicznego, bo nowe informacje mogą zmieniać wcześniejsze wnioski."
           },
           {
                 "id": "mini-evolutionary-algorithm",
