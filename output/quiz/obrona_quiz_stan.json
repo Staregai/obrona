@@ -1,0 +1,2921 @@
+{
+  "version": 1,
+  "app": "obrona-quiz",
+  "exportedAt": "2026-06-30T10:36:16.415Z",
+  "progress": {
+    "hopfield-2": {
+      "status": "hard",
+      "updatedAt": 1782401002179
+    },
+    "linear-2": {
+      "status": "hard",
+      "updatedAt": 1782403068307
+    },
+    "nn-extra-4": {
+      "status": "bad",
+      "updatedAt": 1782391579996
+    },
+    "bober-ocr-3": {
+      "status": "hard",
+      "updatedAt": 1782391622434
+    },
+    "complexity-extra-7": {
+      "status": "bad",
+      "updatedAt": 1782477666466,
+      "answerHtml": "Bada <mark>średni koszt operacji w najgorszym ciągu operacji, bez zakładania rozkładu probabilistycznego.</mark> Droga operacja może być dopuszczalna, jeśli występuje rzadko.",
+      "editedAt": 1782814987888
+    },
+    "algorithms-extra-7": {
+      "status": "bad",
+      "updatedAt": 1782391732660
+    },
+    "complexity-extra-2": {
+      "status": "bad",
+      "updatedAt": 1782392248854
+    },
+    "algorithms-extra-6": {
+      "status": "bad",
+      "updatedAt": 1782392719623
+    },
+    "data-extra-8": {
+      "status": "hard",
+      "updatedAt": 1782392784162
+    },
+    "algorithms-extra-1": {
+      "status": "hard",
+      "updatedAt": 1782392825256
+    },
+    "pnp-1": {
+      "status": "bad",
+      "updatedAt": 1782476551881
+    },
+    "prolog-1": {
+      "status": "bad",
+      "updatedAt": 1782392921382,
+      "answerHtml": "Na <mark>faktach </mark>i <mark>regułach w postaci klauzul Horna, unifikacji, rezolucji SLD i backtrackingu.</mark> Zapytanie jest celem, który Prolog próbuje dowieść.",
+      "editedAt": 1782815482022
+    },
+    "bober-omr-4": {
+      "status": "good",
+      "updatedAt": 1782392984997
+    },
+    "bober-score-6": {
+      "status": "good",
+      "updatedAt": 1782393034787
+    },
+    "bober-eval-6": {
+      "status": "hard",
+      "updatedAt": 1782393244304
+    },
+    "optimization-extra-8": {
+      "status": "hard",
+      "updatedAt": 1782393342774
+    },
+    "nn-extra-6": {
+      "status": "hard",
+      "updatedAt": 1782393429132
+    },
+    "bober-cv-4": {
+      "status": "hard",
+      "updatedAt": 1782393620824
+    },
+    "bober-score-2": {
+      "status": "hard",
+      "updatedAt": 1782393717431
+    },
+    "architecture-1": {
+      "status": "bad",
+      "updatedAt": 1782480460587
+    },
+    "bober-ocr-8": {
+      "status": "good",
+      "updatedAt": 1782393786052
+    },
+    "chomsky-1": {
+      "status": "bad",
+      "updatedAt": 1782393894938
+    },
+    "rl-extra-1": {
+      "status": "good",
+      "updatedAt": 1782754518946
+    },
+    "bober-results-8": {
+      "status": "hard",
+      "updatedAt": 1782394038268
+    },
+    "complexity-extra-3": {
+      "status": "bad",
+      "updatedAt": 1782394097892
+    },
+    "rl-extra-8": {
+      "status": "good",
+      "updatedAt": 1782754059114
+    },
+    "som-1": {
+      "status": "hard",
+      "updatedAt": 1782477448042
+    },
+    "bober-cv-3": {
+      "status": "hard",
+      "updatedAt": 1782394678849
+    },
+    "bober-cv-8": {
+      "status": "bad",
+      "updatedAt": 1782395344588
+    },
+    "bober-omr-7": {
+      "status": "hard",
+      "updatedAt": 1782395434014
+    },
+    "management-extra-7": {
+      "status": "bad",
+      "updatedAt": 1782395489056
+    },
+    "management-extra-5": {
+      "status": "hard",
+      "updatedAt": 1782395566922
+    },
+    "nn-extra-1": {
+      "status": "hard",
+      "updatedAt": 1782395646158
+    },
+    "rl-extra-5": {
+      "status": "good",
+      "updatedAt": 1782753852630
+    },
+    "optimization-1": {
+      "status": "hard",
+      "updatedAt": 1782395821852
+    },
+    "data-extra-4": {
+      "status": "hard",
+      "updatedAt": 1782395906942
+    },
+    "data-extra-6": {
+      "status": "hard",
+      "updatedAt": 1782396224124
+    },
+    "bober-eval-2": {
+      "status": "good",
+      "updatedAt": 1782396256080
+    },
+    "data-extra-2": {
+      "status": "hard",
+      "updatedAt": 1782396292556
+    },
+    "bober-omr-1": {
+      "status": "good",
+      "updatedAt": 1782396354302
+    },
+    "rl-extra-6": {
+      "status": "good",
+      "updatedAt": 1782753975252
+    },
+    "resolution-3": {
+      "status": "hard",
+      "updatedAt": 1782475784826
+    },
+    "bober-omr-2": {
+      "status": "good",
+      "updatedAt": 1782397138396
+    },
+    "optimization-extra-4": {
+      "status": "hard",
+      "updatedAt": 1782815541467
+    },
+    "roots-1": {
+      "status": "hard",
+      "updatedAt": 1782397638521
+    },
+    "dp-1": {
+      "status": "hard",
+      "updatedAt": 1782397687003
+    },
+    "evolution-2": {
+      "status": "bad",
+      "updatedAt": 1782397746954
+    },
+    "mdp-1": {
+      "status": "bad",
+      "updatedAt": 1782751639864,
+      "answerHtml": "MDP składa się ze zbioru stanów S, akcji A, <strong>funkcji przejścia P(s'|s,a)</strong>, funkcji nagrody R(s,a,s') oraz współczynnika dyskontowania gamma.<mark> Własność Markowa</mark> oznacza, że<mark> rozkład następnego stanu i nagrody zależy od bieżącego stanu i akcji, a nie od całej historii</mark>. Polityka pi wybiera akcje w stanach, a celem jest maksymalizacja oczekiwanego zdyskontowanego zwrotu.",
+      "editedAt": 1782751635855
+    },
+    "bober-score-3": {
+      "status": "good",
+      "updatedAt": 1782397860712
+    },
+    "bober-svs-3": {
+      "status": "hard",
+      "updatedAt": 1782397880110
+    },
+    "bober-eval-7": {
+      "status": "good",
+      "updatedAt": 1782397896161
+    },
+    "complexity-extra-6": {
+      "status": "hard",
+      "updatedAt": 1782398070510
+    },
+    "bober-cv-5": {
+      "status": "hard",
+      "updatedAt": 1782398189762
+    },
+    "prolog-2": {
+      "status": "hard",
+      "updatedAt": 1782398212536
+    },
+    "swarm-1": {
+      "status": "hard",
+      "updatedAt": 1782398332900
+    },
+    "management-extra-8": {
+      "status": "hard",
+      "updatedAt": 1782398432960
+    },
+    "scrum-1": {
+      "status": "hard",
+      "updatedAt": 1782398486944
+    },
+    "features-1": {
+      "status": "hard",
+      "updatedAt": 1782476180986
+    },
+    "hopfield-1": {
+      "status": "hard",
+      "updatedAt": 1782479690689
+    },
+    "resolution-1": {
+      "status": "hard",
+      "updatedAt": 1782661923755
+    },
+    "rules-1": {
+      "status": "hard",
+      "updatedAt": 1782398962509
+    },
+    "bober-svs-7": {
+      "status": "hard",
+      "updatedAt": 1782399010949
+    },
+    "nn-extra-3": {
+      "status": "hard",
+      "updatedAt": 1782475830631
+    },
+    "bober-svs-2": {
+      "status": "good",
+      "updatedAt": 1782815721677
+    },
+    "data-extra-5": {
+      "status": "hard",
+      "updatedAt": 1782480930186
+    },
+    "optimization-2": {
+      "status": "hard",
+      "updatedAt": 1782476478458
+    },
+    "bober-ocr-7": {
+      "status": "bad",
+      "updatedAt": 1782399348001
+    },
+    "methodologies-1": {
+      "status": "good",
+      "updatedAt": 1782399411222
+    },
+    "experiment-1": {
+      "status": "hard",
+      "updatedAt": 1782399460774
+    },
+    "bober-results-3": {
+      "status": "good",
+      "updatedAt": 1782399514454
+    },
+    "bober-results-4": {
+      "status": "good",
+      "updatedAt": 1782399530414
+    },
+    "management-extra-3": {
+      "status": "good",
+      "updatedAt": 1782399611748
+    },
+    "rl-extra-2": {
+      "status": "good",
+      "updatedAt": 1782754666224
+    },
+    "bober-score-7": {
+      "status": "good",
+      "updatedAt": 1782399670209
+    },
+    "agent-1": {
+      "status": "hard",
+      "updatedAt": 1782399840270
+    },
+    "bober-svs-8": {
+      "status": "bad",
+      "updatedAt": 1782399881255
+    },
+    "nn-extra-5": {
+      "status": "bad",
+      "updatedAt": 1782399970167
+    },
+    "rl-extra-7": {
+      "status": "good",
+      "updatedAt": 1782751160896
+    },
+    "bober-svs-4": {
+      "status": "hard",
+      "updatedAt": 1782400111512
+    },
+    "data-extra-3": {
+      "status": "hard",
+      "updatedAt": 1782400144738
+    },
+    "bober-ocr-6": {
+      "status": "hard",
+      "updatedAt": 1782400364496
+    },
+    "optimization-extra-2": {
+      "status": "bad",
+      "updatedAt": 1782400420224
+    },
+    "optimization-extra-3": {
+      "status": "bad",
+      "updatedAt": 1782477357352
+    },
+    "bober-omr-5": {
+      "status": "hard",
+      "updatedAt": 1782400535679
+    },
+    "algorithms-extra-5": {
+      "status": "bad",
+      "updatedAt": 1782476809647
+    },
+    "algorithms-extra-4": {
+      "status": "hard",
+      "updatedAt": 1782477305683
+    },
+    "td-2": {
+      "status": "hard",
+      "updatedAt": 1782752501296
+    },
+    "grossberg-1": {
+      "status": "bad",
+      "updatedAt": 1782476738268
+    },
+    "optimization-extra-6": {
+      "status": "hard",
+      "updatedAt": 1782400829887
+    },
+    "qlearning-1": {
+      "status": "good",
+      "updatedAt": 1782753581244
+    },
+    "ai-extra-5": {
+      "status": "hard",
+      "updatedAt": 1782401024484
+    },
+    "complexity-1": {
+      "status": "bad",
+      "updatedAt": 1782475869472
+    },
+    "complexity-extra-4": {
+      "status": "hard",
+      "updatedAt": 1782401233198
+    },
+    "ai-extra-2": {
+      "status": "good",
+      "updatedAt": 1782401251119
+    },
+    "nn-1": {
+      "status": "good",
+      "updatedAt": 1782401279374
+    },
+    "bober-results-5": {
+      "status": "good",
+      "updatedAt": 1782401284448
+    },
+    "ptas-1": {
+      "status": "bad",
+      "updatedAt": 1782477742841
+    },
+    "backprop-1": {
+      "status": "hard",
+      "updatedAt": 1782401575410
+    },
+    "pnp-2": {
+      "status": "bad",
+      "updatedAt": 1782401620454
+    },
+    "bellman-1": {
+      "status": "bad",
+      "updatedAt": 1782751493712,
+      "answerHtml": "Równanie Bellmana<mark> zapisuje wartość stanu jako natychmiastową nagrodę plus zdyskontowaną wartość przyszłości</mark>. Dla polityki pi: V^pi(s)=E[R_{t+1}+gamma V^pi(S_{t+1}) | S_t=s]. Dla optimum wybiera się akcję maksymalizującą oczekiwaną nagrodę i przyszłą wartość. To podstawa programowania dynamicznego, TD learning i Q-learningu.",
+      "editedAt": 1782751487155
+    },
+    "bober-ocr-1": {
+      "status": "hard",
+      "updatedAt": 1782401953036
+    },
+    "bober-score-4": {
+      "status": "good",
+      "updatedAt": 1782401973692
+    },
+    "optimization-extra-1": {
+      "status": "bad",
+      "updatedAt": 1782402008904
+    },
+    "bober-eval-4": {
+      "status": "good",
+      "updatedAt": 1782402035084
+    },
+    "pca-1": {
+      "status": "hard",
+      "updatedAt": 1782402074083
+    },
+    "algorithms-extra-2": {
+      "status": "bad",
+      "updatedAt": 1782402124514
+    },
+    "rl-extra-3": {
+      "status": "good",
+      "updatedAt": 1782751260759
+    },
+    "bober-ocr-4": {
+      "status": "good",
+      "updatedAt": 1782402252961
+    },
+    "chomsky-2": {
+      "status": "hard",
+      "updatedAt": 1782402389168
+    },
+    "testing-random-1": {
+      "status": "good",
+      "updatedAt": 1782402407201
+    },
+    "tsp-1": {
+      "status": "hard",
+      "updatedAt": 1782815566838
+    },
+    "tsp-2": {
+      "status": "bad",
+      "updatedAt": 1782481157348
+    },
+    "interpolation-1": {
+      "status": "hard",
+      "updatedAt": 1782815709588
+    },
+    "interpolation-2": {
+      "status": "hard",
+      "updatedAt": 1782476205014
+    },
+    "linear-1": {
+      "status": "hard",
+      "updatedAt": 1782479783685
+    },
+    "roots-2": {
+      "status": "hard",
+      "updatedAt": 1782403129379
+    },
+    "integration-1": {
+      "status": "hard",
+      "updatedAt": 1782403181803
+    },
+    "kkt-1": {
+      "status": "hard",
+      "updatedAt": 1782403463791
+    },
+    "project-1": {
+      "status": "hard",
+      "updatedAt": 1782815596885
+    },
+    "project-2": {
+      "status": "good",
+      "updatedAt": 1782403513434
+    },
+    "resolution-2": {
+      "status": "hard",
+      "updatedAt": 1782403551951
+    },
+    "evolution-1": {
+      "status": "hard",
+      "updatedAt": 1782403691491
+    },
+    "mcts-1": {
+      "status": "bad",
+      "updatedAt": 1782403742274
+    },
+    "missing-1": {
+      "status": "hard",
+      "updatedAt": 1782478852621
+    },
+    "validation-1": {
+      "status": "hard",
+      "updatedAt": 1782404024969
+    },
+    "rl-1": {
+      "status": "good",
+      "updatedAt": 1782404073790
+    },
+    "rl-2": {
+      "status": "bad",
+      "updatedAt": 1782751371174,
+      "answerHtml": "W <mark>pasywnym </mark>RL <mark>polityka jest dana i ją oceniamy.</mark> W <mark>aktywnym </mark>RL agent <mark>szuka dobrej polityki,</mark> więc musi równoważyć eksplorację i eksploatację.",
+      "editedAt": 1782751364851
+    },
+    "td-1": {
+      "status": "hard",
+      "updatedAt": 1782753522416,
+      "answerHtml": "Błąd TD(0) to <mark>delta = r + gamma V(s') - V(s)</mark>. Jest różnicą między bieżącą estymacją V(s) a jednopunktowym celem bootstrapowanym z nagrody i wartości następnego stanu. Aktualizacja ma postać V(s) &lt;- V(s) + alpha*delta. TD łączy próbki z doświadczenia z bootstrapowaniem, więc może uczyć się bez czekania na koniec epizodu.",
+      "editedAt": 1782753516220
+    },
+    "backprop-2": {
+      "status": "bad",
+      "updatedAt": 1782404312004
+    },
+    "forgetting-1": {
+      "status": "good",
+      "updatedAt": 1782404337368
+    },
+    "forgetting-2": {
+      "status": "hard",
+      "updatedAt": 1782475736354
+    },
+    "complexity-extra-1": {
+      "status": "hard",
+      "updatedAt": 1782478752971
+    },
+    "complexity-extra-5": {
+      "status": "bad",
+      "updatedAt": 1782404414483
+    },
+    "complexity-extra-8": {
+      "status": "hard",
+      "updatedAt": 1782404667568
+    },
+    "algorithms-extra-3": {
+      "status": "hard",
+      "updatedAt": 1782479588876
+    },
+    "algorithms-extra-8": {
+      "status": "hard",
+      "updatedAt": 1782477268130
+    },
+    "optimization-extra-5": {
+      "status": "hard",
+      "updatedAt": 1782481220167
+    },
+    "optimization-extra-7": {
+      "status": "hard",
+      "updatedAt": 1782404867970
+    },
+    "management-extra-1": {
+      "status": "hard",
+      "updatedAt": 1782404973951
+    },
+    "management-extra-2": {
+      "status": "hard",
+      "updatedAt": 1782405014914
+    },
+    "management-extra-4": {
+      "status": "good",
+      "updatedAt": 1782405065382
+    },
+    "management-extra-6": {
+      "status": "hard",
+      "updatedAt": 1782405460111
+    },
+    "ai-extra-1": {
+      "status": "bad",
+      "updatedAt": 1782406187901
+    },
+    "ai-extra-3": {
+      "status": "bad",
+      "updatedAt": 1782406488789
+    },
+    "ai-extra-4": {
+      "status": "good",
+      "updatedAt": 1782406505837
+    },
+    "ai-extra-6": {
+      "status": "good",
+      "updatedAt": 1782406511965
+    },
+    "ai-extra-7": {
+      "status": "good",
+      "updatedAt": 1782406522724
+    },
+    "ai-extra-8": {
+      "status": "good",
+      "updatedAt": 1782406537471
+    },
+    "data-extra-1": {
+      "status": "hard",
+      "updatedAt": 1782406596051
+    },
+    "data-extra-7": {
+      "status": "good",
+      "updatedAt": 1782406615067
+    },
+    "rl-extra-4": {
+      "status": "good",
+      "updatedAt": 1782754376244
+    },
+    "nn-extra-2": {
+      "status": "hard",
+      "updatedAt": 1782406745101
+    },
+    "nn-extra-7": {
+      "status": "bad",
+      "updatedAt": 1782407309705
+    },
+    "nn-extra-8": {
+      "status": "hard",
+      "updatedAt": 1782407352081
+    },
+    "nn-lecture-4": {
+      "status": "hard",
+      "updatedAt": 1782475364416
+    },
+    "wae-8": {
+      "status": "good",
+      "updatedAt": 1782750539505
+    },
+    "wae-11": {
+      "status": "bad",
+      "updatedAt": 1782749845493,
+      "answerHtml": "<mark>Algorytm genetyczny </mark>klasycznie <mark>operuje na chromosomach, często binarnych, z silnym krzyżowaniem i mutacją bitową</mark>. <mark>Strategia ewolucyjna </mark>zwykle pracuje <mark>na wektorach rzeczywistych i mocno eksponuje mutację oraz jej parametry</mark>. <mark>Programowanie genetyczne </mark>rozwija struktury programów lub drzewa, więc <mark>operatory muszą działać na strukturach składniowych</mark>.",
+      "editedAt": 1782749836975
+    },
+    "nn-lecture-11": {
+      "status": "hard",
+      "updatedAt": 1782476420448
+    },
+    "az-4": {
+      "status": "bad",
+      "updatedAt": 1782476595743
+    },
+    "nn-lecture-16": {
+      "status": "hard",
+      "updatedAt": 1782476652893
+    },
+    "nn-lecture-5": {
+      "status": "hard",
+      "updatedAt": 1782476777870
+    },
+    "wae-12": {
+      "status": "good",
+      "updatedAt": 1782750677338
+    },
+    "nn-lecture-1": {
+      "status": "hard",
+      "updatedAt": 1782477806595
+    },
+    "nn-lecture-13": {
+      "status": "bad",
+      "updatedAt": 1782478055324
+    },
+    "az-5": {
+      "status": "bad",
+      "updatedAt": 1782478396903
+    },
+    "az-12": {
+      "status": "bad",
+      "updatedAt": 1782478596249
+    },
+    "az-2": {
+      "status": "bad",
+      "updatedAt": 1782478693467
+    },
+    "wae-7": {
+      "status": "good",
+      "updatedAt": 1782750052568
+    },
+    "az-1": {
+      "status": "hard",
+      "updatedAt": 1782478814169
+    },
+    "wae-5": {
+      "status": "hard",
+      "updatedAt": 1782750705313
+    },
+    "nn-lecture-14": {
+      "status": "hard",
+      "updatedAt": 1782480576622
+    },
+    "az-16": {
+      "status": "bad",
+      "updatedAt": 1782480607728
+    },
+    "wae-6": {
+      "status": "good",
+      "updatedAt": 1782750549769
+    },
+    "nn-lecture-3": {
+      "status": "hard",
+      "updatedAt": 1782481001450
+    },
+    "wae-2": {
+      "status": "hard",
+      "updatedAt": 1782749514022
+    },
+    "nn-lecture-15": {
+      "status": "hard",
+      "updatedAt": 1782481299805
+    },
+    "az-8": {
+      "status": "bad",
+      "updatedAt": 1782481487469
+    },
+    "work-tech-svs-4": {
+      "status": "bad",
+      "updatedAt": 1782494591228
+    },
+    "az-11": {
+      "status": "bad",
+      "updatedAt": 1782494635939
+    },
+    "wae-14": {
+      "status": "good",
+      "updatedAt": 1782750013161
+    },
+    "nn-lecture-8": {
+      "status": "hard",
+      "updatedAt": 1782494713274
+    },
+    "az-10": {
+      "status": "bad",
+      "updatedAt": 1782494741984
+    },
+    "wae-15": {
+      "status": "hard",
+      "updatedAt": 1782750735387
+    },
+    "nn-lecture-6": {
+      "status": "bad",
+      "updatedAt": 1782494800322,
+      "answerHtml": "ELM to sieć feedforward, najczęściej z jedną warstwą ukrytą, w której <mark>parametry neuronów ukrytych są losowane i nieuczone</mark>, a <mark>uczenie dotyczy tylko wag wyjściowych</mark>. Wagi wyjściowe można wyznaczyć jako rozwiązanie problemu liniowego, co daje bardzo szybki trening, kosztem zależności od liczby i losowania neuronów ukrytych.",
+      "editedAt": 1782815625119
+    },
+    "nn-lecture-10": {
+      "status": "hard",
+      "updatedAt": 1782494882631
+    },
+    "az-15": {
+      "status": "bad",
+      "updatedAt": 1782494938685
+    },
+    "wae-10": {
+      "status": "hard",
+      "updatedAt": 1782750448477
+    },
+    "nn-lecture-9": {
+      "status": "bad",
+      "updatedAt": 1782495146389
+    },
+    "az-3": {
+      "status": "good",
+      "updatedAt": 1782495180007
+    },
+    "nn-lecture-7": {
+      "status": "hard",
+      "updatedAt": 1782495195111
+    },
+    "wae-3": {
+      "status": "hard",
+      "updatedAt": 1782750791677,
+      "answerHtml": "<mark>Presja selekcyjna opisuje, jak mocno algorytm faworyzuje lepsze osobniki. </mark>Duża presja przyspiesza eksploatację dobrych obszarów, ale grozi utratą różnorodności i przedwczesną zbieżnością. Mała presja lepiej utrzymuje eksplorację, ale może spowolnić postęp.",
+      "editedAt": 1782750788787
+    },
+    "az-9": {
+      "status": "bad",
+      "updatedAt": 1782495222872
+    },
+    "wae-16": {
+      "status": "hard",
+      "updatedAt": 1782749454521
+    },
+    "az-13": {
+      "status": "bad",
+      "updatedAt": 1782495260353
+    },
+    "wae-4": {
+      "status": "good",
+      "updatedAt": 1782751033690
+    },
+    "wae-13": {
+      "status": "hard",
+      "updatedAt": 1782749567331
+    },
+    "az-7": {
+      "status": "bad",
+      "updatedAt": 1782495451968
+    },
+    "az-18": {
+      "status": "bad",
+      "updatedAt": 1782495504168
+    },
+    "nn-lecture-2": {
+      "status": "good",
+      "updatedAt": 1782495515323
+    },
+    "nn-lecture-12": {
+      "status": "good",
+      "updatedAt": 1782495526499
+    },
+    "az-6": {
+      "status": "hard",
+      "updatedAt": 1782495573380
+    },
+    "az-17": {
+      "status": "bad",
+      "updatedAt": 1782495579793
+    },
+    "wae-1": {
+      "status": "hard",
+      "updatedAt": 1782749986725,
+      "answerHtml": "Trzeba <mark>określić przestrzeń rozwiązań, reprezentację osobnika, funkcję celu lub fitness, operatory zmienności oraz regułę selekcji</mark>. Algorytm nie operuje na abstrakcyjnym optimum, tylko na populacji reprezentacji; jakość reprezentacji decyduje, czy sąsiedztwo, mutacja i krzyżowanie mają sens dla danego problemu.",
+      "editedAt": 1782749958061
+    },
+    "wae-9": {
+      "status": "good",
+      "updatedAt": 1782750642885
+    },
+    "az-14": {
+      "status": "bad",
+      "updatedAt": 1782495620521
+    },
+    "work-tech-omr-9": {
+      "status": "hard",
+      "updatedAt": 1782557337144
+    },
+    "bober-results-7": {
+      "status": "good",
+      "updatedAt": 1782557342717
+    },
+    "bober-cv-6": {
+      "status": "bad",
+      "updatedAt": 1782557353463
+    },
+    "thesis-omr-exp-1": {
+      "status": "good",
+      "updatedAt": 1782557372145
+    },
+    "thesis-lit-2": {
+      "status": "hard",
+      "updatedAt": 1782557410359
+    },
+    "bober-eval-1": {
+      "status": "hard",
+      "updatedAt": 1782557433637
+    },
+    "bober-cv-1": {
+      "status": "good",
+      "updatedAt": 1782557441675
+    },
+    "bober-cv-2": {
+      "status": "hard",
+      "updatedAt": 1782557456841
+    },
+    "nn-basics-6": {
+      "status": "good",
+      "updatedAt": 1782577158638
+    },
+    "thesis-eval-1": {
+      "status": "good",
+      "updatedAt": 1782577195208
+    },
+    "bober-eval-5": {
+      "status": "hard",
+      "updatedAt": 1782577229998
+    },
+    "nn-basics-3": {
+      "status": "hard",
+      "updatedAt": 1782577266813
+    },
+    "bober-ocr-5": {
+      "status": "good",
+      "updatedAt": 1782577310738
+    },
+    "ml-basics-7": {
+      "status": "hard",
+      "updatedAt": 1782577368872
+    },
+    "work-tech-cv-5": {
+      "status": "hard",
+      "updatedAt": 1782577558229
+    },
+    "thesis-lit-1": {
+      "status": "good",
+      "updatedAt": 1782577570824
+    },
+    "work-tech-omr-3": {
+      "status": "hard",
+      "updatedAt": 1782577619907
+    },
+    "thesis-score-ir-2": {
+      "status": "good",
+      "updatedAt": 1782577643319
+    },
+    "thesis-omr-exp-2": {
+      "status": "good",
+      "updatedAt": 1782577663425
+    },
+    "thesis-omr-exp-3": {
+      "status": "good",
+      "updatedAt": 1782577693355
+    },
+    "bober-omr-3": {
+      "status": "good",
+      "updatedAt": 1782577695405
+    },
+    "ai-basics-2": {
+      "status": "good",
+      "updatedAt": 1782577732963
+    },
+    "work-tech-cv-7": {
+      "status": "good",
+      "updatedAt": 1782577782941
+    },
+    "work-tech-svs-3": {
+      "status": "hard",
+      "updatedAt": 1782577808257
+    },
+    "bober-score-8": {
+      "status": "hard",
+      "updatedAt": 1782577822867
+    },
+    "work-tech-ocr-3": {
+      "status": "hard",
+      "updatedAt": 1782577886417
+    },
+    "thesis-ocr-1": {
+      "status": "hard",
+      "updatedAt": 1782577917045
+    },
+    "bober-score-1": {
+      "status": "hard",
+      "updatedAt": 1782577952633
+    },
+    "cv-basics-2": {
+      "status": "hard",
+      "updatedAt": 1782578079267
+    },
+    "ai-basics-1": {
+      "status": "hard",
+      "updatedAt": 1782578168993
+    },
+    "thesis-score-ir-1": {
+      "status": "hard",
+      "updatedAt": 1782578208655
+    },
+    "bober-ocr-2": {
+      "status": "good",
+      "updatedAt": 1782578247841
+    },
+    "nn-basics-2": {
+      "status": "hard",
+      "updatedAt": 1782578306137
+    },
+    "bober-score-5": {
+      "status": "hard",
+      "updatedAt": 1782578403729
+    },
+    "work-tech-cv-1": {
+      "status": "hard",
+      "updatedAt": 1782578440569
+    },
+    "nn-basics-7": {
+      "status": "hard",
+      "updatedAt": 1782578470241
+    },
+    "thesis-domain-1": {
+      "status": "hard",
+      "updatedAt": 1782578486623
+    },
+    "ml-basics-8": {
+      "status": "good",
+      "updatedAt": 1782578499965
+    },
+    "bober-cv-7": {
+      "status": "hard",
+      "updatedAt": 1782578540603
+    },
+    "nn-basics-4": {
+      "status": "hard",
+      "updatedAt": 1782578564773
+    },
+    "work-tech-omr-10": {
+      "status": "hard",
+      "updatedAt": 1782578569257
+    },
+    "bober-omr-6": {
+      "status": "good",
+      "updatedAt": 1782578574173
+    },
+    "thesis-omr-exp-4": {
+      "status": "hard",
+      "updatedAt": 1782578587767
+    },
+    "work-tech-omr-8": {
+      "status": "hard",
+      "updatedAt": 1782578659461
+    },
+    "work-tech-cv-2": {
+      "status": "hard",
+      "updatedAt": 1782578673929
+    },
+    "nn-basics-9": {
+      "status": "bad",
+      "updatedAt": 1782578712367
+    },
+    "bober-results-2": {
+      "status": "good",
+      "updatedAt": 1782578717713
+    },
+    "work-tech-ocr-4": {
+      "status": "good",
+      "updatedAt": 1782578724743
+    },
+    "work-tech-omr-6": {
+      "status": "good",
+      "updatedAt": 1782578726623
+    },
+    "work-tech-omr-5": {
+      "status": "bad",
+      "updatedAt": 1782578793561
+    },
+    "thesis-pipeline-2": {
+      "status": "good",
+      "updatedAt": 1782578798479
+    },
+    "work-tech-ocr-1": {
+      "status": "bad",
+      "updatedAt": 1782578820573
+    },
+    "thesis-svs-2": {
+      "status": "hard",
+      "updatedAt": 1782578880443
+    },
+    "thesis-future-1": {
+      "status": "good",
+      "updatedAt": 1782578883549
+    },
+    "thesis-error-1": {
+      "status": "good",
+      "updatedAt": 1782578907853
+    },
+    "ml-basics-1": {
+      "status": "good",
+      "updatedAt": 1782578951803
+    },
+    "work-tech-cv-8": {
+      "status": "hard",
+      "updatedAt": 1782578974719
+    },
+    "bober-omr-8": {
+      "status": "hard",
+      "updatedAt": 1782578996073
+    },
+    "thesis-svs-1": {
+      "status": "hard",
+      "updatedAt": 1782579020227
+    },
+    "nn-basics-8": {
+      "status": "hard",
+      "updatedAt": 1782579036025
+    },
+    "work-tech-omr-7": {
+      "status": "hard",
+      "updatedAt": 1782579044723
+    },
+    "bober-svs-6": {
+      "status": "hard",
+      "updatedAt": 1782579083901
+    },
+    "bober-eval-3": {
+      "status": "good",
+      "updatedAt": 1782579119617
+    },
+    "ml-basics-5": {
+      "status": "hard",
+      "updatedAt": 1782579152035
+    },
+    "work-tech-svs-5": {
+      "status": "hard",
+      "updatedAt": 1782579177421
+    },
+    "work-tech-ocr-2": {
+      "status": "hard",
+      "updatedAt": 1782579182419
+    },
+    "ml-basics-3": {
+      "status": "hard",
+      "updatedAt": 1782579209565
+    },
+    "work-tech-svs-6": {
+      "status": "hard",
+      "updatedAt": 1782579217959
+    },
+    "work-tech-omr-1": {
+      "status": "hard",
+      "updatedAt": 1782579235411
+    },
+    "work-tech-cv-3": {
+      "status": "good",
+      "updatedAt": 1782579241207
+    },
+    "work-tech-svs-2": {
+      "status": "hard",
+      "updatedAt": 1782579276371
+    },
+    "ml-basics-6": {
+      "status": "hard",
+      "updatedAt": 1782579331901
+    },
+    "work-tech-cv-4": {
+      "status": "hard",
+      "updatedAt": 1782579392685
+    },
+    "work-tech-omr-2": {
+      "status": "hard",
+      "updatedAt": 1782579424063
+    },
+    "work-tech-cv-6": {
+      "status": "hard",
+      "updatedAt": 1782579452649
+    },
+    "work-tech-omr-4": {
+      "status": "hard",
+      "updatedAt": 1782579465629
+    },
+    "work-tech-svs-1": {
+      "status": "hard",
+      "updatedAt": 1782579525049
+    },
+    "cv-basics-1": {
+      "status": "hard",
+      "updatedAt": 1782579528771
+    },
+    "bober-eval-8": {
+      "status": "good",
+      "updatedAt": 1782579534705
+    },
+    "thesis-pipeline-1": {
+      "status": "good",
+      "updatedAt": 1782579539023
+    },
+    "ml-basics-4": {
+      "status": "hard",
+      "updatedAt": 1782579566795
+    },
+    "bober-svs-1": {
+      "status": "hard",
+      "updatedAt": 1782579575907
+    },
+    "ml-basics-2": {
+      "status": "hard",
+      "updatedAt": 1782579603781
+    },
+    "nn-basics-5": {
+      "status": "bad",
+      "updatedAt": 1782579644217
+    },
+    "nn-basics-1": {
+      "status": "good",
+      "updatedAt": 1782579655819
+    },
+    "bober-svs-5": {
+      "status": "hard",
+      "updatedAt": 1782579694609
+    },
+    "bober-results-6": {
+      "status": "good",
+      "updatedAt": 1782579697909
+    },
+    "rl-extra-42": {
+      "status": "good",
+      "updatedAt": 1782754607905
+    },
+    "rl-extra-23": {
+      "status": "hard",
+      "updatedAt": 1782754432670
+    },
+    "rl-extra-45": {
+      "status": "good",
+      "updatedAt": 1782753607536
+    },
+    "rl-extra-25": {
+      "status": "bad",
+      "updatedAt": 1782752779422
+    },
+    "rl-extra-44": {
+      "status": "good",
+      "updatedAt": 1782753435876
+    },
+    "rl-extra-28": {
+      "status": "good",
+      "updatedAt": 1782752708638
+    },
+    "rl-extra-32": {
+      "status": "hard",
+      "updatedAt": 1782753724730
+    },
+    "rl-extra-10": {
+      "status": "hard",
+      "updatedAt": 1782752183548
+    },
+    "rl-extra-29": {
+      "status": "hard",
+      "updatedAt": 1782752333542
+    },
+    "rl-extra-11": {
+      "status": "good",
+      "updatedAt": 1782753821616
+    },
+    "rl-extra-36": {
+      "status": "hard",
+      "updatedAt": 1782753390324,
+      "answerHtml": "<mark>Target network to wolniej aktualizowana kopia sieci Q używana do liczenia celu TD</mark>. Dzięki temu cel nie zmienia się w każdym kroku tak gwałtownie jak bieżąca sieć, co ogranicza niestabilność i oscylacje uczenia.",
+      "editedAt": 1782753387882
+    },
+    "rl-extra-26": {
+      "status": "hard",
+      "updatedAt": 1782753299480
+    },
+    "rl-extra-12": {
+      "status": "hard",
+      "updatedAt": 1782752416044
+    },
+    "rl-extra-38": {
+      "status": "hard",
+      "updatedAt": 1782751545556,
+      "answerHtml": "Dueling DQN <mark>rozdziela estymację wartości stanu od przewagi poszczególnych akcji</mark>. Pomaga to zwłaszcza wtedy, gdy wiele akcji ma podobny efekt i najpierw warto dobrze ocenić sam stan. Architektura potem składa te informacje w wartości Q.",
+      "editedAt": 1782751543122
+    },
+    "rl-extra-22": {
+      "status": "bad",
+      "updatedAt": 1782752665242,
+      "answerHtml": "To ogólna idea, że<mark> uczenie wartości i </mark><mark>poprawianie polityki mogą zachodzić równolegle lub naprzemiennie</mark>. Wiele algorytmów RL można rozumieć jako przybliżoną wersję tego schematu: estymacje wartości prowadzą politykę, a polityka generuje nowe doświadczenie.",
+      "editedAt": 1782752638580
+    },
+    "rl-extra-43": {
+      "status": "hard",
+      "updatedAt": 1782753625308
+    },
+    "rl-extra-24": {
+      "status": "hard",
+      "updatedAt": 1782751675650,
+      "answerHtml": "Exploring starts zakładają, że<mark> epizody mogą zaczynać się z różnych par stan-akcja tak, aby każda para miała szansę zostać odwiedzona</mark>. To techniczne założenie pomaga zapewnić eksplorację, ale w praktycznych środowiskach często jest nierealistyczne.",
+      "editedAt": 1782751673592
+    },
+    "rl-extra-18": {
+      "status": "bad",
+      "updatedAt": 1782754300430
+    },
+    "rl-extra-20": {
+      "status": "bad",
+      "updatedAt": 1782751318752,
+      "answerHtml": "<mark>Policy improvement tworzy lepszą politykę na podstawie aktualnych wartości, zwykle wybierając akcje zachłannie względem V lub Q.</mark> Intuicja jest taka: jeśli znamy konsekwencje akcji, możemy w każdym stanie wybrać tę z najlepszym oczekiwanym zwrotem.",
+      "editedAt": 1782751314229
+    },
+    "rl-extra-13": {
+      "status": "hard",
+      "updatedAt": 1782754033300
+    },
+    "rl-extra-39": {
+      "status": "hard",
+      "updatedAt": 1782754637934
+    },
+    "rl-extra-30": {
+      "status": "hard",
+      "updatedAt": 1782753790738
+    },
+    "rl-extra-35": {
+      "status": "hard",
+      "updatedAt": 1782754455498
+    },
+    "rl-extra-16": {
+      "status": "bad",
+      "updatedAt": 1782753700074
+    },
+    "rl-extra-27": {
+      "status": "hard",
+      "updatedAt": 1782762340562,
+      "answerHtml": "Metody n-krokowe łączą TD(0) i Monte Carlo. Zamiast patrzeć tylko jeden krok albo aż do końca epizodu, używają zwrotu z kilku kolejnych kroków. <mark>Parametr n reguluje kompromis między biasem, wariancją i szybkością propagacji nagród.</mark>",
+      "editedAt": 1782751119911
+    },
+    "rl-extra-17": {
+      "status": "bad",
+      "updatedAt": 1782753349832
+    },
+    "rl-extra-34": {
+      "status": "hard",
+      "updatedAt": 1782754591134
+    },
+    "rl-extra-19": {
+      "status": "hard",
+      "updatedAt": 1782753802308
+    },
+    "rl-extra-41": {
+      "status": "bad",
+      "updatedAt": 1782753575454,
+      "answerHtml": "<mark>Actor uczy polityki,</mark> czyli sposobu wyboru akcji. <mark>Critic ocenia działania aktora przez funkcję wartości lub błąd TD</mark>. Dzięki temu polityka dostaje bardziej informacyjny sygnał uczenia niż sam końcowy zwrot, a critic pomaga obniżyć wariancję gradientu.",
+      "editedAt": 1782753561032
+    },
+    "rl-extra-21": {
+      "status": "bad",
+      "updatedAt": 1782753274308,
+      "answerHtml": "Policy iteration naprzemiennie ocenia bieżącą politykę i ją ulepsza (policy evaluation --&gt; policy improvement). Value iteration łączy te idee, wykonując aktualizacje wartości bliższe równaniu optymalności Bellmana i dopiero z wartości odczytuje politykę. Obie metody wymagają modelu MDP.<br><br><strong>Policy iteration</strong> mówi:<br>\n„Najpierw wybiorę jakąś konkretną strategię działania, sprawdzę dokładnie jak dobra jest, a potem ją poprawię”.<br>\n<strong>Value iteration</strong> mówi:<br>\n„Nie będę osobno trzymał jednej strategii. Będę od razu poprawiał ocenę stanów tak, jakby w każdym stanie wybierać najlepszą akcję”.",
+      "editedAt": 1782753217400
+    },
+    "rl-extra-31": {
+      "status": "hard",
+      "updatedAt": 1782815674645,
+      "answerHtml": "Tablice V lub Q są możliwe tylko dla małych, dyskretnych przestrzeni. <strong>Przy wielu stanach, cechach ciągłych albo obrazach trzeba aproksymować wartości lub politykę modelem, np. liniowym albo siecią neuronową</strong>. Pozwala to generalizować między podobnymi stanami.",
+      "editedAt": 1782752939686
+    },
+    "rl-extra-14": {
+      "status": "good",
+      "updatedAt": 1782581969389
+    },
+    "rl-extra-33": {
+      "status": "good",
+      "updatedAt": 1782753954308
+    },
+    "rl-extra-40": {
+      "status": "bad",
+      "updatedAt": 1782754165178
+    },
+    "rl-extra-37": {
+      "status": "bad",
+      "updatedAt": 1782752872744,
+      "answerHtml": "Zwykły DQN może zawyżać wartości Q, bo ten sam model wybiera najlepszą akcję i ocenia jej wartość. <strong>Double DQN rozdziela wybór akcji od jej oceny</strong>, przez co <mark>zmniejsza overestimation bias i często daje stabilniejsze wyniki.</mark>",
+      "editedAt": 1782752864732
+    },
+    "rl-extra-15": {
+      "status": "good",
+      "updatedAt": 1782752352988
+    },
+    "rl-extra-9": {
+      "status": "hard",
+      "updatedAt": 1782753757138
+    },
+    "mini-monte-carlo-games": {
+      "status": "hard",
+      "updatedAt": 1782654459677
+    },
+    "mini-catastrophic-forgetting": {
+      "status": "hard",
+      "updatedAt": 1782654514509
+    },
+    "mini-neural-architecture-choice": {
+      "status": "hard",
+      "updatedAt": 1782654556181
+    },
+    "mini-project-methodologies": {
+      "status": "hard",
+      "updatedAt": 1782654606157
+    },
+    "mini-ea-vs-classical-optimization": {
+      "status": "bad",
+      "updatedAt": 1782749753047
+    },
+    "mini-error-estimators": {
+      "status": "hard",
+      "updatedAt": 1782654769410
+    },
+    "mini-randomized-methods-testing": {
+      "status": "hard",
+      "updatedAt": 1782654827291
+    },
+    "mini-feature-selection": {
+      "status": "hard",
+      "updatedAt": 1782654925910
+    },
+    "mini-chomsky-hierarchy": {
+      "status": "bad",
+      "updatedAt": 1782654986325
+    },
+    "mini-dynamic-programming": {
+      "status": "hard",
+      "updatedAt": 1782655016865
+    },
+    "mini-algorithm-complexity": {
+      "status": "bad",
+      "updatedAt": 1782655091859
+    },
+    "mini-project-vs-operations": {
+      "status": "hard",
+      "updatedAt": 1782655135123
+    },
+    "mini-hopfield-associative-memory": {
+      "status": "bad",
+      "updatedAt": 1782655202437
+    },
+    "mini-complexity-classes-p-np": {
+      "status": "bad",
+      "updatedAt": 1782656791719
+    },
+    "mini-numerical-integration": {
+      "status": "hard",
+      "updatedAt": 1782656857085
+    },
+    "mini-minimal-rules": {
+      "status": "hard",
+      "updatedAt": 1782656901885
+    },
+    "mini-prolog-logic-programming": {
+      "status": "bad",
+      "updatedAt": 1782657055655,
+      "answerHtml": "W programowaniu logicznym opisuje się <mark>fakty </mark>i <mark>reguły</mark>, a nie szczegółową sekwencję instrukcji. <mark>Prolog używa klauzul Horna</mark>, <mark>unifikacji </mark>i <mark>rezolucji SLD</mark>. Zapytanie jest celem, który interpreter próbuje udowodnić na podstawie bazy wiedzy, stosując przeszukiwanie z nawrotami. Program Prologowy dobrze nadaje się do relacji symbolicznych i reguł, ale kolejność klauzul i sposób przeszukiwania nadal wpływają na efektywność i zakończenie obliczeń.",
+      "editedAt": 1782814329723
+    },
+    "mini-dimensionality-reduction": {
+      "status": "hard",
+      "updatedAt": 1782657125855
+    },
+    "mini-agent-ai": {
+      "status": "hard",
+      "updatedAt": 1782657446669
+    },
+    "mini-root-finding": {
+      "status": "hard",
+      "updatedAt": 1782657859491,
+      "answerHtml": "Dla funkcji jednej zmiennej można użyć metod przedziałowych, takich jak <mark>bisekcja</mark>, które są wolniejsze, ale bezpieczne przy zmianie znaku na przedziale.<mark> Metoda Newtona </mark>wykorzystuje pochodną i zwykle zbiega szybko lokalnie, ale wymaga dobrego punktu startowego i może się rozbiec. <mark>Metoda siecznych</mark> nie wymaga jawnej pochodnej, a regula falsi łączy ideę siecznej z utrzymaniem przedziału. W praktyce wybór zależy od dostępności pochodnej, wymaganej niezawodności i gładkości funkcji.",
+      "editedAt": 1782657737968
+    },
+    "mini-td-learning": {
+      "status": "hard",
+      "updatedAt": 1782752586222
+    },
+    "mini-ptas": {
+      "status": "bad",
+      "updatedAt": 1782658610145
+    },
+    "mini-swarm-intelligence": {
+      "status": "good",
+      "updatedAt": 1782658698847
+    },
+    "mini-interpolation": {
+      "status": "hard",
+      "updatedAt": 1782658869169,
+      "answerHtml": "Interpolacja polega na wyznaczeniu funkcji przechodzącej przez znane punkty pomiarowe, aby szacować wartości między nimi. <mark>Stosuje się wielomiany interpolacyjne</mark>, <mark>postać Lagrange'a lub Newtona</mark>, <mark>funkcje sklejane i splajny</mark>. Interpolacja przydaje się w aproksymacji danych, grafice, przetwarzaniu sygnałów, metodach numerycznych i rekonstrukcji brakujących próbek. Trzeba uważać na oscylacje wysokich wielomianów i odróżniać interpolację od aproksymacji, która nie musi przechodzić dokładnie przez punkty.",
+      "editedAt": 1782814281095
+    },
+    "mini-nonlinear-extremum": {
+      "answerHtml": "Dla problemów bez ograniczeń stosuje się metody lokalne, takie jak <mark>największy spadek, Newton, quasi-Newton, gradient sprzężony i metody bezpochodne, np. Nelder-Mead</mark>. Kluczowe jest wyznaczenie kierunku poszukiwań i długości kroku. Dla funkcji wypukłych minimum lokalne jest globalne, ale dla niewypukłych metoda może utknąć w minimum lokalnym. Dlatego w trudnych zadaniach używa się wielostartu, heurystyk globalnych albo dodatkowej wiedzy o strukturze funkcji.",
+      "editedAt": 1782658920443
+    },
+    "mini-linear-systems-finite": {
+      "status": "bad",
+      "updatedAt": 1782659013167
+    },
+    "mini-constrained-optimization": {
+      "status": "bad",
+      "updatedAt": 1782659079547
+    },
+    "mini-rl-passive-active-policies": {
+      "status": "hard",
+      "updatedAt": 1782815531867,
+      "answerHtml": "Uczenie ze wzmocnieniem opisuje agenta, który działa w środowisku, obserwuje stany, wybiera akcje i otrzymuje nagrody. Celem jest maksymalizacja oczekiwanego zwrotu. W <mark>pasywnym </mark>RL <mark>polityka jest dana i uczymy się oceniać jej wartość</mark>. W <mark>aktywnym</mark> RL <mark>agent sam szuka dobrej polityk</mark>i, więc <mark>musi eksplorować i eksploatować</mark>. <mark>Polityka </mark>to<mark> reguła wyboru akcji w stanie</mark>; może być <mark>deterministyczna lub stochastyczna.</mark>",
+      "editedAt": 1782659185203
+    },
+    "mini-it-project-characteristics": {
+      "status": "hard",
+      "updatedAt": 1782659232005
+    },
+    "mini-tsp": {
+      "status": "bad",
+      "updatedAt": 1782659444695
+    },
+    "mini-evolutionary-algorithm": {
+      "status": "hard",
+      "updatedAt": 1782751057152
+    },
+    "mini-hopfield-grossberg-kohonen": {
+      "answerHtml": "Sieć Hopfielda jest rekurencyjną pamięcią skojarzeniową: stan sieci dąży do atraktora odpowiadającego zapamiętanemu wzorcowi. Modele Grossberga <strong>(ART)</strong>, zwłaszcza związane z adaptive resonance theory, akcentują stabilność-plastyczność, czyli uczenie nowych kategorii bez niszczenia starych. Sieć Kohonena, czyli samoorganizująca się mapa SOM, uczy nienadzorowanie topologicznego odwzorowania danych na zwykle dwuwymiarową siatkę neuronów. Hopfield służy do odtwarzania wzorców, Grossberg do adaptacyjnej kategoryzacji, a Kohonen do mapowania i wizualizacji struktury danych.",
+      "editedAt": 1782659732919
+    },
+    "mini-backpropagation": {
+      "status": "bad",
+      "updatedAt": 1782661432500,
+      "answerHtml": "Algorytm propagacji wstecznej błędu jest metodą efektywnego obliczania gradientu funkcji straty względem wag sieci neuronowej. Najpierw wykonuje się przejście w przód, czyli oblicza wyjście sieci dla danego przykładu. Następnie porównuje się predykcję z wartością oczekiwaną i wyznacza błąd. W kolejnym kroku błąd jest propagowany od warstwy wyjściowej do wcześniejszych warstw przy użyciu reguły łańcuchowej. Dzięki temu dla każdej wagi można obliczyć pochodną funkcji straty, czyli informację, w którą stronę i jak mocno należy zmienić wagę. Samej aktualizacji dokonuje optymalizator, na przykład metoda gradientu prostego, SGD albo Adam.<br>\nZaletą backpropagation jest efektywność obliczeniowa i możliwość trenowania sieci wielowarstwowych. Metoda wymaga jednak różniczkowalnych funkcji i nie gwarantuje znalezienia optimum globalnego, ponieważ uczenie sieci jest zwykle problemem niewypukłym. Typowe problemy to zanikanie i eksplozja gradientu, zależność od learning rate’u oraz możliwość przeuczenia. Podstawowe modyfikacje obejmują uczenie online, batch i mini-batch, momentum, adaptacyjne współczynniki uczenia, Rprop, QuickProp, Adam, a także techniki stabilizacji i regularyzacji, takie jak dobra inicjalizacja wag, dropout, batch normalization i early stopping.",
+      "editedAt": 1782661394016
+    },
+    "mini-missing-data": {
+      "status": "hard",
+      "updatedAt": 1782661553849
+    },
+    "mini-supervised-unsupervised": {
+      "status": "hard",
+      "updatedAt": 1782661627005
+    },
+    "mini-mdp-definition-examples": {
+      "status": "hard",
+      "updatedAt": 1782753648318
+    },
+    "mini-computational-experiments": {
+      "status": "hard",
+      "updatedAt": 1782661786089
+    },
+    "bank-288": {
+      "status": "good",
+      "updatedAt": 1782662013923
+    },
+    "quick-pdf-michal-13": {
+      "status": "good",
+      "updatedAt": 1782662076493
+    },
+    "bank-137": {
+      "status": "good",
+      "updatedAt": 1782665597832,
+      "answerHtml": "Anchory są przypisywane do obiektów ground truth na podstawie współczynnika IoU, czyli stopnia pokrycia kotwicy z prawdziwą ramką obiektu. Dla każdej kotwicy liczy się IoU ze wszystkimi ramkami ground truth i przypisuje ją do tej ramki, z którą ma największe IoU. Kotwica staje się pozytywna, jeśli jej IoU przekracza ustalony próg albo jeśli jest najlepszą kotwicą dla danego obiektu. Kotwice z małym IoU traktuje się jako negatywne, czyli tło. Kotwice z wartością pośrednią często są ignorowane, żeby nie uczyć modelu na niejednoznacznych przykładach.",
+      "editedAt": 1782662211534
+    },
+    "quick-pdf-michal-11": {
+      "status": "good",
+      "updatedAt": 1782662219789
+    },
+    "bank-272": {
+      "status": "hard",
+      "updatedAt": 1782662262791
+    },
+    "zagadnienia-058": {
+      "status": "hard",
+      "updatedAt": 1782662615497,
+      "answerHtml": "Tak, w Score IR dynamic programming jest używane lokalnie, głównie do dopasowania tekstu do nut oraz do naprawy rytmu względem metrum. Jest potrzebne dlatego, że oba problemy mają charakter sekwencyjny: decyzja podjęta dla jednej nuty wpływa na sensowność kolejnych przypisań. Proste zachłanne dopasowanie mogłoby popełnić błąd lokalny i przesunąć całą dalszą sekwencję. DP pozwala zminimalizować globalny koszt, uwzględniając przypisania, pominięcia i korekty. W przypadku tekstu przypomina to alignment sekwencji, a w przypadku metrum — wybór kombinacji długości nut/pauz, która dokładnie domyka takt przy możliwie małej zmianie oryginalnych danych.",
+      "editedAt": 1782662928550
+    },
+    "zagadnienia-099": {
+      "status": "hard",
+      "updatedAt": 1782662664499
+    },
+    "quick-pdf-igor-04": {
+      "status": "hard",
+      "updatedAt": 1782662935732
+    },
+    "bank-108": {
+      "status": "good",
+      "updatedAt": 1782662943973
+    },
+    "bank-278": {
+      "status": "good",
+      "updatedAt": 1782663011966
+    },
+    "bank-156": {
+      "status": "hard",
+      "updatedAt": 1782663107391
+    },
+    "bank-282": {
+      "status": "good",
+      "updatedAt": 1782663190954
+    },
+    "quick-pdf-igor-05": {
+      "status": "good",
+      "updatedAt": 1782663241942
+    },
+    "quick-pdf-igor-15": {
+      "status": "good",
+      "updatedAt": 1782663249217
+    },
+    "bank-150": {
+      "status": "hard",
+      "updatedAt": 1782663330721
+    },
+    "bank-061": {
+      "status": "good",
+      "updatedAt": 1782663422707
+    },
+    "bank-058": {
+      "status": "hard",
+      "updatedAt": 1782663470279
+    },
+    "zagadnienia-071": {
+      "status": "good",
+      "updatedAt": 1782663486281
+    },
+    "bank-138": {
+      "status": "hard",
+      "updatedAt": 1782663523143
+    },
+    "bank-250": {
+      "status": "hard",
+      "updatedAt": 1782663588234
+    },
+    "quick-pdf-igor-13": {
+      "status": "hard",
+      "updatedAt": 1782663635174
+    },
+    "bank-292": {
+      "status": "good",
+      "updatedAt": 1782663700954
+    },
+    "bank-160": {
+      "status": "good",
+      "updatedAt": 1782663763227
+    },
+    "quick-pdf-igor-09": {
+      "status": "good",
+      "updatedAt": 1782663775957
+    },
+    "zagadnienia-003": {
+      "status": "good",
+      "updatedAt": 1782663789388
+    },
+    "zagadnienia-101": {
+      "status": "good",
+      "updatedAt": 1782663797344
+    },
+    "zagadnienia-093": {
+      "status": "good",
+      "updatedAt": 1782663829713
+    },
+    "zagadnienia-075": {
+      "status": "good",
+      "updatedAt": 1782663868096
+    },
+    "quick-pdf-michal-04": {
+      "status": "hard",
+      "updatedAt": 1782663988749
+    },
+    "zagadnienia-026": {
+      "status": "good",
+      "updatedAt": 1782663997367
+    },
+    "quick-pdf-michal-06": {
+      "status": "good",
+      "updatedAt": 1782664144482
+    },
+    "quick-pdf-michal-08": {
+      "status": "hard",
+      "updatedAt": 1782664186360
+    },
+    "zagadnienia-045": {
+      "status": "hard",
+      "updatedAt": 1782664336726
+    },
+    "bank-287": {
+      "status": "good",
+      "updatedAt": 1782664385991
+    },
+    "bank-284": {
+      "status": "good",
+      "updatedAt": 1782664416408
+    },
+    "bank-057": {
+      "status": "good",
+      "updatedAt": 1782664424821
+    },
+    "bank-148": {
+      "status": "hard",
+      "updatedAt": 1782664440727
+    },
+    "zagadnienia-010": {
+      "status": "hard",
+      "updatedAt": 1782664806370,
+      "answerHtml": "Skip connections to połączenia omijające część warstw sieci i przekazujące aktywacje z wcześniejszej warstwy do późniejszej. Stosuje się je, aby ułatwić przepływ informacji i gradientu w głębokich sieciach, zmniejszyć problem zanikającego gradientu oraz umożliwić uczenie funkcji rezydualnych, czyli poprawek względem wejścia. W ResNetach skip connection zwykle polega na dodaniu wejścia do wyniku bloku, y = F(x) + x. W U-Netach często polega na konkatenacji cech z enkodera z cechami dekodera, co pomaga odzyskać szczegóły przestrzenne potrzebne np. w segmentacji.<br><br>Podczas downsamplingu mogą zniknąć cienkie kreski liter i dokładne położenie granic. Skip connections dostarczają decoderowi cechy o wyższej rozdzielczości, dzięki czemu może odtworzyć drobne elementy maski.",
+      "editedAt": 1782664800321
+    },
+    "zagadnienia-035": {
+      "status": "hard",
+      "updatedAt": 1782665069536,
+      "answerHtml": "Zastosowaliśmy GroupNorm zamiast BatchNorm, ponieważ trening detektora OMR odbywał się z bardzo małym batch size, w praktyce równym 1. BatchNorm w takiej sytuacji wyznacza niestabilne statystyki średniej i wariancji, co może pogarszać uczenie i powodować różnice między treningiem a inferencją. GroupNorm normalizuje aktywacje po grupach kanałów wewnątrz pojedynczej próbki, więc nie zależy od liczby obrazów w batchu. Dzięki temu jest bardziej stabilny dla dużych obrazów, kafelkowania i ograniczeń pamięciowych typowych dla detekcji obiektów.",
+      "editedAt": 1782664975820
+    },
+    "zagadnienia-063": {
+      "status": "good",
+      "updatedAt": 1782665113969
+    },
+    "bank-085": {
+      "status": "hard",
+      "updatedAt": 1782665152181
+    },
+    "bank-078": {
+      "status": "bad",
+      "updatedAt": 1782665190812
+    },
+    "zagadnienia-053": {
+      "status": "good",
+      "updatedAt": 1782665274881
+    },
+    "bank-267": {
+      "status": "hard",
+      "updatedAt": 1782665397438
+    },
+    "bank-217": {
+      "status": "hard",
+      "updatedAt": 1782665446309
+    },
+    "bank-265": {
+      "status": "hard",
+      "updatedAt": 1782665481338
+    },
+    "bank-098": {
+      "status": "good",
+      "updatedAt": 1782665515598
+    },
+    "bank-152": {
+      "status": "hard",
+      "updatedAt": 1782665527540
+    },
+    "bank-229": {
+      "status": "hard",
+      "updatedAt": 1782665545324
+    },
+    "bank-038": {
+      "status": "hard",
+      "updatedAt": 1782665649486
+    },
+    "bank-188": {
+      "status": "good",
+      "updatedAt": 1782665673884
+    },
+    "bank-268": {
+      "status": "good",
+      "updatedAt": 1782665713852
+    },
+    "bank-051": {
+      "status": "good",
+      "updatedAt": 1782665759450
+    },
+    "zagadnienia-034": {
+      "status": "good",
+      "updatedAt": 1782665778283
+    },
+    "zagadnienia-057": {
+      "status": "good",
+      "updatedAt": 1782665823601
+    },
+    "bank-273": {
+      "status": "good",
+      "updatedAt": 1782665845628
+    },
+    "bank-172": {
+      "status": "hard",
+      "updatedAt": 1782666014591
+    },
+    "bank-039": {
+      "status": "hard",
+      "updatedAt": 1782666054040
+    },
+    "quick-pdf-igor-12": {
+      "status": "hard",
+      "updatedAt": 1782666095096
+    },
+    "bank-233": {
+      "status": "good",
+      "updatedAt": 1782666164161
+    },
+    "zagadnienia-085": {
+      "status": "good",
+      "updatedAt": 1782666198028
+    },
+    "bank-193": {
+      "status": "good",
+      "updatedAt": 1782666215515
+    },
+    "bank-289": {
+      "status": "good",
+      "updatedAt": 1782666222052
+    },
+    "bank-059": {
+      "status": "bad",
+      "updatedAt": 1782666244154
+    },
+    "bank-167": {
+      "status": "bad",
+      "updatedAt": 1782666291301
+    },
+    "bank-238": {
+      "status": "hard",
+      "updatedAt": 1782666344087
+    },
+    "bank-087": {
+      "status": "bad",
+      "updatedAt": 1782666387564
+    },
+    "bank-161": {
+      "status": "good",
+      "updatedAt": 1782666401268
+    },
+    "bank-096": {
+      "status": "hard",
+      "updatedAt": 1782666448996
+    },
+    "bank-218": {
+      "status": "hard",
+      "updatedAt": 1782666466683
+    },
+    "bank-245": {
+      "status": "hard",
+      "updatedAt": 1782666491855
+    },
+    "bank-163": {
+      "status": "good",
+      "updatedAt": 1782666506112
+    },
+    "bank-290": {
+      "status": "good",
+      "updatedAt": 1782666513058
+    },
+    "bank-264": {
+      "status": "hard",
+      "updatedAt": 1782666539028
+    },
+    "bank-143": {
+      "status": "good",
+      "updatedAt": 1782666583630
+    },
+    "bank-131": {
+      "status": "bad",
+      "updatedAt": 1782666634066
+    },
+    "bank-206": {
+      "status": "good",
+      "updatedAt": 1782666641970
+    },
+    "zagadnienia-028": {
+      "status": "good",
+      "updatedAt": 1782666668561
+    },
+    "bank-128": {
+      "status": "good",
+      "updatedAt": 1782666681351
+    },
+    "bank-104": {
+      "status": "bad",
+      "updatedAt": 1782666780443,
+      "answerHtml": "LSTM, czyli Long Short-Term Memory, jest odmianą sieci rekurencyjnej zaprojektowaną do modelowania długich zależności w sekwencjach. Oprócz stanu ukrytego posiada stan komórki, który pełni rolę pamięci długoterminowej. Przepływ informacji przez komórkę jest kontrolowany przez bramki: bramkę zapominania, która decyduje, co usunąć z poprzedniego stanu komórki; bramkę wejścia, która decyduje, jakie nowe informacje zapisać; oraz bramkę wyjścia, która decyduje, jaka część pamięci zostanie przekazana jako stan ukryty. Dzięki temu LSTM ogranicza problem zanikającego gradientu i lepiej radzi sobie z długimi sekwencjami niż klasyczne RNN.",
+      "editedAt": 1782666760938
+    },
+    "bank-045": {
+      "status": "good",
+      "updatedAt": 1782666791317
+    },
+    "bank-165": {
+      "status": "good",
+      "updatedAt": 1782666807963
+    },
+    "bank-141": {
+      "status": "bad",
+      "updatedAt": 1782666830930
+    },
+    "bank-216": {
+      "status": "hard",
+      "updatedAt": 1782666859404
+    },
+    "bank-079": {
+      "status": "hard",
+      "updatedAt": 1782666904302
+    },
+    "zagadnienia-051": {
+      "status": "hard",
+      "updatedAt": 1782666967170
+    },
+    "bank-106": {
+      "status": "hard",
+      "updatedAt": 1782667014654
+    },
+    "bank-149": {
+      "status": "hard",
+      "updatedAt": 1782667075385,
+      "answerHtml": "<mark>Średnia harmoniczna precision i recall</mark>. Jest wysoka tylko wtedy, gdy oba wyniki są wysokie.",
+      "editedAt": 1782667027730
+    },
+    "bank-054": {
+      "status": "good",
+      "updatedAt": 1782667087387
+    },
+    "zagadnienia-012": {
+      "status": "good",
+      "updatedAt": 1782667129903
+    },
+    "bank-101": {
+      "status": "bad",
+      "updatedAt": 1782667169094
+    },
+    "bank-072": {
+      "status": "good",
+      "updatedAt": 1782667290422,
+      "answerHtml": "<mark>Operacja morfologiczna </mark>zmniejszająca jasny obszar maski. Może usuwać drobny szum i rozdzielać połączone elementy, ale może zniszczyć cienkie znaki.",
+      "editedAt": 1782667222666
+    },
+    "bank-259": {
+      "status": "hard",
+      "updatedAt": 1782667306900
+    },
+    "bank-253": {
+      "status": "bad",
+      "updatedAt": 1782667337138
+    },
+    "bank-258": {
+      "status": "hard",
+      "updatedAt": 1782667378768,
+      "answerHtml": "Model lub algorytm zamieniający reprezentację akustyczną, <mark>np. mel-spektrogram, na waveform.</mark>",
+      "editedAt": 1782667376091
+    },
+    "bank-170": {
+      "status": "good",
+      "updatedAt": 1782667392325
+    },
+    "bank-215": {
+      "status": "hard",
+      "updatedAt": 1782667435920,
+      "answerHtml": "<mark>Połowa częstotliwości próbkowania</mark>. Składowe powyżej niej powodują aliasing, jeżeli nie zostaną odfiltrowane.",
+      "editedAt": 1782667433130
+    },
+    "zagadnienia-023": {
+      "status": "good",
+      "updatedAt": 1782667445160
+    },
+    "quick-pdf-igor-08": {
+      "status": "hard",
+      "updatedAt": 1782667497935
+    },
+    "bank-166": {
+      "status": "good",
+      "updatedAt": 1782667502931
+    },
+    "bank-050": {
+      "status": "good",
+      "updatedAt": 1782667541158
+    },
+    "bank-080": {
+      "status": "good",
+      "updatedAt": 1782667556687
+    },
+    "bank-248": {
+      "status": "bad",
+      "updatedAt": 1782667593756
+    },
+    "bank-116": {
+      "status": "hard",
+      "updatedAt": 1782667602585
+    },
+    "bank-257": {
+      "status": "good",
+      "updatedAt": 1782667644534
+    },
+    "bank-214": {
+      "status": "good",
+      "updatedAt": 1782667644659
+    },
+    "quick-pdf-igor-01": {
+      "status": "good",
+      "updatedAt": 1782667674733
+    },
+    "bank-179": {
+      "status": "good",
+      "updatedAt": 1782667690430
+    },
+    "bank-044": {
+      "status": "good",
+      "updatedAt": 1782667696054
+    },
+    "bank-102": {
+      "status": "good",
+      "updatedAt": 1782667716254
+    },
+    "bank-256": {
+      "status": "hard",
+      "updatedAt": 1782667811121
+    },
+    "bank-114": {
+      "status": "good",
+      "updatedAt": 1782667825489
+    },
+    "bank-107": {
+      "status": "bad",
+      "updatedAt": 1782667837170
+    },
+    "bank-041": {
+      "status": "hard",
+      "updatedAt": 1782667849744
+    },
+    "bank-169": {
+      "status": "hard",
+      "updatedAt": 1782669810788
+    },
+    "zagadnienia-031": {
+      "status": "good",
+      "updatedAt": 1782669828072
+    },
+    "bank-055": {
+      "status": "hard",
+      "updatedAt": 1782669859280
+    },
+    "bank-162": {
+      "status": "good",
+      "updatedAt": 1782669881448
+    },
+    "quick-pdf-michal-01": {
+      "status": "good",
+      "updatedAt": 1782670646218
+    },
+    "bank-241": {
+      "status": "hard",
+      "updatedAt": 1782670663252
+    },
+    "bank-097": {
+      "status": "bad",
+      "updatedAt": 1782670700534
+    },
+    "bank-155": {
+      "status": "bad",
+      "updatedAt": 1782670725000
+    },
+    "bank-237": {
+      "status": "hard",
+      "updatedAt": 1782670805095
+    },
+    "zagadnienia-062": {
+      "status": "good",
+      "updatedAt": 1782670808530
+    },
+    "bank-060": {
+      "status": "hard",
+      "updatedAt": 1782670925232
+    },
+    "bank-281": {
+      "status": "good",
+      "updatedAt": 1782670939039
+    },
+    "bank-263": {
+      "status": "hard",
+      "updatedAt": 1782670967980
+    },
+    "bank-158": {
+      "status": "bad",
+      "updatedAt": 1782670985292
+    },
+    "bank-067": {
+      "status": "bad",
+      "updatedAt": 1782671029720
+    },
+    "bank-142": {
+      "status": "hard",
+      "updatedAt": 1782671045122
+    },
+    "zagadnienia-039": {
+      "status": "good",
+      "updatedAt": 1782671107670
+    },
+    "bank-280": {
+      "status": "bad",
+      "updatedAt": 1782671133176
+    },
+    "bank-222": {
+      "status": "good",
+      "updatedAt": 1782671145940
+    },
+    "zagadnienia-025": {
+      "status": "hard",
+      "updatedAt": 1782671175204
+    },
+    "bank-192": {
+      "status": "good",
+      "updatedAt": 1782671191766
+    },
+    "bank-208": {
+      "status": "hard",
+      "updatedAt": 1782671202884
+    },
+    "bank-231": {
+      "status": "good",
+      "updatedAt": 1782671211464
+    },
+    "bank-110": {
+      "status": "bad",
+      "updatedAt": 1782671225296
+    },
+    "bank-279": {
+      "status": "hard",
+      "updatedAt": 1782726820735
+    },
+    "bank-174": {
+      "status": "hard",
+      "updatedAt": 1782727244228
+    },
+    "bank-049": {
+      "status": "hard",
+      "updatedAt": 1782727307813
+    },
+    "bank-037": {
+      "status": "hard",
+      "updatedAt": 1782727309367
+    },
+    "bank-260": {
+      "status": "good",
+      "updatedAt": 1782727940762
+    },
+    "bank-063": {
+      "status": "good",
+      "updatedAt": 1782727947426
+    },
+    "zagadnienia-100": {
+      "status": "good",
+      "updatedAt": 1782727951272
+    },
+    "bank-084": {
+      "status": "bad",
+      "updatedAt": 1782728136666
+    },
+    "bank-157": {
+      "status": "good",
+      "updatedAt": 1782728141696
+    },
+    "bank-145": {
+      "status": "hard",
+      "updatedAt": 1782728166229
+    },
+    "bank-109": {
+      "status": "good",
+      "updatedAt": 1782737817818,
+      "answerHtml": "Kolejność etykiet jest monotoniczna względem wejścia (np. zawsze czytamy od lewej do prawej). CTC nie modeluje swobodnych przestawień znaków.",
+      "editedAt": 1782728451580
+    },
+    "bank-120": {
+      "status": "bad",
+      "updatedAt": 1782728491212
+    },
+    "zagadnienia-086": {
+      "status": "hard",
+      "updatedAt": 1782728513528
+    },
+    "zagadnienia-081": {
+      "status": "hard",
+      "updatedAt": 1782728513704
+    },
+    "bank-062": {
+      "status": "good",
+      "updatedAt": 1782728608828
+    },
+    "bank-133": {
+      "status": "hard",
+      "updatedAt": 1782728704216,
+      "answerHtml": "Region Proposal Network przewiduje dla anchors prawdopodobieństwo obiektu (korzystajac z objectness score) i poprawkę boxa, tworząc listę regionów kandydackich dla drugiego etapu.",
+      "editedAt": 1782728698678
+    },
+    "zagadnienia-021": {
+      "status": "hard",
+      "updatedAt": 1782728717678
+    },
+    "bank-076": {
+      "status": "hard",
+      "updatedAt": 1782728769890
+    },
+    "bank-139": {
+      "status": "good",
+      "updatedAt": 1782733323445
+    },
+    "bank-091": {
+      "status": "good",
+      "updatedAt": 1782733405879
+    },
+    "bank-254": {
+      "status": "good",
+      "updatedAt": 1782733480073
+    },
+    "bank-095": {
+      "status": "hard",
+      "updatedAt": 1782733564192
+    },
+    "bank-048": {
+      "status": "good",
+      "updatedAt": 1782733707157
+    },
+    "bank-094": {
+      "status": "hard",
+      "updatedAt": 1782733757936
+    },
+    "bank-173": {
+      "status": "hard",
+      "updatedAt": 1782733910170
+    },
+    "bank-083": {
+      "status": "good",
+      "updatedAt": 1782734072831
+    },
+    "zagadnienia-011": {
+      "status": "hard",
+      "updatedAt": 1782734192602
+    },
+    "bank-255": {
+      "status": "hard",
+      "updatedAt": 1782734269869
+    },
+    "zagadnienia-041": {
+      "status": "good",
+      "updatedAt": 1782734548880
+    },
+    "zagadnienia-065": {
+      "status": "bad",
+      "updatedAt": 1782734905958,
+      "answerHtml": "Conformer różni się od klasycznego Transformera tym, że oprócz mechanizmu self-attention zawiera moduł konwolucyjny. Self-attention odpowiada za modelowanie zależności globalnych w sekwencji, czyli pozwala odległym elementom wpływać na siebie nawzajem. Moduł konwolucyjny wprowadza silne modelowanie lokalnych wzorców, na przykład zależności między sąsiednimi ramkami sygnału audio. Jest to szczególnie korzystne w przetwarzaniu mowy i śpiewu, ponieważ sygnał audio ma lokalną ciągłość, ale jednocześnie zależy od dłuższego kontekstu. Conformer łączy więc zalety CNN i Transformera.",
+      "editedAt": 1782734898685
+    },
+    "zagadnienia-069": {
+      "status": "hard",
+      "updatedAt": 1782735035234
+    },
+    "bank-105": {
+      "status": "good",
+      "updatedAt": 1782735082528
+    },
+    "bank-077": {
+      "status": "good",
+      "updatedAt": 1782735107224
+    },
+    "bank-099": {
+      "status": "good",
+      "updatedAt": 1782735128420
+    },
+    "bank-100": {
+      "status": "good",
+      "updatedAt": 1782735446386
+    },
+    "bank-277": {
+      "status": "good",
+      "updatedAt": 1782735464718
+    },
+    "bank-135": {
+      "status": "good",
+      "updatedAt": 1782735478532
+    },
+    "bank-187": {
+      "status": "good",
+      "updatedAt": 1782735497958
+    },
+    "bank-181": {
+      "status": "good",
+      "updatedAt": 1782735510230
+    },
+    "bank-240": {
+      "status": "hard",
+      "updatedAt": 1782735553800
+    },
+    "bank-146": {
+      "status": "good",
+      "updatedAt": 1782735575046
+    },
+    "bank-246": {
+      "status": "bad",
+      "updatedAt": 1782735936702,
+      "answerHtml": "Depthwise convolution to konwolucja wykonywana osobno dla każdego kanału wejściowego. W przeciwieństwie do zwykłej konwolucji nie miesza informacji między kanałami, tylko stosuje oddzielny filtr przestrzenny lub czasowy do każdego kanału. Dzięki temu ma znacznie mniej parametrów i mniejszy koszt obliczeniowy. Mieszanie kanałów można potem wykonać osobną konwolucją 1×1, czyli pointwise convolution. W Conformerze depthwise convolution służy do efektywnego modelowania lokalnego kontekstu czasowego, na przykład zależności między sąsiednimi ramkami audio.",
+      "editedAt": 1782735930762
+    },
+    "bank-295": {
+      "status": "hard",
+      "updatedAt": 1782735962486
+    },
+    "bank-047": {
+      "status": "good",
+      "updatedAt": 1782735989512
+    },
+    "bank-204": {
+      "status": "good",
+      "updatedAt": 1782736011130
+    },
+    "bank-252": {
+      "status": "good",
+      "updatedAt": 1782736034352
+    },
+    "bank-086": {
+      "status": "bad",
+      "updatedAt": 1782736087140
+    },
+    "zagadnienia-044": {
+      "status": "good",
+      "updatedAt": 1782736185856,
+      "answerHtml": "Model zazwyczaj znajduje obiekt, ale jego ramka nie jest wystarczająco dokładna przy bardziej rygorystycznym wymaganiu lokalizacji. (Uzywamy IoU)",
+      "editedAt": 1782736157208
+    },
+    "zagadnienia-016": {
+      "status": "good",
+      "updatedAt": 1782736197946
+    },
+    "bank-070": {
+      "status": "good",
+      "updatedAt": 1782736875828
+    },
+    "bank-239": {
+      "status": "bad",
+      "updatedAt": 1782737799648
+    },
+    "bank-103": {
+      "status": "hard",
+      "updatedAt": 1782738014360
+    },
+    "bank-069": {
+      "status": "good",
+      "updatedAt": 1782738038795
+    },
+    "bank-199": {
+      "status": "hard",
+      "updatedAt": 1782738105953
+    },
+    "bank-270": {
+      "status": "good",
+      "updatedAt": 1782738145549
+    },
+    "bank-081": {
+      "status": "good",
+      "updatedAt": 1782738187728
+    },
+    "bank-232": {
+      "status": "good",
+      "updatedAt": 1782738199544
+    },
+    "bank-154": {
+      "status": "good",
+      "updatedAt": 1782738212890
+    },
+    "zagadnienia-037": {
+      "status": "good",
+      "updatedAt": 1782738274205
+    },
+    "bank-053": {
+      "status": "good",
+      "updatedAt": 1782738287443
+    },
+    "bank-073": {
+      "status": "good",
+      "updatedAt": 1782738309967
+    },
+    "bank-065": {
+      "status": "good",
+      "updatedAt": 1782738354752
+    },
+    "bank-046": {
+      "status": "bad",
+      "updatedAt": 1782738388256
+    },
+    "bank-227": {
+      "status": "good",
+      "updatedAt": 1782738450655
+    },
+    "bank-088": {
+      "status": "hard",
+      "updatedAt": 1782738696977
+    },
+    "bank-068": {
+      "status": "good",
+      "updatedAt": 1782738714132
+    },
+    "zagadnienia-052": {
+      "status": "good",
+      "updatedAt": 1782738729281
+    },
+    "bank-225": {
+      "status": "good",
+      "updatedAt": 1782738769983
+    },
+    "bank-082": {
+      "status": "good",
+      "updatedAt": 1782738791409
+    },
+    "bank-043": {
+      "status": "bad",
+      "updatedAt": 1782738810038
+    },
+    "quick-pdf-michal-02": {
+      "status": "good",
+      "updatedAt": 1782738833315
+    },
+    "bank-224": {
+      "status": "good",
+      "updatedAt": 1782738839555
+    },
+    "bank-261": {
+      "status": "hard",
+      "updatedAt": 1782738867591
+    },
+    "bank-090": {
+      "status": "bad",
+      "updatedAt": 1782739067441,
+      "answerHtml": "Atrous, czyli dilated convolution, to konwolucja z odstępami między elementami kernela. Dzięki współczynnikowi dylatacji kernel obejmuje większy obszar wejścia, ale liczba uczonych wag pozostaje taka sama. Pozwala to zwiększyć pole recepcyjne bez dodatkowego downsamplingu, dlatego jest często używana w zadaniach segmentacji, gdzie potrzebny jest jednocześnie szeroki kontekst i zachowanie rozdzielczości przestrzennej.",
+      "editedAt": 1782738964928
+    },
+    "zagadnienia-092": {
+      "status": "good",
+      "updatedAt": 1782739097007
+    },
+    "bank-205": {
+      "status": "good",
+      "updatedAt": 1782739144313
+    },
+    "zagadnienia-048": {
+      "status": "good",
+      "updatedAt": 1782739149659
+    },
+    "bank-111": {
+      "status": "bad",
+      "updatedAt": 1782739169355
+    },
+    "bank-223": {
+      "status": "bad",
+      "updatedAt": 1782739204141
+    },
+    "bank-092": {
+      "status": "hard",
+      "updatedAt": 1782739382613
+    },
+    "bank-164": {
+      "status": "good",
+      "updatedAt": 1782739423911
+    },
+    "zagadnienia-042": {
+      "status": "good",
+      "updatedAt": 1782739561427
+    },
+    "bank-056": {
+      "status": "good",
+      "updatedAt": 1782739568945
+    },
+    "bank-064": {
+      "status": "good",
+      "updatedAt": 1782739571211
+    },
+    "quick-pdf-michal-03": {
+      "status": "good",
+      "updatedAt": 1782739612915
+    },
+    "bank-262": {
+      "status": "hard",
+      "updatedAt": 1782739705833
+    },
+    "bank-093": {
+      "status": "bad",
+      "updatedAt": 1782739731301
+    },
+    "bank-052": {
+      "status": "good",
+      "updatedAt": 1782739751699
+    },
+    "bank-153": {
+      "status": "hard",
+      "updatedAt": 1782739799765
+    },
+    "bank-042": {
+      "status": "bad",
+      "updatedAt": 1782739892691
+    },
+    "zagadnienia-060": {
+      "status": "good",
+      "updatedAt": 1782739899177
+    },
+    "bank-132": {
+      "status": "good",
+      "updatedAt": 1782739927613
+    },
+    "bank-220": {
+      "status": "hard",
+      "updatedAt": 1782739953725
+    },
+    "bank-242": {
+      "status": "bad",
+      "updatedAt": 1782740165845,
+      "answerHtml": "Transformer nie ma naturalnej informacji o kolejności, bo mechanizm self-attention przetwarza elementy sekwencji równolegle. Dlatego do embeddingów dodaje się kodowanie pozycyjne. W wersji sinusoidalnej jest ono z góry ustalone, nieuczone, i składa się z sinusów oraz cosinusów o różnych częstotliwościach. Dzięki temu każdy token otrzymuje informację o swojej pozycji, a model może rozróżniać kolejność oraz zależności odległościowe między elementami sekwencji.",
+      "editedAt": 1782740163486
+    },
+    "bank-071": {
+      "status": "good",
+      "updatedAt": 1782740420483
+    },
+    "bank-168": {
+      "status": "good",
+      "updatedAt": 1782740429685
+    },
+    "quick-pdf-igor-11": {
+      "status": "good",
+      "updatedAt": 1782740470491
+    },
+    "quick-pdf-michal-10": {
+      "status": "good",
+      "updatedAt": 1782740498209
+    },
+    "zagadnienia-067": {
+      "status": "hard",
+      "updatedAt": 1782740539499
+    },
+    "zagadnienia-043": {
+      "status": "good",
+      "updatedAt": 1782740558775
+    },
+    "bank-115": {
+      "status": "bad",
+      "updatedAt": 1782740672127
+    },
+    "bank-244": {
+      "status": "bad",
+      "updatedAt": 1782740692223
+    },
+    "bank-134": {
+      "status": "hard",
+      "updatedAt": 1782740722457
+    },
+    "bank-117": {
+      "status": "good",
+      "updatedAt": 1782740758931
+    },
+    "bank-175": {
+      "status": "bad",
+      "updatedAt": 1782740772413
+    },
+    "bank-251": {
+      "status": "hard",
+      "updatedAt": 1782740815731
+    },
+    "bank-144": {
+      "status": "good",
+      "updatedAt": 1782741004917
+    },
+    "bank-236": {
+      "status": "bad",
+      "updatedAt": 1782741034429
+    },
+    "bank-151": {
+      "status": "bad",
+      "updatedAt": 1782741070505
+    },
+    "bank-136": {
+      "status": "good",
+      "updatedAt": 1782741075363
+    },
+    "bank-089": {
+      "status": "bad",
+      "updatedAt": 1782741108517
+    },
+    "bank-221": {
+      "status": "bad",
+      "updatedAt": 1782741130312
+    },
+    "bank-125": {
+      "status": "good",
+      "updatedAt": 1782741142113
+    },
+    "bank-147": {
+      "status": "bad",
+      "updatedAt": 1782741201911
+    },
+    "bank-121": {
+      "status": "bad",
+      "updatedAt": 1782741302981,
+      "answerHtml": "Transformer potrzebuje kodowania pozycyjnego, ponieważ sam mechanizm self-attention nie ma wbudowanej informacji o kolejności elementów sekwencji. Przetwarza tokeny równolegle i porównuje je ze sobą, ale bez dodatkowego kodu pozycji nie wie, który token był pierwszy, który drugi ani jaka jest odległość między nimi. Kodowanie pozycyjne dodaje do embeddingów informację o położeniu tokenu, dzięki czemu model może rozróżniać sekwencje z tymi samymi tokenami, ale w innej kolejności.",
+      "editedAt": 1782741300185
+    },
+    "bank-119": {
+      "status": "good",
+      "updatedAt": 1782741322101
+    },
+    "bank-140": {
+      "status": "bad",
+      "updatedAt": 1782741528055
+    },
+    "bank-176": {
+      "status": "bad",
+      "updatedAt": 1782741568871
+    },
+    "bank-230": {
+      "status": "bad",
+      "updatedAt": 1782741598625
+    },
+    "bank-040": {
+      "status": "good",
+      "updatedAt": 1782741627515
+    },
+    "wae-29": {
+      "status": "hard",
+      "updatedAt": 1782749440017
+    },
+    "wae-32": {
+      "status": "bad",
+      "updatedAt": 1782749633591
+    },
+    "wae-23": {
+      "status": "bad",
+      "updatedAt": 1782749709145
+    },
+    "wae-19": {
+      "status": "bad",
+      "updatedAt": 1782749928847
+    },
+    "wae-25": {
+      "status": "hard",
+      "updatedAt": 1782750129441,
+      "answerHtml": "CMA-ES, czyli <mark>Covariance Matrix Adaptation Evolution Strategy</mark>, próbuje uczyć rozkład mutacji w przestrzeni rzeczywistej. Utrzymuje średnią populacji, globalny krok oraz macierz kowariancji, która opisuje kierunki i zależności korzystnych zmian. Dzięki temu mutacje nie są tylko izotropowym szumem, lecz<mark> dopasowują się do kształtu funkcji celu.</mark>",
+      "editedAt": 1782750119181
+    },
+    "wae-18": {
+      "status": "good",
+      "updatedAt": 1782750157141
+    },
+    "wae-21": {
+      "status": "good",
+      "updatedAt": 1782750206637
+    },
+    "wae-20": {
+      "status": "hard",
+      "updatedAt": 1782750261907
+    },
+    "wae-30": {
+      "status": "hard",
+      "updatedAt": 1782750405149
+    },
+    "wae-17": {
+      "status": "hard",
+      "updatedAt": 1782750520379
+    },
+    "wae-24": {
+      "status": "good",
+      "updatedAt": 1782750533792
+    },
+    "wae-31": {
+      "status": "good",
+      "updatedAt": 1782750661813
+    },
+    "wae-28": {
+      "status": "bad",
+      "updatedAt": 1782750758321
+    },
+    "wae-22": {
+      "status": "hard",
+      "updatedAt": 1782750857724
+    },
+    "wae-27": {
+      "status": "hard",
+      "updatedAt": 1782750930161,
+      "answerHtml": "Ewolucja różnicowa <mark>generuje kandydata przez dodanie do wybranego punktu przeskalowanej różnicy między innymi punktami populacji</mark>, a<mark><strong> </strong></mark><mark><mark><strong>następnie miesza go z osobnikiem docelowym przez krzyżowanie</strong></mark>.</mark> Różnice między osobnikami wyznaczają więc kierunek i skalę mutacji. Metoda jest szczególnie popularna w ciągłej optymalizacji black-box.",
+      "editedAt": 1782750925415
+    },
+    "wae-26": {
+      "status": "hard",
+      "updatedAt": 1782750973222,
+      "answerHtml": "Adaptacja macierzy kowariancji pozwala wykryć kierunki, w których dobre rozwiązania zmieniają się wspólnie. Na wydłużonych dolinach funkcji celu zwykła mutacja gaussowska z diagonalną kowariancją porusza się nieefektywnie. CMA-ES obraca i skaluje rozkład mutacji tak, <mark>aby częściej próbować kroków zgodnych z geometrią problemu.</mark>",
+      "editedAt": 1782750970597
+    }
+  },
+  "blacklist": {
+    "main": [],
+    "bank": [
+      "bank-298",
+      "quick-pdf-michal-12",
+      "zagadnienia-046",
+      "quick-pdf-michal-09",
+      "zagadnienia-094",
+      "bank-113",
+      "zagadnienia-073",
+      "zagadnienia-049",
+      "bank-293",
+      "zagadnienia-008",
+      "zagadnienia-009",
+      "zagadnienia-054",
+      "bank-185",
+      "bank-243",
+      "bank-234",
+      "zagadnienia-080",
+      "quick-pdf-igor-06",
+      "zagadnienia-088",
+      "zagadnienia-014",
+      "zagadnienia-019",
+      "bank-195",
+      "bank-247",
+      "zagadnienia-029",
+      "bank-211",
+      "bank-210",
+      "bank-127",
+      "bank-202",
+      "zagadnienia-079",
+      "zagadnienia-032",
+      "bank-219",
+      "bank-123",
+      "zagadnienia-024",
+      "bank-183",
+      "zagadnienia-007",
+      "bank-186",
+      "zagadnienia-047",
+      "bank-184",
+      "zagadnienia-095",
+      "bank-075",
+      "zagadnienia-002",
+      "zagadnienia-090",
+      "bank-249",
+      "zagadnienia-017",
+      "bank-180",
+      "bank-285",
+      "zagadnienia-027",
+      "zagadnienia-020",
+      "bank-171",
+      "bank-269",
+      "zagadnienia-015",
+      "bank-294",
+      "zagadnienia-072",
+      "zagadnienia-040",
+      "bank-182",
+      "zagadnienia-006",
+      "bank-201",
+      "zagadnienia-030",
+      "zagadnienia-061",
+      "zagadnienia-033",
+      "bank-200",
+      "zagadnienia-018",
+      "zagadnienia-097",
+      "quick-pdf-michal-05",
+      "bank-235",
+      "zagadnienia-084",
+      "bank-291",
+      "zagadnienia-083",
+      "bank-074",
+      "zagadnienia-013",
+      "quick-pdf-igor-03",
+      "bank-299",
+      "zagadnienia-068",
+      "bank-296",
+      "bank-275",
+      "quick-pdf-igor-07",
+      "bank-178",
+      "bank-286",
+      "bank-159",
+      "bank-271",
+      "zagadnienia-004",
+      "zagadnienia-001",
+      "zagadnienia-036",
+      "zagadnienia-077",
+      "zagadnienia-076",
+      "bank-226",
+      "zagadnienia-005",
+      "zagadnienia-078",
+      "quick-pdf-michal-14",
+      "zagadnienia-038",
+      "bank-177",
+      "bank-276",
+      "quick-pdf-michal-07",
+      "zagadnienia-098",
+      "zagadnienia-050",
+      "bank-198",
+      "bank-066",
+      "bank-207",
+      "bank-196",
+      "zagadnienia-064",
+      "bank-122",
+      "zagadnienia-089",
+      "zagadnienia-059",
+      "bank-297",
+      "bank-191",
+      "quick-pdf-igor-10",
+      "quick-pdf-igor-14",
+      "zagadnienia-096",
+      "bank-203",
+      "zagadnienia-066",
+      "bank-274",
+      "quick-pdf-igor-02",
+      "zagadnienia-087",
+      "zagadnienia-022",
+      "bank-213",
+      "bank-126",
+      "bank-189",
+      "zagadnienia-074",
+      "zagadnienia-056",
+      "zagadnienia-091",
+      "bank-194",
+      "zagadnienia-082",
+      "bank-266",
+      "zagadnienia-070",
+      "bank-112",
+      "zagadnienia-055",
+      "bank-283",
+      "bank-129",
+      "bank-197",
+      "bank-130",
+      "bank-124",
+      "bank-190",
+      "bank-228",
+      "bank-212",
+      "bank-209",
+      "bank-118"
+    ]
+  },
+  "session": {
+    "deck": "main",
+    "mode": "flash",
+    "theme": "dark",
+    "index": 9,
+    "order": [
+      "complexity-extra-7",
+      "mini-constrained-optimization",
+      "az-14",
+      "prolog-1",
+      "optimization-extra-1",
+      "nn-lecture-6",
+      "ai-extra-1",
+      "nn-basics-9",
+      "ptas-1",
+      "pnp-1",
+      "architecture-1",
+      "az-10",
+      "mini-hopfield-associative-memory",
+      "complexity-extra-5",
+      "az-17",
+      "mini-prolog-logic-programming",
+      "rl-2",
+      "rl-extra-37",
+      "nn-extra-4",
+      "mini-complexity-classes-p-np",
+      "work-tech-svs-4",
+      "az-13",
+      "bober-svs-8",
+      "mini-chomsky-hierarchy",
+      "bober-ocr-7",
+      "nn-basics-5",
+      "mcts-1",
+      "algorithms-extra-2",
+      "wae-32",
+      "nn-extra-7",
+      "az-8",
+      "rl-extra-25",
+      "tsp-2",
+      "optimization-extra-3",
+      "wae-11",
+      "az-7",
+      "az-18",
+      "grossberg-1",
+      "rl-extra-40",
+      "pnp-2",
+      "nn-extra-5",
+      "wae-23",
+      "algorithms-extra-7",
+      "mini-backpropagation",
+      "chomsky-1",
+      "bober-cv-6",
+      "nn-lecture-13",
+      "az-2",
+      "nn-lecture-9",
+      "rl-extra-16",
+      "complexity-extra-2",
+      "rl-extra-17",
+      "bober-cv-8",
+      "rl-extra-21",
+      "management-extra-7",
+      "evolution-2",
+      "az-4",
+      "wae-28",
+      "rl-extra-41",
+      "az-5",
+      "backprop-2",
+      "mini-linear-systems-finite",
+      "mini-ptas",
+      "ai-extra-3",
+      "az-12",
+      "work-tech-omr-5",
+      "rl-extra-18",
+      "algorithms-extra-5",
+      "mini-tsp",
+      "az-15",
+      "algorithms-extra-6",
+      "rl-extra-20",
+      "optimization-extra-2",
+      "rl-extra-22",
+      "wae-19",
+      "mini-algorithm-complexity",
+      "complexity-extra-3",
+      "mini-ea-vs-classical-optimization",
+      "az-11",
+      "mdp-1",
+      "az-9",
+      "work-tech-ocr-1",
+      "az-16",
+      "bellman-1",
+      "complexity-1"
+    ],
+    "topics": [
+      "Teoria i złożoność",
+      "Algorytmy i numeryczne",
+      "Optymalizacja",
+      "Zarządzanie",
+      "Reprezentacja wiedzy",
+      "AI i eksperckie",
+      "Dane",
+      "Uczenie ze wzmocnieniem",
+      "Sieci neuronowe",
+      "Algorytmy zaawansowane",
+      "Algorytmy ewolucyjne",
+      "OMR/SVS: wyniki i metodologia",
+      "Lokalizacja tekstu i CV",
+      "OCR",
+      "OMR i detekcja",
+      "Score IR i muzyka",
+      "SVS i audio",
+      "Integracja i ewaluacja",
+      "Sieci neuronowe: wykłady"
+    ],
+    "search": "",
+    "thesisOnly": false,
+    "miniOnly": false,
+    "statusFilters": [
+      "bad"
+    ],
+    "shuffle": true,
+    "seed": "2314530299",
+    "answerVisible": false,
+    "savedAt": 1782815776418
+  }
+}
