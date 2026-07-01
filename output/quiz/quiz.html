@@ -1068,6 +1068,13 @@
                     "a": "Answer extraction dotyczy zapytań egzystencjalnych typu: kto spełnia własność phi(x). Zamiast szukać tylko sprzeczności, dodaje się pomocniczy predykat Answer(x), którego nie ma w bazie wiedzy. W trakcie rezolucji nie tyle czeka się na klauzulę pustą, ile na klauzulę zawierającą sam predykat Answer z konkretnym termem. Ten term jest odpowiedzią, np. Answer(tweety) oznacza, że znaleziono obiekt spełniający zapytanie."
           },
           {
+                    "id": "mini-reasoning-about-actions",
+                    "topic": "Reprezentacja wiedzy",
+                    "mini": true,
+                    "q": "Jakie są główne problemy w zagadnieniach wnioskowania o działaniach?",
+                    "a": "Wnioskowanie o działaniach opisuje, jak akcje zmieniają stan świata w czasie. Klasyczne problemy to frame problem, czyli jak zwięźle opisać, co się nie zmienia po akcji; qualification problem, czyli jak uwzględnić ukryte warunki powodzenia akcji; oraz ramification problem, czyli jak opisać pośrednie skutki działań. Dochodzą też współbieżność działań, kolejność zdarzeń, czas trwania akcji, konflikty między efektami, niepełna wiedza i skutki domyślne. Dlatego często używa się logik niemonotonicznych, rachunków sytuacyjnych, formalizmów akcji i reguł domyślnych."
+          },
+          {
                     "id": "evolution-1",
                     "topic": "AI i eksperckie",
                     "q": "Jak wygląda główna pętla algorytmu ewolucyjnego?",
@@ -1083,7 +1090,7 @@
                     "id": "mcts-1",
                     "topic": "AI i eksperckie",
                     "q": "Jakie są cztery fazy Monte Carlo Tree Search?",
-                    "a": "Monte Carlo Tree Search składa się z czterech faz: selection, expansion, simulation i backpropagation. W selection schodzimy po drzewie, równoważąc eksplorację i eksploatację, np. wzorem UCB/UCT. W expansion dodajemy nowy węzeł, w simulation wykonujemy rollout do końca albo przybliżonej oceny, a w backpropagation aktualizujemy statystyki odwiedzonych węzłów. Metoda jest użyteczna, gdy pełne drzewo gry jest zbyt duże."
+                    "a": "Monte Carlo Tree Search buduje drzewo decyzji stopniowo, tylko w obiecujących fragmentach przestrzeni stanów. Każda iteracja ma cztery fazy. Selection schodzi od korzenia do liścia, wybierając dziecko według kompromisu eksploatacja-eksploracja, np. UCT: wysoka średnia nagroda zachęca do wykorzystywania, a mała liczba odwiedzin do eksploracji. Expansion dodaje do drzewa nowy węzeł dla jeszcze niesprawdzonej akcji. Simulation, czyli rollout, ocenia pozycję przez losową lub heurystyczną symulację do końca albo do przybliżonej oceny. Backpropagation przenosi wynik w górę ścieżki i aktualizuje liczby odwiedzin oraz średnie wartości. Po wielu iteracjach wybiera się ruch z największą liczbą odwiedzin albo najlepszą wartością. MCTS jest dobre, gdy pełne drzewo gry jest ogromne, model przejść jest znany, a oceny można uzyskać przez symulacje."
           },
           {
                     "id": "agent-1",
@@ -2107,6 +2114,34 @@
                     "a": "Transformer używa self-attention i sieci feedforward, dzięki czemu może przetwarzać tokeny równolegle i bez rekurencji modelować dalekie zależności. RNN aktualizuje stan sekwencyjnie, więc trudniej je równoleglić i częściej cierpi na problemy długiego horyzontu. Transformer potrzebuje jednak kodowania pozycyjnego, bo sam attention nie zna kolejności tokenów."
           },
           {
+                    "id": "thesis-attention-1",
+                    "topic": "Sieci neuronowe",
+                    "thesis": true,
+                    "q": "Jak działa scaled dot-product attention z użyciem query, key i value?",
+                    "a": "Dla każdego elementu sekwencji model tworzy wektory query, key i value. Podobieństwo query do wszystkich key mówi, na które pozycje warto zwrócić uwagę. Wyniki skalarne dzieli się przez sqrt(d_k), aby stabilizować skalę gradientów, potem stosuje softmax i otrzymane wagi mnoży przez value. Wzór ma postać softmax(QK^T / sqrt(d_k))V. Intuicyjnie query pyta, key opisuje, kiedy pozycja pasuje do pytania, a value niesie informację przekazywaną dalej."
+          },
+          {
+                    "id": "thesis-attention-2",
+                    "topic": "Sieci neuronowe",
+                    "thesis": true,
+                    "q": "Czym self-attention różni się od cross-attention?",
+                    "a": "W self-attention query, key i value powstają z tej samej sekwencji, więc elementy wejścia komunikują się między sobą, np. tokeny tekstu albo ramki cech audio. W cross-attention query pochodzi z jednej reprezentacji, a key i value z innej, np. dekoder pyta o cechy enkodera. Self-attention buduje kontekst wewnątrz jednej modalności lub sekwencji, a cross-attention służy do łączenia źródeł informacji."
+          },
+          {
+                    "id": "thesis-attention-3",
+                    "topic": "Sieci neuronowe",
+                    "thesis": true,
+                    "q": "Po co stosuje się multi-head self-attention?",
+                    "a": "Multi-head self-attention uruchamia kilka mechanizmów uwagi równolegle na różnych projekcjach cech. Dzięki temu jedna głowa może śledzić zależności lokalne, inna dalekie, inna relacje składniowe, czasowe lub wysokościowe. Wyniki głów są łączone i projektowane dalej. To zwiększa ekspresyjność bez wymuszania, aby jeden attention mapował wszystkie typy relacji naraz."
+          },
+          {
+                    "id": "thesis-attention-4",
+                    "topic": "Sieci neuronowe",
+                    "thesis": true,
+                    "q": "Dlaczego self-attention potrzebuje kodowania pozycyjnego i masek?",
+                    "a": "Sam self-attention operuje na parach pozycji i bez dodatkowej informacji nie zna naturalnej kolejności sekwencji. Kodowanie pozycyjne dodaje informację o miejscu tokenu, ramki lub nuty. Maski są potrzebne, aby ignorować padding w batchu albo zablokować patrzenie w przyszłość w dekoderze autoregresyjnym. Bez pozycji i masek model może mieszać sztuczne dopełnienia z realnymi danymi albo łamać przyczynowość."
+          },
+          {
                     "id": "nn-extra-8",
                     "topic": "Sieci neuronowe",
                     "q": "Do czego służy autoenkoder?",
@@ -2299,6 +2334,34 @@
                     "a": "Przy małym obiekcie przesunięcie o kilka pikseli może znacząco obniżyć IoU, choć muzycznie symbol może być nadal blisko poprawnej pozycji."
           },
           {
+                    "id": "thesis-faster-rcnn-1",
+                    "topic": "OMR i detekcja",
+                    "thesis": true,
+                    "q": "Jakie główne straty optymalizuje Faster R-CNN podczas treningu?",
+                    "a": "Faster R-CNN uczy dwa etapy naraz lub sekwencyjnie: RPN i głowicę detekcyjną. RPN ma stratę klasyfikacji objectness, czyli czy anchor zawiera obiekt, oraz stratę regresji przesunięcia anchorów do ramek. Drugi etap ma stratę klasyfikacji klasy obiektu i stratę regresji bounding box dla propozycji RoI. W praktyce całkowita funkcja kosztu łączy błędy klasyfikacji i lokalizacji, więc model musi zarówno znaleźć symbol, jak i dobrze dopasować ramkę."
+          },
+          {
+                    "id": "thesis-faster-rcnn-2",
+                    "topic": "OMR i detekcja",
+                    "thesis": true,
+                    "q": "Jaką rolę pełnią NMS i progi confidence w Faster R-CNN?",
+                    "a": "RPN i głowica detekcyjna mogą wygenerować wiele podobnych ramek dla tego samego symbolu. NMS usuwa duplikaty przez zostawienie mocniejszej predykcji i odrzucenie silnie nakładających się ramek. Próg confidence odcina słabe detekcje. Zbyt niski próg daje dużo false positives, a zbyt wysoki gubi małe lub słabsze symbole; w OMR wpływa to potem na melodię, rytm i Score IR."
+          },
+          {
+                    "id": "thesis-faster-rcnn-3",
+                    "topic": "OMR i detekcja",
+                    "thesis": true,
+                    "q": "Dlaczego rozdzielczość map cech, FPN i stride są ważne dla Faster R-CNN w OMR?",
+                    "a": "Symbole muzyczne są często bardzo małe, cienkie lub gęsto ułożone. Jeśli backbone zbyt mocno zmniejszy rozdzielczość mapy cech, pojedynczy symbol może zajmować tylko kilka aktywacji i trudno go precyzyjnie zlokalizować. Mniejszy stride lub FPN pomagają, bo łączą semantycznie mocne cechy z wyższą rozdzielczością. Kosztem jest większa pamięć i wolniejsza inferencja."
+          },
+          {
+                    "id": "thesis-faster-rcnn-4",
+                    "topic": "OMR i detekcja",
+                    "thesis": true,
+                    "q": "Dlaczego w OMR można wybrać Faster R-CNN zamiast detektora jednostopniowego typu YOLO?",
+                    "a": "Faster R-CNN jest dwustopniowy: najpierw szuka kandydatów, a potem dokładniej je klasyfikuje i poprawia ramki. To zwykle daje lepszą precyzję lokalizacji, co jest ważne przy małych symbolach i zależnościach muzycznych. YOLO jest szybszy i prostszy w inferencji, ale może łatwiej gubić drobne obiekty albo gorzej radzić sobie z bardzo gęstą notacją. W pracy wybór zależy od kompromisu między dokładnością OMR a czasem działania."
+          },
+          {
                     "id": "bober-score-1",
                     "topic": "Score IR i muzyka",
                     "q": "Dlaczego Score IR jest ważnym elementem pracy?",
@@ -2393,6 +2456,90 @@
                     "topic": "SVS i audio",
                     "q": "Po co potrzebny jest wokoder w systemie SVS?",
                     "a": "Model akustyczny zwykle przewiduje mel-spektrogram lub podobną reprezentację, a wokoder zamienia ją na waveform, czyli rzeczywisty sygnał audio do odsłuchu."
+          },
+          {
+                    "id": "thesis-svs-acoustic-1",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Co robi model akustyczny w systemie singing voice synthesis?",
+                    "a": "Model akustyczny zamienia reprezentację symboliczną i językową na cechy akustyczne, najczęściej mel-spektrogram, F0, energię lub inne parametry sterujące. Wejściem mogą być fonemy, nuty, czasy trwania, wysokości, informacje o głosie i stylu. Model nie generuje jeszcze gotowej fali audio; tworzy pośredni opis dźwięku, który musi zostać zrealizowany przez wokoder."
+          },
+          {
+                    "id": "thesis-svs-acoustic-2",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Dlaczego model akustyczny i wokoder są zwykle rozdzielone?",
+                    "a": "Rozdzielenie upraszcza problem: model akustyczny uczy się mapowania nut, tekstu i czasu na mel-spektrogram, a wokoder uczy się zamiany mel na waveform. Dzięki temu można osobno diagnozować błędy melodii, rytmu, barwy i artefaktów audio oraz używać różnych strat i danych. Wadą jest ryzyko acoustic-vocoder mismatch, bo wokoder może trenować na melach referencyjnych, a w inferencji dostaje mele przewidywane przez model akustyczny."
+          },
+          {
+                    "id": "thesis-svs-vocoder-1",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Jakie warunki może dostawać wokoder oprócz mel-spektrogramu i po co?",
+                    "a": "Wokoder może być warunkowany nie tylko mel-spektrogramem, ale też F0, voiced/unvoiced, energią, identyfikatorem głosu, stylem lub sygnałem harmonicznym. Takie warunki pomagają kontrolować periodyczność, wysokość, barwę i stabilność generowanego audio. W SVS jest to szczególnie ważne, bo mały błąd F0 lub ignorowanie warunku wysokości może dać słyszalnie fałszywy śpiew."
+          },
+          {
+                    "id": "thesis-svs-acoustic-3",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Po co w modelu akustycznym stosuje się postnet albo residualny mel refiner?",
+                    "a": "Główny model może przewidzieć ogólną strukturę mel-spektrogramu, ale zostawić lokalne błędy, rozmycia lub brak detali. Postnet albo residualny mel refiner uczy się poprawki do mel, często jako residual, czyli dodatek do bazowej predykcji. Taki moduł może poprawić szczegóły widmowe i stabilność, ale nie naprawi fundamentalnych błędów czasu, tekstu lub melodii."
+          },
+          {
+                    "id": "thesis-svs-acoustic-4",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Dlaczego niska strata mel L1 nie gwarantuje dobrego brzmienia po wokoderze?",
+                    "a": "Mel L1 mierzy średnią różnicę w reprezentacji pośredniej, ale słabo oddaje fazę, drobne artefakty, naturalność, zrozumiałość i subiektywną barwę. Dwa sygnały mogą mieć podobny mel, a różnić się periodycznością, szumem albo jakością formantów. Końcową jakość trzeba sprawdzać na waveformie, np. odsłuchem, MOS/CMOS, analizą F0 i metrykami audio po przejściu przez wokoder."
+          },
+          {
+                    "id": "thesis-svs-conformer-1",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Co to jest Conformer i dlaczego pasuje do modeli akustycznych SVS?",
+                    "a": "Conformer to blok sieciowy łączący self-attention z konwolucją. Self-attention dobrze łapie zależności długiego zasięgu, np. relacje między fonemami, nutami i frazą, a konwolucja modeluje lokalną ciągłość czasową, artykulację i krótkie przejścia akustyczne. W SVS jest to przydatne, bo śpiew ma jednocześnie strukturę globalną, wynikającą z melodii i tekstu, oraz bardzo lokalne zjawiska, takie jak atak dźwięku, vibrato, przejścia między fonemami i stabilność samogłosek."
+          },
+          {
+                    "id": "thesis-svs-conformer-2",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Jak działa typowy blok Conformera?",
+                    "a": "Typowy blok Conformera ma strukturę residualną i zwykle składa się z feed-forward, multi-head self-attention, modułu konwolucyjnego oraz drugiego feed-forward. Wariant z dwoma FFN bywa nazywany macaron style. Self-attention miesza informację między odległymi pozycjami sekwencji, konwolucja depthwise separable wzmacnia lokalny kontekst, a residual connections i layer normalization stabilizują uczenie. Dzięki temu blok potrafi jednocześnie modelować globalną frazę i lokalną dynamikę audio."
+          },
+          {
+                    "id": "thesis-svs-conformer-3",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Po co w Conformerze jest moduł konwolucyjny, skoro jest już self-attention?",
+                    "a": "Self-attention może łączyć dowolne pozycje, ale sam z siebie nie ma silnego założenia o lokalnej ciągłości sygnału. Moduł konwolucyjny dodaje bias lokalny: łatwiej uczy sąsiedztwo ramek, płynne przejścia, krótkie zależności fonetyczne i czasowe. W audio to ważne, bo waveform i mel-spektrogram są bardzo lokalnie skorelowane. Dla SVS konwolucja pomaga zachować stabilność artykulacji i przejść między nutami, a attention daje szerszy kontekst muzyczno-tekstowy."
+          },
+          {
+                    "id": "thesis-svs-discriminator-1",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Jakie dyskryminatory stosuje się w wokoderach typu HiFi-GAN i po co jest ich kilka?",
+                    "a": "W HiFi-GAN klasycznie stosuje się kilka dyskryminatorów, najczęściej Multi-Period Discriminator i Multi-Scale Discriminator. MPD patrzy na periodyczność sygnału, czyli strukturę ważną dla głosu i wysokości F0. MSD analizuje waveform w różnych skalach czasowych, np. oryginalny i downsamplowany sygnał. Warianty wokoderów mogą dodawać dyskryminatory spektralne, multi-resolution STFT albo mel sub-band. Kilka dyskryminatorów daje generatorowi bogatszy sygnał: jeden pilnuje harmoniczności, drugi lokalnych artefaktów, a inny struktury widmowej."
+          },
+          {
+                    "id": "thesis-svs-discriminator-2",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Jak działa Multi-Period Discriminator w wokoderze?",
+                    "a": "Multi-Period Discriminator sprawdza waveform pod kątem okresowości. Dla kilku okresów, np. różnych małych liczb próbek, sygnał jest przekształcany tak, aby próbki z kolejnych okresów tworzyły strukturę dwuwymiarową. Konwolucje oceniają wtedy, czy lokalny wzór wygląda jak prawdziwy głos. Taki dyskryminator jest czuły na harmoniczność, pitch, voiced/unvoiced i artefakty periodyczne, więc pomaga wokoderowi generować stabilny, naturalny śpiew."
+          },
+          {
+                    "id": "thesis-svs-discriminator-3",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Jak działa Multi-Scale Discriminator i czym różni się od Multi-Period Discriminator?",
+                    "a": "Multi-Scale Discriminator ocenia ten sam sygnał w kilku skalach czasowych, np. waveform oryginalny oraz wersje downsamplowane. Dzięki temu widzi zarówno szybkie szczegóły i szum, jak i bardziej globalną obwiednię sygnału. Multi-Period Discriminator koncentruje się bardziej na periodyczności i strukturze harmonicznej, a Multi-Scale Discriminator na jakości waveformu w różnych rozdzielczościach. Razem ograniczają różne typy artefaktów."
+          },
+          {
+                    "id": "thesis-svs-discriminator-4",
+                    "topic": "SVS i audio",
+                    "thesis": true,
+                    "q": "Jak adversarial loss i feature matching pomagają trenować wokoder?",
+                    "a": "Adversarial loss uczy generator tworzyć waveform, który dyskryminatory uznają za podobny do prawdziwego audio. Sam sygnał adversarial może być niestabilny, dlatego często dodaje się feature matching: porównuje się pośrednie aktywacje dyskryminatorów dla prawdziwego i wygenerowanego audio. To daje łagodniejszy, bogatszy gradient i stabilizuje trening. W praktyce wokoder łączy straty mel/spektralne, adversarial i feature matching, aby zachować zgodność z warunkiem wejściowym oraz naturalność brzmienia."
           },
           {
                     "id": "bober-eval-1",

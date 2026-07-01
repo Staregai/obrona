@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="1180" viewBox="0 0 980 1180" role="img" aria-labelledby="title desc">
+  <title id="title">Schemat bloku Conformer</title>
+  <desc id="desc">Diagram przepływu: wejście, cztery połączenia residualne z FFN, self-attention i convolution, końcowy LayerNorm oraz wyjście bloku.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#263238"/>
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .node { fill: #f8fbff; stroke: #263238; stroke-width: 2; rx: 10; }
+      .state { fill: #eef7ff; stroke: #1565c0; stroke-width: 2.2; rx: 10; }
+      .scale { fill: #fff8e1; stroke: #b26a00; stroke-width: 2; rx: 10; }
+      .add { fill: #f1f8e9; stroke: #2e7d32; stroke-width: 2.4; }
+      .arrow { fill: none; stroke: #263238; stroke-width: 2.2; marker-end: url(#arrow); stroke-linecap: round; stroke-linejoin: round; }
+      .skip { fill: none; stroke: #607d8b; stroke-width: 2.2; marker-end: url(#arrow); stroke-linecap: round; stroke-linejoin: round; }
+      .label { fill: #17212b; font-family: Arial, Helvetica, sans-serif; font-size: 20px; text-anchor: middle; dominant-baseline: middle; }
+      .small { font-size: 19px; }
+      .plus { fill: #1b5e20; font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="980" height="1180"/>
+
+  <!-- Input -->
+  <rect class="state" x="150" y="35" width="220" height="62"/>
+  <text class="label" x="260" y="66">x wejściowe</text>
+
+  <!-- Block 1: FFN 1 -->
+  <path class="skip" d="M260 97 L260 195"/>
+  <path class="arrow" d="M370 66 C430 66 405 116 460 116"/>
+  <rect class="node" x="460" y="85" width="210" height="62"/>
+  <text class="label" x="565" y="116">LayerNorm</text>
+  <path class="arrow" d="M565 147 L565 170"/>
+  <rect class="node" x="460" y="170" width="210" height="62"/>
+  <text class="label" x="565" y="201">FFN 1</text>
+  <path class="arrow" d="M565 232 L565 255"/>
+  <rect class="scale" x="500" y="255" width="130" height="62"/>
+  <text class="label" x="565" y="286">* 0.5</text>
+  <path class="arrow" d="M500 286 C405 286 385 230 295 230"/>
+  <circle class="add" cx="260" cy="230" r="35"/>
+  <text class="plus" x="260" y="230">+</text>
+  <path class="arrow" d="M260 265 L260 305"/>
+  <rect class="state" x="190" y="305" width="140" height="56"/>
+  <text class="label" x="260" y="333">x1</text>
+
+  <!-- Block 2: Attention -->
+  <path class="skip" d="M260 361 L260 461"/>
+  <path class="arrow" d="M330 333 C425 333 400 386 460 386"/>
+  <rect class="node" x="460" y="355" width="210" height="62"/>
+  <text class="label" x="565" y="386">LayerNorm</text>
+  <path class="arrow" d="M565 417 L565 440"/>
+  <rect class="node" x="415" y="440" width="300" height="62"/>
+  <text class="label small" x="565" y="471">Multi-Head Self-Attention</text>
+  <path class="arrow" d="M415 471 C340 471 335 496 295 496"/>
+  <circle class="add" cx="260" cy="496" r="35"/>
+  <text class="plus" x="260" y="496">+</text>
+  <path class="arrow" d="M260 531 L260 571"/>
+  <rect class="state" x="190" y="571" width="140" height="56"/>
+  <text class="label" x="260" y="599">x2</text>
+
+  <!-- Block 3: Convolution -->
+  <path class="skip" d="M260 627 L260 727"/>
+  <path class="arrow" d="M330 599 C425 599 400 652 460 652"/>
+  <rect class="node" x="460" y="621" width="210" height="62"/>
+  <text class="label" x="565" y="652">LayerNorm</text>
+  <path class="arrow" d="M565 683 L565 706"/>
+  <rect class="node" x="420" y="706" width="290" height="62"/>
+  <text class="label" x="565" y="737">Convolution Module</text>
+  <path class="arrow" d="M420 737 C340 737 335 762 295 762"/>
+  <circle class="add" cx="260" cy="762" r="35"/>
+  <text class="plus" x="260" y="762">+</text>
+  <path class="arrow" d="M260 797 L260 837"/>
+  <rect class="state" x="190" y="837" width="140" height="56"/>
+  <text class="label" x="260" y="865">x3</text>
+
+  <!-- Block 4: FFN 2 -->
+  <path class="skip" d="M260 893 L260 993"/>
+  <path class="arrow" d="M330 865 C425 865 400 918 460 918"/>
+  <rect class="node" x="460" y="887" width="210" height="62"/>
+  <text class="label" x="565" y="918">LayerNorm</text>
+  <path class="arrow" d="M565 949 L565 972"/>
+  <rect class="node" x="460" y="972" width="210" height="62"/>
+  <text class="label" x="565" y="1003">FFN 2</text>
+  <path class="arrow" d="M565 1034 L565 1057"/>
+  <rect class="scale" x="500" y="1057" width="130" height="62"/>
+  <text class="label" x="565" y="1088">* 0.5</text>
+  <path class="arrow" d="M500 1088 C405 1088 385 1028 295 1028"/>
+  <circle class="add" cx="260" cy="1028" r="35"/>
+  <text class="plus" x="260" y="1028">+</text>
+
+  <!-- Final LayerNorm and output -->
+  <path class="arrow" d="M260 1063 L260 1090"/>
+  <rect class="node" x="150" y="1090" width="220" height="62"/>
+  <text class="label" x="260" y="1121">Final LayerNorm</text>
+  <path class="arrow" d="M370 1121 L460 1121"/>
+  <rect class="state" x="460" y="1090" width="220" height="62"/>
+  <text class="label" x="570" y="1121">wyjście bloku</text>
+</svg>
